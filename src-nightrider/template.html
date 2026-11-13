@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>星月夜骑士 STARRY NIGHTRIDER — 梵高厚涂油画风 3D 骑乘冒险网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 榜首 Starry Nightrider 与 Oil Paint 的零外部素材 3D 网页游戏：实时各向异性厚涂油画笔触着色器、普罗旺斯星月夜山谷与纯代码原声弦乐合成。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="nightrider-app" class="__APP_CLASS__">
+    <canvas id="nr-canvas" tabindex="0"></canvas>
+
+    <section id="nr-hud" aria-label="油画骑乘抬头界面">
+      <div id="nr-perf">60 FPS · 厚涂名画</div>
+
+      <div id="nr-top-center">
+        <div id="nr-compass">北 N · 000°</div>
+        <div id="nr-quest-pill">
+          <span id="nr-stage-tag">星穹复苏</span>
+          <span id="nr-stage-desc">点亮圣雷米星象画架 [0 / 5]</span>
+          <span class="nr-pips">
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="nr-quick-bar">
+        <button id="btn-brush" class="nr-mini-btn" type="button">笔触 [B]</button>
+        <button id="btn-cam" class="nr-mini-btn" type="button">视角 [C]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="nr-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="nr-mini-btn" type="button">暂歇 [P]</button>
+      </div>
+
+      <div id="nr-toast-feed"></div>
+      <div id="nr-waypoints"></div>
+
+      <div id="nr-banner">
+        <div id="nr-banner-title"></div>
+        <div id="nr-banner-sub"></div>
+      </div>
+
+      <div id="nr-energy-card">
+        <div class="card-row">
+          <span id="nr-speed-val">0</span>
+          <span class="card-lbl">KM/H · 星辉画笔能量</span>
+        </div>
+        <div class="energy-track"><div id="nr-energy-fill"></div></div>
+      </div>
+
+      <div id="nr-controls-tip">WASD/方向键驰骋 · Shift/左键星流冲刺 · 空格腾跃</div>
+
+      <div id="nr-score-card">
+        <span id="nr-score-val">0</span>
+        <span id="nr-combo-val">星彩写生</span>
+      </div>
+    </section>
+
+    <div id="nr-touch">
+      <div id="nr-t-pad"><div id="nr-t-knob"></div></div>
+      <div class="nr-t-actions">
+        <button id="nr-tb-dash" class="nr-t-btn gold" type="button">冲刺</button>
+        <button id="nr-tb-jump" class="nr-t-btn" type="button">腾跃</button>
+      </div>
+    </div>
+
+    <main id="nr-overlay">
+      <div class="nr-placard">
+        <header>
+          <div id="nr-kicker" class="nr-kicker">SAINT-RÉMY, JUNE 1889 // 零外部素材 WebGL2 厚涂油画冒险</div>
+          <h1 id="nr-title">星月夜骑士 · STARRY NIGHTRIDER</h1>
+          <p id="nr-desc" class="nr-desc">
+            化身草帽画家文森特，策马驰骋在流动的 1889《星月夜》山谷之中。穿越随风起伏的金色麦田、火焰柏树林与星光石桥，收集星芒颜料、挥毫冲碎夜魇墨涡，点亮圣雷米夜空的五座璀璨星宫。
+          </p>
+        </header>
+
+        <section id="nr-debrief" aria-label="画作完成结算">
+          <div class="db-cell"><span>写生用时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="db-cell"><span>采集星芒</span><strong id="st-seeds">0</strong></div>
+          <div class="db-cell"><span>净除墨涡</span><strong id="st-purified">0</strong></div>
+          <div class="db-cell"><span>画作总分</span><strong id="st-score">0</strong></div>
+          <div class="db-cell gold"><span>馆藏评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="nr-actions">
+          <button id="nr-btn-start" class="nr-btn-primary" type="button">策马入画</button>
+          <button id="nr-btn-freeride" class="nr-btn-secondary" type="button" style="display:none">留驻画中漫游</button>
+          <button id="nr-btn-restart" class="nr-btn-secondary" type="button" style="display:none">重绘星夜</button>
+          <button id="nr-btn-studio" class="nr-btn-secondary" type="button">夜曲原声琴房</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="nr-studio" aria-label="纯代码夜曲原声琴房">
+          <div class="studio-head">
+            <span>ACOUSTIC NOCTURNE SYNTH · 零采样古典弦乐与马蹄拟音</span>
+            <span>D-LYDIAN HARMONY</span>
+          </div>
+          <canvas id="nr-scope" width="560" height="64"></canvas>
+          <div class="studio-btns">
+            <button class="studio-trigger" data-s="guitar" type="button">古典木吉他拨弦</button>
+            <button class="studio-trigger" data-s="cello" type="button">独奏大提琴揉弦</button>
+            <button class="studio-trigger" data-s="harp" type="button">星宫竖琴刮奏</button>
+            <button class="studio-trigger" data-s="chime" type="button">钢片琴星芒泛音</button>
+            <button class="studio-trigger" data-s="dash" type="button">油画宽笔挥扫</button>
+            <button class="studio-trigger" data-s="hoof-bridge" type="button">石桥马蹄声</button>
+            <button class="studio-trigger" data-s="hoof-water" type="button">星河踏水声</button>
+          </div>
+        </section>
+
+        <div class="nr-settings">
+          <div class="set-item">
+            <span>油画笔触</span>
+            <button class="brush-pill" data-b="0" type="button">清透原画</button>
+            <button class="brush-pill active" data-b="1" type="button">厚涂名画</button>
+            <button class="brush-pill" data-b="2" type="button">狂野梵高</button>
+          </div>
+          <div class="set-item">
+            <span>画质</span>
+            <button class="nr-q-pill" data-q="low" type="button">流畅</button>
+            <button class="nr-q-pill" data-q="med" type="button">均衡</button>
+            <button class="nr-q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="set-item">
+            <label for="nr-vol">夜曲音量</label>
+            <input id="nr-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="nr-keys-grid">
+          <div><span>策马加速 / 勒缰转向</span><span><kbd>W A S D</kbd> / 方向键</span></div>
+          <div><span>星流画笔冲刺（破除墨涡）</span><span><kbd>Shift</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>骏马腾跃（穿越高空星环）</span><span><kbd>Space</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>实时油画笔触滤镜切换</span><span><kbd>B</kbd></span></div>
+          <div><span>追尾 / 仰望星穹视角</span><span><kbd>C</kbd></span></div>
+          <div><span>环顾四周 / 暂歇菜单</span><span>移动鼠标 / <kbd>P</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>
