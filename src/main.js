@@ -143,6 +143,7 @@ async function bootGame() {
     alive: true,
     cameraKickPitch: 0,
     cameraKickYaw: 0,
+    adsToggle: false,
   };
 
   const keys = {};
@@ -150,8 +151,10 @@ async function bootGame() {
     leftDown: false,
     rightDown: false,
     draggingLook: false,
-    lastX: 0,
-    lastY: 0,
+    lastX: null,
+    lastY: null,
+    normX: 0.5,
+    inside: false,
   };
 
   // Touch joystick state
@@ -612,8 +615,10 @@ async function bootGame() {
       else if (game.mode === 'paused') startOrResumeGame();
     }
     if (game.mode !== 'playing') return;
+    if (e.code === 'Space' || e.code.startsWith('Arrow')) e.preventDefault();
 
     if (e.code === 'KeyR') tryReload();
+    else if (e.code === 'KeyV') player.adsToggle = !player.adsToggle;
     else if (e.code === 'KeyF') {
       const on = weapon.toggleFlashlight();
       $('gear-flash').innerHTML = `<b>[F]</b> 战术灯 ${on ? 'ON' : 'OFF'}`;
@@ -649,18 +654,19 @@ async function bootGame() {
   });
 
   canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+  canvas.addEventListener('mouseenter', () => { mouse.inside = true; });
+  canvas.addEventListener('mouseleave', () => { mouse.inside = false; mouse.lastX = null; mouse.lastY = null; });
 
   canvas.addEventListener('mousedown', (e) => {
     if (game.mode !== 'playing') return;
     sound.init();
+    try { window.focus(); } catch {}
     if (document.pointerLockElement !== canvas) {
       tryLockPointer();
     }
     if (e.button === 0) {
       mouse.leftDown = true;
       mouse.draggingLook = true;
-      mouse.lastX = e.clientX;
-      mouse.lastY = e.clientY;
     } else if (e.button === 2) {
       mouse.rightDown = true;
     }
@@ -682,9 +688,14 @@ async function bootGame() {
     if (document.pointerLockElement === canvas) {
       dx = e.movementX || 0;
       dy = e.movementY || 0;
-    } else if (mouse.draggingLook) {
-      dx = (e.movementX !== undefined ? e.movementX : e.clientX - mouse.lastX);
-      dy = (e.movementY !== undefined ? e.movementY : e.clientY - mouse.lastY);
+    } else {
+      const rect = canvas.getBoundingClientRect();
+      mouse.normX = clamp((e.clientX - rect.left) / Math.max(1, rect.width), 0, 1);
+      mouse.inside = true;
+      if (mouse.lastX !== null) {
+        dx = (e.clientX - mouse.lastX) * 1.45;
+        dy = (e.clientY - mouse.lastY) * 1.35;
+      }
       mouse.lastX = e.clientX;
       mouse.lastY = e.clientY;
     }
@@ -861,12 +872,16 @@ async function bootGame() {
     weapon.weaponRoot.visible = player.alive;
     game.missionTime += dt;
 
-    // Keyboard Arrow-Key Look support (great accessibility & fallback!)
+    // Keyboard Arrow-Key Look + Iframe Screen-Edge Auto-Turn support
     const arrowLookSpd = 1.9 * dt;
     if (keys['ArrowLeft']) player.yaw += arrowLookSpd;
     if (keys['ArrowRight']) player.yaw -= arrowLookSpd;
     if (keys['ArrowUp']) player.pitch = clamp(player.pitch + arrowLookSpd * 0.8, -1.42, 1.42);
     if (keys['ArrowDown']) player.pitch = clamp(player.pitch - arrowLookSpd * 0.8, -1.42, 1.42);
+    if (document.pointerLockElement !== canvas && mouse.inside && !touchState.enabled) {
+      if (mouse.normX < 0.11) player.yaw += ((0.11 - mouse.normX) / 0.11) * 2.1 * dt;
+      else if (mouse.normX > 0.89) player.yaw -= ((mouse.normX - 0.89) / 0.11) * 2.1 * dt;
+    }
 
     // Movement Input Vector
     let moveFwd = (keys['KeyW'] ? 1 : 0) - (keys['KeyS'] ? 1 : 0) - touchState.moveY;
@@ -877,7 +892,7 @@ async function bootGame() {
       moveRight /= inputLen;
     }
 
-    const adsHeld = mouse.rightDown || touchState.ads;
+    const adsHeld = mouse.rightDown || player.adsToggle || touchState.ads;
     player.crouching = !!(keys['KeyC'] || keys['ControlLeft']);
     const sprinting = !!(keys['ShiftLeft'] || keys['ShiftRight']) && moveFwd > 0.2 && !adsHeld && !player.crouching && !player.sliding;
 
