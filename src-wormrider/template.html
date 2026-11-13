@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>沙丘巨虫 SHAI-RIDER: SPICE CONVOY — 零外部素材 3D 巨虫驾驭网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 Worm Rider 的零外部素材浏览器 3D 巨物驾驭动作游戏：双日落日大漠、实时热浪海市蜃楼、26 节百米沙虫潜沙鲸跃与低音铜管战鼓实时合成。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="wormrider-app" class="__APP_CLASS__">
+    <canvas id="wr-canvas" tabindex="0"></canvas>
+
+    <section id="wr-hud" aria-label="弗雷曼驭虫战术界面">
+      <div id="wr-perf">60 FPS · 热浪沙暴</div>
+
+      <div id="wr-top-center">
+        <div id="wr-compass">北 N · 000° · 深漠震频</div>
+        <div id="wr-quest-pill">
+          <span id="wr-stage-tag">沙槌召唤</span>
+          <span id="wr-stage-desc">吞噬哈肯尼香料母车 [0 / 3]</span>
+          <span class="wr-pips">
+            <i class="wr-pip"></i>
+            <i class="wr-pip"></i>
+            <i class="wr-pip"></i>
+          </span>
+        </div>
+        <div id="wr-boss-wrap">
+          <div class="boss-row">
+            <span>哈肯号指挥护卫舰 · HARKON FRIGATE</span>
+            <span id="wr-boss-pct">100%</span>
+          </div>
+          <div class="boss-bar-bg"><div id="wr-boss-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="wr-quick-bar">
+        <button id="btn-haze" class="wr-mini-btn" type="button">热浪 [H]</button>
+        <button id="btn-cam" class="wr-mini-btn" type="button">视角 [C]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="wr-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="wr-mini-btn" type="button">暂停 [P]</button>
+      </div>
+
+      <div id="wr-toast-feed"></div>
+      <div id="wr-waypoints"></div>
+
+      <div id="wr-hook-prompt">按 [空格 / 左键] 射出双造物主钩爪登虫！</div>
+
+      <div id="wr-banner">
+        <div id="wr-banner-title"></div>
+        <div id="wr-banner-sub"></div>
+      </div>
+
+      <div id="wr-worm-card">
+        <div class="worm-card-top">
+          <span id="wr-speed-val">0</span>
+          <span class="worm-unit">KM/H · 造物主震速</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">潜沙蓄力</span>
+          <div class="meter-track"><div id="wr-dive-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">香料狂暴</span>
+          <div class="meter-track"><div id="wr-spice-fill"></div></div>
+        </div>
+        <div class="armor-row">
+          <span>钩爪护甲</span>
+          <span id="wr-armor-pips" class="armor-pips">
+            <i class="armor-pip"></i>
+            <i class="armor-pip"></i>
+            <i class="armor-pip"></i>
+            <i class="armor-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="wr-controls-tip">A/D 转向 · 按住空格潜沙 · 松开破沙鲸跃 · Shift 冲刺</div>
+
+      <div id="wr-score-card">
+        <span id="wr-score-val">0</span>
+        <span id="wr-state-val">沙海待命</span>
+      </div>
+    </section>
+
+    <div id="wr-touch">
+      <div id="wr-t-pad"><div id="wr-t-knob"></div></div>
+      <div class="wr-t-actions">
+        <button id="wr-tb-dive" class="wr-t-btn amber" type="button">按住潜沙 / 松开鲸跃</button>
+        <button id="wr-tb-boost" class="wr-t-btn" type="button">香料冲刺</button>
+      </div>
+    </div>
+
+    <main id="wr-overlay">
+      <div class="wr-placard">
+        <header>
+          <div id="wr-kicker" class="wr-kicker">ARRAKIS DEEP ERG, 10191 AG // 零外部素材 WebGL2 巨虫驾驭动作</div>
+          <h1 id="wr-title">沙丘巨虫 · SHAI-RIDER</h1>
+          <p id="wr-desc" class="wr-desc">
+            双日西沉的厄拉科斯深漠，在沙脊敲响弗雷曼沙槌召唤 26 节百米沙虫「夏胡鲁」！甩出造物主双钩撬鳞登虫，按住空格潜入流沙蓄力，在哈肯尼香料母车正下方破沙鲸跃一口吞噬，并腾空扑碎帝国扑翼机与轨道指挥舰。
+          </p>
+        </header>
+
+        <section id="wr-debrief" aria-label="深漠战役结算">
+          <div class="wr-db-cell"><span>狩猎耗时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="wr-db-cell"><span>吞噬母车</span><strong id="st-harv">0 / 3</strong></div>
+          <div class="wr-db-cell"><span>击落扑翼机</span><strong id="st-orni">0</strong></div>
+          <div class="wr-db-cell"><span>香料总分</span><strong id="st-score">0</strong></div>
+          <div class="wr-db-cell amber"><span>传奇评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="wr-actions">
+          <button id="wr-btn-start" class="wr-btn-primary" type="button">敲击沙槌 · 召唤巨虫</button>
+          <button id="wr-btn-quickride" class="wr-btn-secondary" type="button">直接驭虫狂飙</button>
+          <button id="wr-btn-freeride" class="wr-btn-secondary" type="button" style="display:none">继续无尽大漠巡猎</button>
+          <button id="wr-btn-restart" class="wr-btn-secondary" type="button" style="display:none">重新召唤沙虫</button>
+          <button id="wr-btn-studio" class="wr-btn-secondary" type="button">沙丘震音合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="wr-studio" aria-label="纯代码沙丘震音合成台">
+          <div class="wr-studio-head">
+            <span>DESERT CINEMA WEB AUDIO · 零采样低音铜管与中东战鼓合成</span>
+            <span>D-HIJAZ MAQSUM</span>
+          </div>
+          <canvas id="wr-scope" width="560" height="54"></canvas>
+          <div class="wr-studio-btns">
+            <button class="wr-sfx-trigger" data-s="braaam" type="button">Braaam 巨物低音铜管</button>
+            <button class="wr-sfx-trigger" data-s="thumper" type="button">弗雷曼机械沙槌</button>
+            <button class="wr-sfx-trigger" data-s="hook" type="button">造物主双钩咬合</button>
+            <button class="wr-sfx-trigger" data-s="breach" type="button">百米沙虫破沙咆哮</button>
+            <button class="wr-sfx-trigger" data-s="crunch" type="button">吞噬母车装甲碎裂</button>
+            <button class="wr-sfx-trigger" data-s="duduk" type="button">希贾兹沙漠杜杜克管</button>
+          </div>
+        </section>
+
+        <div class="wr-settings">
+          <div class="wr-set-group">
+            <span>热浪蜃景</span>
+            <button class="wr-pill haze-pill" data-h="0" type="button">清冽</button>
+            <button class="wr-pill haze-pill active" data-h="1" type="button">炽热</button>
+            <button class="wr-pill haze-pill" data-h="2" type="button">熔金烈日</button>
+          </div>
+          <div class="wr-set-group">
+            <span>画质</span>
+            <button class="wr-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="wr-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="wr-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="wr-set-group">
+            <label for="wr-vol">震音音量</label>
+            <input id="wr-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="wr-keys-grid">
+          <div><span>勒钩转向 / 驭虫微调</span><span><kbd>A D</kbd> / 方向键</span></div>
+          <div><span>潜入流沙蓄力（躲激光）</span><span>按住 <kbd>Space</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>破沙鲸跃（秒吞母车/扑翼机）</span><span>松开 <kbd>Space</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>香料狂暴加速</span><span><kbd>Shift</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>切换热浪 / 巨物机位</span><span><kbd>H</kbd> / <kbd>C</kbd></span></div>
+          <div><span>环顾沙海 / 暂停菜单</span><span>移动鼠标 / <kbd>P</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>
