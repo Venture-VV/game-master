@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>星月夜骑士 STARRY NIGHTRIDER — 梵高厚涂油画风 3D 骑乘冒险网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 榜首 Starry Nightrider 与 Oil Paint 的零外部素材 3D 网页游戏：实时各向异性厚涂油画笔触着色器、普罗旺斯星月夜山谷与纯代码原声弦乐合成。" />
+  <style>*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:0;background:transparent;color:#f5edd8;font-family:Optima,Georgia,Songti SC,STSong,"Noto Serif SC",PingFang SC,serif;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none}body.standalone-body{background:#060f23;overflow:hidden}#nightrider-app{--prussian: rgba(8, 19, 42, .84);--prussian-deep: rgba(5, 13, 30, .92);--linen: #f5edd8;--linen-muted: rgba(245, 237, 216, .72);--hairline: rgba(245, 237, 216, .22);--hairline-strong: rgba(245, 237, 216, .42);--cadmium: #f4c534;--ochre: #e59628;--cerulean: #5ca8e6;position:relative;width:100%;height:446px;overflow:hidden;background:#060f23;border-radius:8px;border:1px solid var(--hairline);font-variant-numeric:tabular-nums;touch-action:none;transition:height .22s ease}#nightrider-app.tall{height:720px}#nightrider-app.standalone{height:100vh;border-radius:0;border:0}#nightrider-app:fullscreen,#nightrider-app:-webkit-full-screen{width:100%;height:100%;border-radius:0;border:0}#nr-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;outline:none}#nr-canvas:active{cursor:grabbing}#nr-hud{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0;transition:opacity .35s ease}#nr-hud.active{opacity:1}#nr-perf{position:absolute;top:12px;left:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.6px;color:var(--linen-muted);background:#060f229e;padding:4px 8px;border:1px solid var(--hairline)}#nr-top-center{position:absolute;top:10px;left:43%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;width:min(320px,42%)}#nr-compass{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1.5px;color:var(--cadmium);background:var(--prussian);padding:3px 12px;border:1px solid var(--hairline)}#nr-quest-pill{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--prussian);border:1px solid var(--hairline);backdrop-filter:blur(8px);font-size:12px;white-space:nowrap}#nr-stage-tag{color:var(--cadmium);font-weight:700;letter-spacing:1px}.nr-pips{display:inline-flex;gap:5px}.nr-star-pip{width:8px;height:8px;transform:rotate(45deg);border:1px solid var(--cadmium);background:transparent;transition:background .25s ease,transform .25s ease}.nr-star-pip.lit{background:var(--cadmium);transform:rotate(45deg) scale(1.18)}#nr-quick-bar{position:absolute;top:10px;right:14px;display:flex;gap:6px;pointer-events:auto}.nr-mini-btn{padding:4px 9px;background:var(--prussian);color:var(--linen);border:1px solid var(--hairline);font-size:12px;font-family:system-ui,-apple-system,PingFang SC,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:background .16s ease,border-color .16s ease}.nr-mini-btn:hover{background:#f4c5342e;border-color:var(--hairline-strong)}#nr-waypoints{position:absolute;inset:0;pointer-events:none;overflow:hidden}.nr-wp{position:absolute;top:0;left:0;display:none;align-items:center;gap:5px;padding:2px 8px;background:#071126c7;border:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;color:var(--linen);white-space:nowrap}.wp-diamond{width:7px;height:7px;transform:rotate(45deg);background:var(--cerulean);display:inline-block}.wp-diamond.gold{background:var(--cadmium)}#nr-banner{position:absolute;top:23%;left:50%;transform:translate(-50%,-8px);text-align:center;opacity:0;transition:opacity .35s ease,transform .35s ease;background:#060f22c2;padding:10px 22px;border-top:1px solid var(--hairline-strong);border-bottom:1px solid var(--hairline-strong)}#nr-banner.show{opacity:1;transform:translate(-50%)}#nr-banner-title{font-size:22px;letter-spacing:3px;color:var(--cadmium);font-weight:700}#nr-banner-sub{font-size:12px;letter-spacing:1.5px;color:var(--linen);margin-top:3px;font-family:system-ui,-apple-system,PingFang SC,sans-serif}#nr-toast-feed{position:absolute;top:78px;left:14px;display:flex;flex-direction:column;gap:5px;max-width:248px}.nr-toast{padding:5px 10px;background:var(--prussian);border-left:2px solid var(--cadmium);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;line-height:1.4;color:var(--linen)}#nr-energy-card{position:absolute;left:14px;bottom:14px;min-width:186px;padding:8px 12px;background:var(--prussian);border:1px solid var(--hairline);backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:5px}.card-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.card-lbl{font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;letter-spacing:1px;color:var(--linen-muted)}#nr-speed-val{font-size:26px;font-weight:700;color:var(--linen);line-height:1}.energy-track{width:100%;height:5px;background:#f5edd829}#nr-energy-fill{height:100%;width:100%;background:var(--cadmium);transition:width .14s ease}#nr-score-card{position:absolute;right:14px;bottom:14px;min-width:154px;padding:8px 12px;background:var(--prussian);border:1px solid var(--hairline);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:flex-end;gap:4px}#nr-score-val{font-size:28px;font-weight:700;color:var(--cadmium);line-height:1}#nr-combo-val{font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;letter-spacing:1px;color:var(--linen-muted)}#nr-controls-tip{position:absolute;bottom:14px;left:53%;transform:translate(-50%);padding:4px 10px;background:#071126c2;border:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;color:var(--linen-muted);white-space:nowrap}#nr-overlay{position:absolute;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;padding:12px;background:radial-gradient(circle at 52% 42%,#07122a5c,#040a18db);transition:opacity .32s ease}#nr-overlay.hide{opacity:0;pointer-events:none}.nr-placard{width:min(760px,96%);max-height:95%;overflow-y:auto;background:var(--prussian-deep);border:1px solid var(--hairline-strong);backdrop-filter:blur(14px);padding:14px 20px;display:flex;flex-direction:column;gap:10px}.nr-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:2px;color:var(--cadmium)}.nr-placard h1{font-size:clamp(22px,3.4vw,32px);letter-spacing:3px;line-height:1.12;color:var(--linen)}.nr-desc{font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:13px;line-height:1.5;color:var(--linen-muted);max-width:68ch}#nr-debrief{display:none;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px 10px;background:#f5edd80d;border:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif}#nr-debrief.show{display:grid}.db-cell{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--linen-muted)}.db-cell strong{font-size:18px;color:var(--linen)}.db-cell.gold strong{color:var(--cadmium)}.nr-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.nr-btn-primary{padding:8px 20px;background:var(--cadmium);color:#08132a;border:1px solid var(--cadmium);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:transform .14s ease,background .14s ease}.nr-btn-primary:hover{background:#ffd659;transform:translateY(-1px)}.nr-btn-secondary{padding:8px 13px;background:#f5edd812;color:var(--linen);border:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:13px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:background .15s ease,border-color .15s ease}.nr-btn-secondary:hover{background:#f5edd826;border-color:var(--hairline-strong)}#nr-studio{display:none;flex-direction:column;gap:7px;padding:9px 12px;background:#040a18d9;border:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif}#nr-studio.open{display:flex}.studio-head{display:flex;justify-content:space-between;font-size:12px;color:var(--cadmium)}#nr-scope{width:100%;height:54px;background:#071126;border:1px solid var(--hairline)}.studio-btns{display:flex;flex-wrap:wrap;gap:6px}.studio-trigger{padding:4px 9px;background:#f5edd814;color:var(--linen);border:1px solid var(--hairline);font-size:12px;cursor:pointer}.studio-trigger:hover{border-color:var(--cadmium);color:var(--cadmium)}.nr-settings{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:6px;border-top:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;color:var(--linen-muted)}.set-item{display:flex;align-items:center;gap:5px}.brush-pill,.nr-q-pill{padding:3px 8px;background:transparent;color:var(--linen-muted);border:1px solid var(--hairline);font-size:12px;cursor:pointer}.brush-pill.active,.nr-q-pill.active{background:#f4c53438;color:var(--cadmium);border-color:var(--cadmium)}#nr-vol{width:78px;accent-color:var(--cadmium)}.nr-keys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px 12px;padding-top:6px;border-top:1px solid var(--hairline);font-family:system-ui,-apple-system,PingFang SC,sans-serif;font-size:12px;color:var(--linen-muted)}.nr-keys-grid div{display:flex;justify-content:space-between;gap:6px}.nr-keys-grid kbd{color:var(--cadmium);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}#nr-touch{position:absolute;inset:0;z-index:8;display:none;pointer-events:none}#nr-touch.show{display:block}#nr-t-pad{position:absolute;left:18px;bottom:78px;width:108px;height:108px;border-radius:50%;border:1px solid var(--hairline-strong);background:#08132a73;pointer-events:auto;display:flex;align-items:center;justify-content:center}#nr-t-knob{width:38px;height:38px;border-radius:50%;background:#f4c534ad}.nr-t-actions{position:absolute;right:18px;bottom:84px;display:flex;gap:10px;pointer-events:auto}.nr-t-btn{width:58px;height:58px;border-radius:50%;background:var(--prussian);color:var(--linen);border:1px solid var(--hairline-strong);font-size:12px}.nr-t-btn.gold{border-color:var(--cadmium);color:var(--cadmium)}@media(max-width:720px){#nr-controls-tip{display:none}.nr-keys-grid{grid-template-columns:1fr 1fr}#nr-debrief{grid-template-columns:repeat(3,1fr)}}</style>
+</head>
+<body class="standalone-body">
+  <div id="nightrider-app" class="standalone">
+    <canvas id="nr-canvas" tabindex="0"></canvas>
+
+    <section id="nr-hud" aria-label="油画骑乘抬头界面">
+      <div id="nr-perf">60 FPS · 厚涂名画</div>
+
+      <div id="nr-top-center">
+        <div id="nr-compass">北 N · 000°</div>
+        <div id="nr-quest-pill">
+          <span id="nr-stage-tag">星穹复苏</span>
+          <span id="nr-stage-desc">点亮圣雷米星象画架 [0 / 5]</span>
+          <span class="nr-pips">
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+            <i class="nr-star-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="nr-quick-bar">
+        <button id="btn-brush" class="nr-mini-btn" type="button">笔触 [B]</button>
+        <button id="btn-cam" class="nr-mini-btn" type="button">视角 [C]</button>
+        <a href="./saltline.html" class="nr-mini-btn">⇄ 断潮行动</a><a href="./index.html" class="nr-mini-btn">⌂ 大厅</a>
+        <button id="btn-fs" class="nr-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="nr-mini-btn" type="button">暂歇 [P]</button>
+      </div>
+
+      <div id="nr-toast-feed"></div>
+      <div id="nr-waypoints"></div>
+
+      <div id="nr-banner">
+        <div id="nr-banner-title"></div>
+        <div id="nr-banner-sub"></div>
+      </div>
+
+      <div id="nr-energy-card">
+        <div class="card-row">
+          <span id="nr-speed-val">0</span>
+          <span class="card-lbl">KM/H · 星辉画笔能量</span>
+        </div>
+        <div class="energy-track"><div id="nr-energy-fill"></div></div>
+      </div>
+
+      <div id="nr-controls-tip">WASD/方向键驰骋 · Shift/左键星流冲刺 · 空格腾跃</div>
+
+      <div id="nr-score-card">
+        <span id="nr-score-val">0</span>
+        <span id="nr-combo-val">星彩写生</span>
+      </div>
+    </section>
+
+    <div id="nr-touch">
+      <div id="nr-t-pad"><div id="nr-t-knob"></div></div>
+      <div class="nr-t-actions">
+        <button id="nr-tb-dash" class="nr-t-btn gold" type="button">冲刺</button>
+        <button id="nr-tb-jump" class="nr-t-btn" type="button">腾跃</button>
+      </div>
+    </div>
+
+    <main id="nr-overlay">
+      <div class="nr-placard">
+        <header>
+          <div id="nr-kicker" class="nr-kicker">SAINT-RÉMY, JUNE 1889 // 零外部素材 WebGL2 厚涂油画冒险</div>
+          <h1 id="nr-title">星月夜骑士 · STARRY NIGHTRIDER</h1>
+          <p id="nr-desc" class="nr-desc">
+            化身草帽画家文森特，策马驰骋在流动的 1889《星月夜》山谷之中。穿越随风起伏的金色麦田、火焰柏树林与星光石桥，收集星芒颜料、挥毫冲碎夜魇墨涡，点亮圣雷米夜空的五座璀璨星宫。
+          </p>
+        </header>
+
+        <section id="nr-debrief" aria-label="画作完成结算">
+          <div class="db-cell"><span>写生用时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="db-cell"><span>采集星芒</span><strong id="st-seeds">0</strong></div>
+          <div class="db-cell"><span>净除墨涡</span><strong id="st-purified">0</strong></div>
+          <div class="db-cell"><span>画作总分</span><strong id="st-score">0</strong></div>
+          <div class="db-cell gold"><span>馆藏评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="nr-actions">
+          <button id="nr-btn-start" class="nr-btn-primary" type="button">策马入画</button>
+          <button id="nr-btn-freeride" class="nr-btn-secondary" type="button" style="display:none">留驻画中漫游</button>
+          <button id="nr-btn-restart" class="nr-btn-secondary" type="button" style="display:none">重绘星夜</button>
+          <button id="nr-btn-studio" class="nr-btn-secondary" type="button">夜曲原声琴房</button>
+          <a href="./saltline.html" class="nr-btn-secondary">⇄ 切换《断潮行动》</a><a href="./index.html" class="nr-btn-secondary">⌂ 双作大厅</a>
+        </div>
+
+        <section id="nr-studio" aria-label="纯代码夜曲原声琴房">
+          <div class="studio-head">
+            <span>ACOUSTIC NOCTURNE SYNTH · 零采样古典弦乐与马蹄拟音</span>
+            <span>D-LYDIAN HARMONY</span>
+          </div>
+          <canvas id="nr-scope" width="560" height="64"></canvas>
+          <div class="studio-btns">
+            <button class="studio-trigger" data-s="guitar" type="button">古典木吉他拨弦</button>
+            <button class="studio-trigger" data-s="cello" type="button">独奏大提琴揉弦</button>
+            <button class="studio-trigger" data-s="harp" type="button">星宫竖琴刮奏</button>
+            <button class="studio-trigger" data-s="chime" type="button">钢片琴星芒泛音</button>
+            <button class="studio-trigger" data-s="dash" type="button">油画宽笔挥扫</button>
+            <button class="studio-trigger" data-s="hoof-bridge" type="button">石桥马蹄声</button>
+            <button class="studio-trigger" data-s="hoof-water" type="button">星河踏水声</button>
+          </div>
+        </section>
+
+        <div class="nr-settings">
+          <div class="set-item">
+            <span>油画笔触</span>
+            <button class="brush-pill" data-b="0" type="button">清透原画</button>
+            <button class="brush-pill active" data-b="1" type="button">厚涂名画</button>
+            <button class="brush-pill" data-b="2" type="button">狂野梵高</button>
+          </div>
+          <div class="set-item">
+            <span>画质</span>
+            <button class="nr-q-pill" data-q="low" type="button">流畅</button>
+            <button class="nr-q-pill" data-q="med" type="button">均衡</button>
+            <button class="nr-q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="set-item">
+            <label for="nr-vol">夜曲音量</label>
+            <input id="nr-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="nr-keys-grid">
+          <div><span>策马加速 / 勒缰转向</span><span><kbd>W A S D</kbd> / 方向键</span></div>
+          <div><span>星流画笔冲刺（破除墨涡）</span><span><kbd>Shift</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>骏马腾跃（穿越高空星环）</span><span><kbd>Space</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>实时油画笔触滤镜切换</span><span><kbd>B</kbd></span></div>
+          <div><span>追尾 / 仰望星穹视角</span><span><kbd>C</kbd></span></div>
+          <div><span>环顾四周 / 暂歇菜单</span><span>移动鼠标 / <kbd>P</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">var Q=(e,n,t)=>e<n?n:e>t?t:e,q=(e,n,t)=>e+(n-e)*t,gt=(e,n,t,i)=>q(e,n,1-Math.exp(-t*i)),St=(e,n,t)=>{let i=Q((t-e)/(n-e),0,1);return i*i*(3-2*i)};function re(e){for(;e>Math.PI;)e-=Math.PI*2;for(;e<-Math.PI;)e+=Math.PI*2;return e}function Qt(e){let n=e>>>0;return function(){n|=0,n=n+1831565813|0;let t=Math.imul(n^n>>>15,1|n);return t=t+Math.imul(t^t>>>7,61|t)^t,((t^t>>>14)>>>0)/4294967296}}function Ht(e,n){let t=Math.sin(e*127.1+n*311.7)*43758.5453123;return t-Math.floor(t)}function ke(e,n){let t=Math.floor(e),i=Math.floor(n),s=e-t,r=n-i,d=s*s*(3-2*s),c=r*r*(3-2*r),u=Ht(t,i),p=Ht(t+1,i),w=Ht(t,i+1),V=Ht(t+1,i+1);return q(q(u,p,d),q(w,V,d),c)}function se(e,n){let t=0,i=.5,s=e,r=n;for(let d=0;d<4;d++){t+=i*ke(s,r);let c=s*1.62+r*1.18,u=-s*1.18+r*1.62;s=c,r=u,i*=.5}return t}var kt=-.42,Ot=[-34,32];function vt(e){return 15*Math.sin(e*.031)+4}function qt(e,n){let t=Math.hypot((e-30)*.85,(n+24)*1.05),i=Math.hypot((e+40)*.9,(n-34)*.95),s=1-St(14,25,t),r=1-St(13,24,i),d=Math.abs(n-vt(e)),c=St(7.5,11.5,d);return Q(Math.max(s,r)*c,0,1)}function Yt(e,n){let t=Math.abs(e-(-34+(n+18)*.42)),i=Math.abs(e-(32-(n+10)*.42)),s=Math.hypot(e*.92,(n+8)*1.05),r=Math.abs(s-44),d=Math.min(t,i,r);return 1-St(2.2,4.8,d)}function yt(e,n){let t=Math.sin(e*.038)*Math.cos(n*.036)*2.35+Math.sin(e*.075+n*.055)*.85+(se(e*.045+11.3,n*.045-7.1)-.5)*3.2,i=Math.hypot(e+22,n+32),s=1-St(10,22,i);t=q(t,.85,s*.78);let r=Math.hypot(e*.82,n+76);t+=7.8*Math.exp(-(r*r)/676);let d=Math.hypot(e-48,n-34);t+=5.1*Math.exp(-(d*d)/529);let c=Math.hypot(e+48,n-24);t+=4.6*Math.exp(-(c*c)/484);let u=vt(e),p=Math.abs(n-u);if(p<11){let V=St(3.2,11,p);t=q(-1.22,t,V)}let w=Math.hypot(e,n+6);if(w>90){let V=St(90,124,w),L=.65+.7*se(e*.09+3.1,n*.09+8.4);t+=V*V*24*L}return t}function bt(e,n){let t=yt(e,n),i=t,s="meadow",r=vt(e);for(let c=0;c<Ot.length;c++){let u=Ot[c],p=Math.abs(e-u),w=n-r;if(p<3.85&&Math.abs(w)<9.6){let L=.65+Math.cos(w/9.6*(Math.PI*.5))*1.45;L>i&&(i=L,s="bridge")}}let d=s==="bridge"?0:Math.max(0,kt-i);return d>.06?s="water":s!=="bridge"&&(qt(e,n)>.45?s="wheat":Yt(e,n)>.45&&(s="path")),{y:i,groundY:t,waterDepth:d,surf:s}}function ie(e,n){let i=yt(e-.65,n),s=yt(e+.65,n),r=yt(e,n-.65),d=yt(e,n+.65),c=i-s,u=2*.65,p=r-d,w=1/Math.hypot(c,u,p);return[c*w,u*w,p*w]}var _={create(){let e=new Float32Array(16);return e[0]=e[5]=e[10]=e[15]=1,e},perspective(e,n,t,i,s){let r=1/Math.tan(n*.5);return e.fill(0),e[0]=r/t,e[5]=r,e[10]=(s+i)/(i-s),e[11]=-1,e[14]=2*s*i/(i-s),e},lookAt(e,n,t,i,s,r,d,c=0,u=1,p=0){let w=n-s,V=t-r,L=i-d,g=Math.hypot(w,V,L)||1;w/=g,V/=g,L/=g;let x=u*L-p*V,k=p*w-c*L,R=c*V-u*w;g=Math.hypot(x,k,R)||1,x/=g,k/=g,R/=g;let K=V*R-L*k,j=L*x-w*R,F=w*k-V*x;return e[0]=x,e[1]=K,e[2]=w,e[3]=0,e[4]=k,e[5]=j,e[6]=V,e[7]=0,e[8]=R,e[9]=F,e[10]=L,e[11]=0,e[12]=-(x*n+k*t+R*i),e[13]=-(K*n+j*t+F*i),e[14]=-(w*n+V*t+L*i),e[15]=1,e},mul(e,n,t){let i=n[0],s=n[1],r=n[2],d=n[3],c=n[4],u=n[5],p=n[6],w=n[7],V=n[8],L=n[9],g=n[10],x=n[11],k=n[12],R=n[13],K=n[14],j=n[15];for(let F=0;F<4;F++){let G=t[F*4],h=t[F*4+1],A=t[F*4+2],b=t[F*4+3];e[F*4]=G*i+h*c+A*V+b*k,e[F*4+1]=G*s+h*u+A*L+b*R,e[F*4+2]=G*r+h*p+A*g+b*K,e[F*4+3]=G*d+h*w+A*x+b*j}return e},trs(e,n,t,i,s,r,d,c,u,p){let w=Math.cos(s),V=Math.sin(s),L=Math.cos(r),g=Math.sin(r),x=Math.cos(d),k=Math.sin(d);return e[0]=(L*x+g*V*k)*c,e[1]=w*k*c,e[2]=(-g*x+L*V*k)*c,e[3]=0,e[4]=(-L*k+g*V*x)*u,e[5]=w*x*u,e[6]=(g*k+L*V*x)*u,e[7]=0,e[8]=g*w*p,e[9]=-V*p,e[10]=L*w*p,e[11]=0,e[12]=n,e[13]=t,e[14]=i,e[15]=1,e},projectToScreen(e,n,t,i,s,r){let d=e[0]*n+e[4]*t+e[8]*i+e[12],c=e[1]*n+e[5]*t+e[9]*i+e[13],u=e[3]*n+e[7]*t+e[11]*i+e[15];if(u<=.05)return null;let p=d/u,w=c/u;return{x:(p*.5+.5)*s,y:(.5-w*.5)*r,inFront:!0}}};var ce=`#version 300 es
+precision highp float;
+layout(location = 0) in vec3 aPos;
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uCamPos;
+out vec3 vDir;
+void main() {
+  vDir = aPos;
+  vec4 wp = vec4(uCamPos + aPos * 520.0, 1.0);
+  gl_Position = uProj * uView * wp;
+}`,le=`#version 300 es
+precision highp float;
+in vec3 vDir;
+uniform float uTime;
+uniform float uConstLit[5];
+out vec4 fragColor;
+
+float hash21(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float vnoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
+    u.y
+  );
+}
+
+float fbm(vec2 p) {
+  float s = 0.0;
+  float a = 0.5;
+  mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+  for (int i = 0; i < 4; i++) {
+    s += a * vnoise(p);
+    p = m * p;
+    a *= 0.5;
+  }
+  return s;
+}
+
+void main() {
+  vec3 d = normalize(vDir);
+  float el = clamp(d.y, -0.15, 1.0);
+  float az = atan(d.x, -d.z); // 0 when looking North (-Z)
+
+  // Base nocturnal sky gradient (Prussian -> Ultramarine -> Horizon Cerulean)
+  vec3 deepPrussian = vec3(0.035, 0.085, 0.225);
+  vec3 ultramarine  = vec3(0.085, 0.215, 0.485);
+  vec3 cerulean     = vec3(0.195, 0.435, 0.685);
+  vec3 viridianMist = vec3(0.145, 0.385, 0.475);
+
+  vec3 sky = mix(ultramarine, deepPrussian, smoothstep(0.08, 0.78, el));
+  sky = mix(viridianMist, sky, smoothstep(-0.02, 0.20, el));
+
+  // Van Gogh's Great Central S-Wave Nebula & Twin Curl Vortices
+  vec2 uv = vec2(az * 2.1, el * 3.4);
+  float drift = uTime * 0.055;
+
+  // Vortex centers in (az, el) space
+  vec2 v1 = uv - vec2(-0.42 + sin(uTime * 0.08) * 0.05, 1.12);
+  vec2 v2 = uv - vec2(0.32 - cos(uTime * 0.07) * 0.04, 0.92);
+  float r1 = length(v1);
+  float r2 = length(v2);
+  float swirlAngle1 = 3.4 * exp(-r1 * 1.45);
+  float swirlAngle2 = -2.9 * exp(-r2 * 1.55);
+
+  vec2 wuv = uv;
+  wuv += vec2(-v1.y, v1.x) * swirlAngle1 * 0.55;
+  wuv += vec2(-v2.y, v2.x) * swirlAngle2 * 0.52;
+  wuv.x += sin(wuv.y * 3.2 - drift * 2.0) * 0.35;
+
+  float flowA = fbm(wuv * 1.85 + vec2(drift, -drift * 0.4));
+  float flowB = fbm(wuv * 3.4 - vec2(drift * 1.3, drift * 0.5));
+
+  // Quantize into segmented Van Gogh directional impasto daubs!
+  vec2 strokeGrid = wuv * vec2(13.0, 22.0);
+  vec2 cellId = floor(strokeGrid);
+  vec2 cellUv = fract(strokeGrid) - 0.5;
+  float jitter = hash21(cellId);
+
+  // Brushstroke capsule mask & bristle grooves
+  float cap = 1.0 - smoothstep(0.28, 0.49, max(abs(cellUv.x) * 0.85, abs(cellUv.y) * 1.12));
+  float bristles = sin((cellUv.y + jitter) * 34.0) * 0.5 + 0.5;
+  float ridgeHighlight = smoothstep(0.55, 0.95, bristles) * cap;
+
+  float swirlBand = smoothstep(0.42, 0.74, flowA) * smoothstep(0.03, 0.22, el) * (1.0 - smoothstep(0.62, 0.92, el));
+  vec3 milkySwirl = mix(cerulean, vec3(0.62, 0.80, 0.93), smoothstep(0.52, 0.82, flowB));
+  sky = mix(sky, milkySwirl, swirlBand * (0.55 + 0.35 * cap));
+
+  // Add individual cobalt/turquoise brushstroke color variation & impasto ridge catchlight
+  vec3 strokeTint = mix(vec3(0.06, 0.16, 0.39), vec3(0.26, 0.54, 0.78), jitter);
+  sky = mix(sky, strokeTint, cap * 0.24 * smoothstep(0.0, 0.25, el));
+  sky += vec3(0.11, 0.19, 0.30) * ridgeHighlight * 0.38;
+
+  // Blazing Crescent Moon (Upper North-East over Moonrise Summit)
+  vec3 moonDir = normalize(vec3(0.44, 0.45, -0.777));
+  float mAng = acos(clamp(dot(d, moonDir), -1.0, 1.0));
+  vec3 biteDir = normalize(moonDir + vec3(-0.042, 0.022, -0.01));
+  float bAng = acos(clamp(dot(d, biteDir), -1.0, 1.0));
+
+  float outerDisc = 1.0 - smoothstep(0.058, 0.064, mAng);
+  float innerCut  = 1.0 - smoothstep(0.046, 0.053, bAng);
+  float crescent  = clamp(outerDisc - innerCut * 0.92, 0.0, 1.0);
+
+  // Concentric broken impasto halo rings around the Moon
+  vec3 tAxis = normalize(cross(vec3(0.0, 1.0, 0.0), moonDir));
+  vec3 bAxis = cross(moonDir, tAxis);
+  float ringTheta = atan(dot(d, bAxis), dot(d, tAxis));
+  float ringR = mAng * 38.0;
+  float ringBand = sin(ringR * 3.14159) * 0.5 + 0.5;
+  float dash = smoothstep(0.25, 0.75, sin(ringTheta * 14.0 + floor(ringR) * 2.7 + uTime * 0.6) * 0.5 + 0.5);
+  float moonHalo = exp(-mAng * 6.2) * (0.48 + 0.52 * ringBand * dash);
+
+  vec3 saffron = vec3(0.96, 0.63, 0.16);
+  vec3 cadmium = vec3(0.99, 0.85, 0.32);
+  sky += mix(saffron, cadmium, 0.65) * moonHalo * 0.92;
+  sky = mix(sky, vec3(1.0, 0.92, 0.52), crescent);
+
+  // 9 Signature Swirling Van Gogh Halo Stars
+  const vec3 STARS[9] = vec3[9](
+    vec3(-0.55, 0.48, -0.68),
+    vec3(-0.28, 0.62, -0.73),
+    vec3( 0.06, 0.56, -0.82),
+    vec3(-0.72, 0.31, -0.62),
+    vec3( 0.68, 0.33, -0.65),
+    vec3(-0.42, 0.25,  0.87),
+    vec3( 0.35, 0.44,  0.82),
+    vec3( 0.02, 0.74,  0.67),
+    vec3( 0.76, 0.52,  0.38)
+  );
+  for (int i = 0; i < 9; i++) {
+    vec3 sd = normalize(STARS[i]);
+    float sa = acos(clamp(dot(d, sd), -1.0, 1.0));
+    if (sa < 0.22) {
+      float pulse = 0.86 + 0.14 * sin(uTime * 2.1 + float(i) * 1.7);
+      float core = 1.0 - smoothstep(0.008, 0.016, sa);
+      float rings = sin(sa * 135.0 - uTime * 1.4) * 0.5 + 0.5;
+      float halo = exp(-sa * 22.0) * (0.55 + 0.45 * rings) * pulse;
+      vec3 scol = (i == 0 || i == 4) ? vec3(0.98, 0.88, 0.48) : vec3(0.96, 0.80, 0.34);
+      sky += scol * (halo * 0.78 + core * 1.15);
+    }
+  }
+
+  // 5 Ignitable Overhead Constellations (linked to the 5 Valley Altars!)
+  const vec3 C_CENTERS[5] = vec3[5](
+    vec3(-0.52, 0.36,  0.32), // I. Cygnus Overlook
+    vec3( 0.42, 0.38, -0.35), // II. Pleiades Wheatfield
+    vec3(-0.36, 0.34, -0.18), // III. Pisces Stone Bridge
+    vec3( 0.52, 0.40,  0.42), // IV. Corona Windmill Ridge
+    vec3(-0.22, 0.42, -0.52)  // V. Ursa Belltower
+  );
+  for (int c = 0; c < 5; c++) {
+    float lit = uConstLit[c];
+    vec3 cc = normalize(C_CENTERS[c]);
+    vec3 ct = normalize(cross(vec3(0.0, 1.0, 0.0), cc));
+    vec3 cb = cross(cc, ct);
+    vec2 prevP = vec2(0.0);
+    for (int k = 0; k < 4; k++) {
+      float fk = float(k);
+      vec2 ofs = vec2(
+        sin(fk * 2.1 + float(c) * 1.3) * 0.09,
+        cos(fk * 1.7 + float(c) * 0.9) * 0.065
+      );
+      vec3 skDir = normalize(cc + ct * ofs.x + cb * ofs.y);
+      float da = acos(clamp(dot(d, skDir), -1.0, 1.0));
+      float dimGlow = exp(-da * 38.0) * 0.22;
+      float litGlow = exp(-da * 20.0) * (0.95 + 0.2 * sin(uTime * 3.5 + fk)) * lit;
+      sky += mix(vec3(0.45, 0.68, 0.95), vec3(1.0, 0.88, 0.38), lit) * (dimGlow + litGlow);
+
+      // Shimmering constellation line segment when ignited!
+      if (k > 0 && lit > 0.02) {
+        vec2 curP = vec2(dot(d - cc, ct), dot(d - cc, cb));
+        vec2 seg = ofs - prevP;
+        float tProj = clamp(dot(curP - prevP, seg) / max(0.0001, dot(seg, seg)), 0.0, 1.0);
+        float distLine = length(curP - (prevP + seg * tProj));
+        float lineMask = (1.0 - smoothstep(0.0018, 0.0055, distLine)) * step(0.0, dot(d, cc));
+        sky += vec3(1.0, 0.84, 0.36) * lineMask * lit * 0.68;
+      }
+      prevP = ofs;
+    }
+  }
+
+  // Horizon atmospheric blend into Les Alpilles mountains
+  vec3 horizonGlow = vec3(0.11, 0.24, 0.42);
+  sky = mix(horizonGlow, sky, smoothstep(-0.08, 0.08, el));
+
+  fragColor = vec4(sky, 1.0);
+}`,ue=`#version 300 es
+precision highp float;
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec2 aUV;
+layout(location = 3) in vec3 aTint;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec2 vUV;
+out vec3 vTint;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  vNormal = normalize(transpose(inverse(mat3(uModel))) * aNorm);
+  vUV = aUV;
+  vTint = aTint;
+  gl_Position = uProj * uView * wp;
+}`,he=`#version 300 es
+precision highp float;
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec2 vUV;
+in vec3 vTint;
+
+uniform int uMat;         // 1:Terrain, 2:RiverWater, 3:Cypress, 4:PaintedSolid, 6:Emissive
+uniform vec3 uColor;
+uniform vec3 uParams;     // x:roughness/glow, y:strokeScale, z:alpha
+uniform vec3 uCamPos;
+uniform vec3 uLanternPos; // Warm golden lantern carried by Vincent!
+uniform float uTime;
+uniform float uDashGlow;
+
+out vec4 fragColor;
+
+float hash21(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float vnoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
+    u.y
+  );
+}
+
+void main() {
+  vec3 V = normalize(uCamPos - vWorldPos);
+  float dist = length(uCamPos - vWorldPos);
+
+  // Emissive Star-Seeds, Cottage Windows, Constellation Beams & Golden Portal
+  if (uMat == 6) {
+    float pulse = 0.90 + 0.10 * sin(uTime * 4.0 + vWorldPos.x * 0.5 + vWorldPos.y);
+    vec3 glow = uColor * uParams.x * pulse;
+    float fogF = 1.0 - exp(-dist * 0.0045);
+    glow = mix(glow, vec3(0.08, 0.18, 0.36), fogF * 0.45);
+    fragColor = vec4(glow, uParams.z);
+    return;
+  }
+
+  vec3 N = normalize(vNormal);
+  vec3 base = uColor * vTint;
+
+  // Starlight River Water (Van Gogh's "Starry Night Over the Rh\xF4ne" golden reflection bars!)
+  if (uMat == 2) {
+    vec2 wuv = vWorldPos.xz;
+    float ripple = sin(wuv.x * 2.4 + uTime * 2.2 + sin(wuv.y * 1.7)) * 0.5 + 0.5;
+    float ripple2 = vnoise(vec2(wuv.x * 1.6 - uTime * 0.8, wuv.y * 4.2));
+    vec3 deepWater = vec3(0.04, 0.12, 0.29);
+    vec3 tealStroke = vec3(0.11, 0.32, 0.48);
+    vec3 col = mix(deepWater, tealStroke, smoothstep(0.35, 0.78, ripple2));
+
+    // Broken horizontal golden reflection bars of the Moon & Village lights
+    float moonTrack = exp(-pow((wuv.x - 14.0) * 0.038, 2.0)) + 0.65 * exp(-pow((wuv.x + 26.0) * 0.055, 2.0));
+    float barPattern = smoothstep(0.56, 0.86, sin(wuv.y * 5.2 + ripple * 2.4 - uTime * 1.5) * 0.5 + 0.5);
+    float strokeBreak = smoothstep(0.35, 0.72, vnoise(vec2(wuv.x * 0.9, wuv.y * 3.5)));
+    col += vec3(0.98, 0.79, 0.28) * moonTrack * barPattern * strokeBreak * 0.92;
+
+    // Lantern reflection near horse
+    float lDist = length(vWorldPos - uLanternPos);
+    col += vec3(0.98, 0.68, 0.22) * (2.2 / (1.0 + lDist * lDist * 0.12)) * (0.5 + 0.5 * barPattern);
+
+    float fresnel = pow(1.0 - max(dot(vec3(0.0, 1.0, 0.0), V), 0.0), 3.0);
+    col += vec3(0.18, 0.38, 0.62) * fresnel * 0.55;
+
+    float fogW = 1.0 - exp(-dist * 0.006);
+    col = mix(col, vec3(0.08, 0.19, 0.37), fogW);
+    fragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // Impasto Brushstroke Relief Coordinates
+  float sc = max(0.3, uParams.y);
+  vec2 puv;
+  if (uMat == 1) {
+    // Flowing contour brushstrokes across Proven\xE7al hills
+    float swirl = vnoise(vWorldPos.xz * 0.08);
+    puv = vWorldPos.xz * 1.35 + vec2(cos(swirl * 6.28), sin(swirl * 6.28)) * 0.9;
+  } else if (uMat == 3) {
+    // Upward flame-tongue strokes on Cypress trees
+    puv = vec2(atan(N.x, N.z) * 4.5 + sin(vWorldPos.y * 1.4 + uTime * 1.3) * 0.45, vWorldPos.y * 2.2);
+  } else {
+    puv = vUV * sc + vWorldPos.xy * 0.65 + vWorldPos.zy * 0.45;
+  }
+
+  vec2 cell = floor(puv * 3.2);
+  vec2 fuv = fract(puv * 3.2) - 0.5;
+  float cj = hash21(cell);
+
+  // Bristle ridge normal perturbation (gives real 3D oil-paint thickness!)
+  float bristle = sin((fuv.x * 0.7 + fuv.y * 1.3 + cj) * 26.0);
+  float dabEdge = smoothstep(0.32, 0.49, max(abs(fuv.x), abs(fuv.y)));
+  vec3 T = normalize(cross(abs(N.y) > 0.9 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0), N));
+  vec3 B = cross(N, T);
+  N = normalize(N + T * bristle * 0.14 - B * dabEdge * 0.18);
+
+  // Subtle pigment variation per brushstroke dab (authentic Van Gogh broken-color technique!)
+  if (uMat == 1) {
+    vec3 coolShift = base * vec3(0.84, 0.96, 1.18);
+    vec3 warmShift = base * vec3(1.16, 1.06, 0.84);
+    base = mix(coolShift, warmShift, cj);
+  } else if (uMat == 3) {
+    // Dark emerald + Prussian blue + warm bronze tips on Cypress flames
+    vec3 cypDark = vec3(0.03, 0.11, 0.12);
+    vec3 cypTeal = vec3(0.08, 0.25, 0.22);
+    vec3 cypWarm = vec3(0.22, 0.24, 0.11);
+    base = mix(cypDark, cypTeal, cj);
+    base = mix(base, cypWarm, smoothstep(0.75, 0.98, cj) * 0.45);
+  } else {
+    base *= (0.90 + 0.20 * cj);
+  }
+
+  // Lighting:
+  // 1. Blazing Crescent Moon directional light
+  vec3 Lmoon = normalize(vec3(0.44, 0.52, -0.73));
+  float ndl = max(dot(N, Lmoon), 0.0);
+  vec3 Hmoon = normalize(Lmoon + V);
+  float specMoon = pow(max(dot(N, Hmoon), 0.0), 22.0) * (1.0 - uParams.x * 0.65);
+
+  // 2. Nocturnal Sky Hemisphere Fill (Cobalt Zenith vs Deep Valley Shadow)
+  vec3 amb = mix(vec3(0.045, 0.095, 0.20), vec3(0.11, 0.22, 0.44), N.y * 0.5 + 0.5);
+
+  vec3 col = base * (amb * 0.95 + vec3(0.68, 0.76, 0.94) * ndl * 0.68);
+  col += vec3(0.95, 0.86, 0.56) * specMoon * 0.24; // Wet linseed-oil sheen on bristle ridges!
+
+  // 3. Vincent's Swinging Warm Lantern + Starlight Dash Aura
+  vec3 toLantern = uLanternPos - vWorldPos;
+  float lDist = length(toLantern);
+  vec3 Llan = toLantern / max(lDist, 0.001);
+  float lanAtten = (1.0 + uDashGlow * 1.1) / (1.0 + lDist * lDist * 0.085);
+  float lanDiff = max(dot(N, Llan), 0.0) * 0.75 + 0.25;
+  vec3 lanColor = mix(vec3(1.0, 0.72, 0.22), vec3(0.55, 0.88, 1.0), uDashGlow * 0.45);
+  col += base * lanColor * lanAtten * lanDiff * 1.55;
+
+  // Rim highlight from Moonlit Sky
+  float rim = pow(1.0 - max(dot(N, V), 0.0), 3.2) * max(0.0, N.y + 0.3);
+  col += vec3(0.18, 0.38, 0.66) * rim * 0.26;
+
+  // Painterly cobalt-prussian valley mist
+  float fogF = 1.0 - exp(-dist * 0.0055);
+  vec3 mistCol = mix(vec3(0.05, 0.13, 0.30), vec3(0.11, 0.24, 0.46), clamp(vWorldPos.y * 0.05 + 0.25, 0.0, 1.0));
+  col = mix(col, mistCol, fogF * 0.78);
+
+  fragColor = vec4(col, 1.0);
+}`,fe=`#version 300 es
+precision highp float;
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec2 aUV;
+// Per-instance attributes
+layout(location = 4) in vec4 iPosScale; // xyz: base pos, w: scale
+layout(location = 5) in vec4 iRotKind;  // x: yaw, y: tilt, z: phase, w: kind (0=wheat, 1=skySwirl, 2=particle)
+layout(location = 6) in vec4 iColor;    // rgba
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uRiderPos;
+uniform float uTime;
+
+out vec2 vUV;
+out vec4 vCol;
+
+void main() {
+  vUV = aUV;
+  vCol = iColor;
+
+  float yaw = iRotKind.x;
+  float tilt = iRotKind.y;
+  float phase = iRotKind.z;
+  float kind = iRotKind.w;
+  float sc = iPosScale.w;
+
+  vec3 lp = aPos * sc;
+
+  if (kind < 0.5) {
+    // 0: Golden Proven\xE7al Wheat Stalks \u2014 sway in wind waves & part around galloping horse!
+    float hFactor = clamp(aUV.y, 0.0, 1.0);
+    float wind = sin(uTime * 2.4 + iPosScale.x * 0.16 + iPosScale.z * 0.12 + phase) * 0.34;
+    float gust = cos(uTime * 4.1 + iPosScale.x * 0.32) * 0.10;
+
+    float cy = cos(yaw), sy = sin(yaw);
+    vec3 wp = vec3(
+      lp.x * cy - lp.z * sy,
+      lp.y,
+      lp.x * sy + lp.z * cy
+    );
+    wp.x += (wind + gust) * hFactor * hFactor * sc;
+    wp.z += wind * 0.55 * hFactor * hFactor * sc;
+
+    // Horse parting displacement
+    vec2 away = iPosScale.xz - uRiderPos.xz;
+    float dH = length(away);
+    if (dH < 3.4 && dH > 0.01) {
+      float push = (1.0 - dH / 3.4);
+      wp.xz += normalize(away) * push * push * hFactor * 1.15;
+      wp.y -= push * 0.25 * hFactor;
+    }
+
+    gl_Position = uProj * uView * vec4(iPosScale.xyz + wp, 1.0);
+  } else if (kind < 1.5) {
+    // 1: Floating Sky & Valley Swirling Oil-Paint Ribbons
+    float drift = uTime * (0.35 + 0.25 * sin(phase)) + phase;
+    float cy = cos(yaw + drift * 0.3), sy = sin(yaw + drift * 0.3);
+    float ct = cos(tilt), st = sin(tilt);
+    vec3 p = vec3(lp.x * 2.6, lp.y * 0.42, lp.z);
+    // Slight wave along stroke length
+    p.y += sin(aPos.x * 3.0 + uTime * 2.5 + phase) * 0.12 * sc;
+    vec3 rp = vec3(p.x * cy - p.z * sy, p.y * ct - p.z * st, p.x * sy + p.z * cy);
+    vec3 center = iPosScale.xyz + vec3(cos(drift) * 1.4, sin(drift * 1.3) * 0.45, sin(drift) * 1.4);
+    gl_Position = uProj * uView * vec4(center + rp, 1.0);
+  } else {
+    // 2: Dynamic Hoof / Starlight Dash / Celebration Brushstroke Daubs (billboarded to camera)
+    vec3 camRight = vec3(uView[0][0], uView[1][0], uView[2][0]);
+    vec3 camUp    = vec3(uView[0][1], uView[1][1], uView[2][1]);
+    float c = cos(yaw), s = sin(yaw);
+    vec2 rotXY = vec2(aPos.x * c - (aPos.y - 0.5) * s, aPos.x * s + (aPos.y - 0.5) * c) * sc;
+    vec3 wp = iPosScale.xyz + camRight * rotXY.x * 1.5 + camUp * rotXY.y;
+    gl_Position = uProj * uView * vec4(wp, 1.0);
+  }
+}`,de=`#version 300 es
+precision highp float;
+in vec2 vUV;
+in vec4 vCol;
+out vec4 fragColor;
+
+void main() {
+  // Painterly tapered brushstroke silhouette + bristle streaks
+  float taper = sin(clamp(vUV.y, 0.0, 1.0) * 3.14159);
+  float edge = abs(vUV.x - 0.5) * 2.0;
+  if (edge > 0.95) discard;
+  float bristle = 0.82 + 0.18 * sin(vUV.x * 28.0 + vUV.y * 6.0);
+  float alpha = vCol.a * smoothstep(1.0, 0.35, edge) * (0.35 + 0.65 * taper);
+  if (alpha < 0.03) discard;
+  fragColor = vec4(vCol.rgb * bristle, alpha);
+}`,pe=`#version 300 es
+precision highp float;
+out vec2 vUV;
+void main() {
+  vec2 pos = vec2((gl_VertexID == 1) ? 3.0 : -1.0, (gl_VertexID == 2) ? 3.0 : -1.0);
+  vUV = pos * 0.5 + 0.5;
+  gl_Position = vec4(pos, 0.0, 1.0);
+}`,me=`#version 300 es
+precision highp float;
+in vec2 vUV;
+uniform sampler2D uTex;
+uniform vec2 uRes;
+uniform int uBrushMode; // 0: Crisp 3D, 1: Impasto Masterpiece, 2: Wild Van Gogh Swirl
+uniform float uTime;
+uniform float uSpeedBlur;
+out vec4 fragColor;
+
+float luma(vec3 c) {
+  return dot(c, vec3(0.299, 0.587, 0.114));
+}
+
+void main() {
+  vec2 px = 1.0 / uRes;
+  vec3 center = texture(uTex, vUV).rgb;
+
+  vec3 painted = center;
+
+  if (uBrushMode > 0) {
+    // Compute local structure gradient to align brushstroke direction along contours!
+    float lL = luma(texture(uTex, vUV - vec2(px.x * 1.5, 0.0)).rgb);
+    float lR = luma(texture(uTex, vUV + vec2(px.x * 1.5, 0.0)).rgb);
+    float lD = luma(texture(uTex, vUV - vec2(0.0, px.y * 1.5)).rgb);
+    float lU = luma(texture(uTex, vUV + vec2(0.0, px.y * 1.5)).rgb);
+
+    vec2 grad = vec2(lR - lL, lU - lD);
+    float gLen = length(grad);
+    // Tangent along painted edges (or gentle swirl in flat areas)
+    float fallbackAng = sin(vUV.x * 9.0 + uTime * 0.25) * 0.6 + cos(vUV.y * 7.0) * 0.6;
+    vec2 dir = (gLen > 0.015) ? normalize(vec2(-grad.y, grad.x)) : vec2(cos(fallbackAng), sin(fallbackAng));
+    vec2 nrm = vec2(-dir.y, dir.x);
+
+    float radius = (uBrushMode == 2) ? 2.65 : 1.55;
+    vec2 stepAlong = dir * px * radius * 1.75;
+    vec2 stepCross = nrm * px * radius * 0.72;
+
+    // 4-Sector Fast Anisotropic Kuwahara Filter (minimum-variance oil-paint region!)
+    vec3 m0 = center, s0 = center * center;
+    vec3 m1 = center, s1 = center * center;
+    vec3 m2 = center, s2 = center * center;
+    vec3 m3 = center, s3 = center * center;
+
+    vec3 c;
+    c = texture(uTex, vUV + stepAlong).rgb;               m0 += c; s0 += c * c;
+    c = texture(uTex, vUV + stepAlong * 0.5 + stepCross).rgb; m0 += c; s0 += c * c;
+    c = texture(uTex, vUV + stepCross).rgb;               m0 += c; s0 += c * c;
+
+    c = texture(uTex, vUV - stepAlong).rgb;               m1 += c; s1 += c * c;
+    c = texture(uTex, vUV - stepAlong * 0.5 + stepCross).rgb; m1 += c; s1 += c * c;
+    c = texture(uTex, vUV + stepCross * 0.8).rgb;         m1 += c; s1 += c * c;
+
+    c = texture(uTex, vUV + stepAlong * 0.9 - stepCross).rgb; m2 += c; s2 += c * c;
+    c = texture(uTex, vUV - stepCross).rgb;               m2 += c; s2 += c * c;
+    c = texture(uTex, vUV + stepAlong * 0.4).rgb;         m2 += c; s2 += c * c;
+
+    c = texture(uTex, vUV - stepAlong * 0.9 - stepCross).rgb; m3 += c; s3 += c * c;
+    c = texture(uTex, vUV - stepAlong * 0.4).rgb;         m3 += c; s3 += c * c;
+    c = texture(uTex, vUV - stepCross * 0.8).rgb;         m3 += c; s3 += c * c;
+
+    m0 *= 0.25; s0 = abs(s0 * 0.25 - m0 * m0);
+    m1 *= 0.25; s1 = abs(s1 * 0.25 - m1 * m1);
+    m2 *= 0.25; s2 = abs(s2 * 0.25 - m2 * m2);
+    m3 *= 0.25; s3 = abs(s3 * 0.25 - m3 * m3);
+
+    float v0 = s0.r + s0.g + s0.b;
+    float v1 = s1.r + s1.g + s1.b;
+    float v2 = s2.r + s2.g + s2.b;
+    float v3 = s3.r + s3.g + s3.b;
+
+    float minV = v0;
+    painted = m0;
+    if (v1 < minV) { minV = v1; painted = m1; }
+    if (v2 < minV) { minV = v2; painted = m2; }
+    if (v3 < minV) { minV = v3; painted = m3; }
+
+    // Impasto Paint-Edge Catchlight + Woven Linen Canvas Grain
+    float bevel = clamp((lR - lL) + (lU - lD), -0.25, 0.25);
+    float bristleWave = sin(dot(vUV * uRes, nrm) * 0.85) * 0.018;
+    float canvasWeave = (sin(vUV.x * uRes.x * 1.15) * sin(vUV.y * uRes.y * 1.15)) * 0.014;
+    float boost = (uBrushMode == 2) ? 1.45 : 0.88;
+    painted += vec3(0.95, 0.88, 0.68) * (bevel * 0.26 + bristleWave) * boost;
+    painted += canvasWeave * boost;
+  }
+
+  // Subtle radial Starlight-Gallop streak at outer screen edges when dashing
+  if (uSpeedBlur > 0.02) {
+    vec2 toCenter = vec2(0.5) - vUV;
+    float edgeMask = smoothstep(0.18, 0.65, length(toCenter));
+    vec3 streak = texture(uTex, vUV + toCenter * 0.022 * uSpeedBlur * edgeMask).rgb;
+    painted = mix(painted, streak, edgeMask * uSpeedBlur * 0.45);
+  }
+
+  // Rich Van Gogh Vibrance & Warm Nocturne Tone Mapping
+  float lum = luma(painted);
+  painted = mix(vec3(lum), painted, 1.16);
+  painted = (painted * (2.51 * painted + 0.03)) / (painted * (2.43 * painted + 0.59) + 0.14);
+
+  // Subtle gallery canvas edge framing
+  float vig = 1.0 - smoothstep(0.52, 0.96, length((vUV - 0.5) * vec2(1.12, 1.0)));
+  painted *= mix(0.76, 1.0, vig);
+
+  fragColor = vec4(pow(max(painted, vec3(0.0)), vec3(1.0 / 2.15)), 1.0);
+}`;var Xt=class{constructor(){this.ctx=null,this.master=null,this.analyser=null,this.echoIn=null,this.noiseBuf=null,this.vol=.8,this.stepTimer=0,this.arpStep=0,this.windGain=null,this.windFilter=null}init(){if(this.ctx){this.ctx.state==="suspended"&&this.ctx.resume().catch(()=>{});return}let n=window.AudioContext||window.webkitAudioContext;if(!n)return;this.ctx=new n;let t=this.ctx.createDynamicsCompressor();t.threshold.value=-10,t.knee.value=12,t.ratio.value=8,t.attack.value=.004,t.release.value=.18,this.master=this.ctx.createGain(),this.master.gain.value=this.vol,this.analyser=this.ctx.createAnalyser(),this.analyser.fftSize=512,this.master.connect(t),t.connect(this.analyser),this.analyser.connect(this.ctx.destination),this.echoIn=this.ctx.createGain(),this.echoIn.gain.value=.28;let i=this.ctx.createDelay(1);i.delayTime.value=.31;let s=this.ctx.createGain();s.gain.value=.34;let r=this.ctx.createBiquadFilter();r.type="lowpass",r.frequency.value=2100,this.echoIn.connect(i),i.connect(r),r.connect(s),s.connect(i),r.connect(this.master);let d=this.ctx.sampleRate*2;this.noiseBuf=this.ctx.createBuffer(1,d,this.ctx.sampleRate);let c=this.noiseBuf.getChannelData(0),u=0,p=0,w=0;for(let L=0;L<d;L++){let g=Math.random()*2-1;u=.997*u+g*.029,p=.985*p+g*.032,w=.95*w+g*.048,c[L]=(u+p+w+g*.18)*.9}let V=this.ctx.createBufferSource();V.buffer=this.noiseBuf,V.loop=!0,this.windFilter=this.ctx.createBiquadFilter(),this.windFilter.type="bandpass",this.windFilter.frequency.value=340,this.windFilter.Q.value=1.6,this.windGain=this.ctx.createGain(),this.windGain.gain.value=.035,V.connect(this.windFilter),this.windFilter.connect(this.windGain),this.windGain.connect(this.master),V.start()}setVolume(n){this.vol=n,this.master&&this.ctx&&this.master.gain.setTargetAtTime(n,this.ctx.currentTime,.04)}playPluck(n,t=1.1,i=.14){if(!this.ctx)return;let s=this.ctx.currentTime,r=this.ctx.createOscillator(),d=this.ctx.createOscillator();r.type="triangle",d.type="sawtooth",r.frequency.value=n,d.frequency.value=n*1.0015;let c=this.ctx.createBiquadFilter();c.type="lowpass",c.frequency.setValueAtTime(n*5.2,s),c.frequency.exponentialRampToValueAtTime(Math.max(240,n*1.3),s+t*.75);let u=this.ctx.createGain();u.gain.setValueAtTime(1e-4,s),u.gain.linearRampToValueAtTime(i,s+.008),u.gain.exponentialRampToValueAtTime(8e-4,s+t);let p=this.ctx.createGain();p.gain.value=.28,r.connect(c),d.connect(p),p.connect(c),c.connect(u),u.connect(this.master),u.connect(this.echoIn),r.start(s),d.start(s),r.stop(s+t+.04),d.stop(s+t+.04)}playCello(n,t=1.9,i=.11){if(!this.ctx)return;let s=this.ctx.currentTime,r=this.ctx.createOscillator();r.type="sawtooth",r.frequency.value=n;let d=this.ctx.createOscillator(),c=this.ctx.createGain();d.frequency.value=5.1,c.gain.value=n*.0075,d.connect(c),c.connect(r.frequency);let u=this.ctx.createBiquadFilter();u.type="lowpass",u.frequency.value=640,u.Q.value=1.3;let p=this.ctx.createGain();p.gain.setValueAtTime(1e-4,s),p.gain.linearRampToValueAtTime(i,s+.26),p.gain.setValueAtTime(i*.85,s+t*.65),p.gain.exponentialRampToValueAtTime(8e-4,s+t),r.connect(u),u.connect(p),p.connect(this.master),p.connect(this.echoIn),r.start(s),d.start(s),r.stop(s+t+.05),d.stop(s+t+.05)}playStarChime(n=0){if(!this.ctx)return;let t=[587.33,659.25,739.99,830.61,880,987.77,1108.73,1174.66,1479.98],i=t[n%t.length],s=this.ctx.currentTime,r=this.ctx.createOscillator(),d=this.ctx.createOscillator();r.type="sine",d.type="triangle",r.frequency.value=i,d.frequency.value=i*2;let c=this.ctx.createGain(),u=this.ctx.createGain();c.gain.setValueAtTime(1e-4,s),c.gain.linearRampToValueAtTime(.18,s+.006),c.gain.exponentialRampToValueAtTime(8e-4,s+.85),u.gain.setValueAtTime(1e-4,s),u.gain.linearRampToValueAtTime(.05,s+.004),u.gain.exponentialRampToValueAtTime(5e-4,s+.28),r.connect(c),d.connect(u),c.connect(this.master),c.connect(this.echoIn),u.connect(this.master),r.start(s),d.start(s),r.stop(s+.9),d.stop(s+.32)}playConstellationHarp(){if(!this.ctx)return;[293.66,329.63,369.99,440,493.88,587.33,659.25,739.99,880,1174.66].forEach((t,i)=>{setTimeout(()=>{this.playPluck(t,1.65,.14)},i*46)}),this.playCello(146.83,2.6,.14)}playHoopBoost(){this.ctx&&([587.33,739.99,880,1174.66].forEach((n,t)=>{setTimeout(()=>this.playPluck(n,.95,.15),t*38)}),this.playDashBrush())}playDashBrush(){if(!this.ctx||!this.noiseBuf)return;let n=this.ctx.currentTime,t=this.ctx.createBufferSource();t.buffer=this.noiseBuf;let i=this.ctx.createBiquadFilter();i.type="bandpass",i.frequency.setValueAtTime(420,n),i.frequency.exponentialRampToValueAtTime(1650,n+.24),i.frequency.exponentialRampToValueAtTime(520,n+.52),i.Q.value=1.8;let s=this.ctx.createGain();s.gain.setValueAtTime(.001,n),s.gain.linearRampToValueAtTime(.22,n+.06),s.gain.exponentialRampToValueAtTime(.001,n+.55),t.connect(i),i.connect(s),s.connect(this.master),s.connect(this.echoIn),t.start(n),t.stop(n+.58),this.playPluck(880,.65,.08)}playPurifyGloom(){this.ctx&&[440,554.37,659.25,880].forEach((n,t)=>{setTimeout(()=>this.playPluck(n,1.1,.14),t*24)})}playGloomBump(){if(!this.ctx)return;let n=this.ctx.currentTime,t=this.ctx.createOscillator();t.type="sine",t.frequency.setValueAtTime(135,n),t.frequency.exponentialRampToValueAtTime(48,n+.32);let i=this.ctx.createGain();i.gain.setValueAtTime(.24,n),i.gain.exponentialRampToValueAtTime(.001,n+.34),t.connect(i),i.connect(this.master),t.start(n),t.stop(n+.36)}playHoof(n="meadow",t=.7,i=0){if(!this.ctx||!this.noiseBuf)return;let s=this.ctx.currentTime,r=(.07+t*.11)*(i===0||i===2?1:.82);if(n==="bridge"){let u=this.ctx.createOscillator();u.type="triangle";let p=i%2===0?520:640;u.frequency.setValueAtTime(p,s),u.frequency.exponentialRampToValueAtTime(190,s+.055);let w=this.ctx.createGain();w.gain.setValueAtTime(r*1.15,s),w.gain.exponentialRampToValueAtTime(.001,s+.065),u.connect(w),w.connect(this.master),u.start(s),u.stop(s+.07);return}if(n==="water"){let u=this.ctx.createBufferSource();u.buffer=this.noiseBuf;let p=this.ctx.createBiquadFilter();p.type="bandpass",p.frequency.value=1150+Math.random()*350,p.Q.value=1.1;let w=this.ctx.createGain();w.gain.setValueAtTime(r*1.25,s),w.gain.exponentialRampToValueAtTime(.001,s+.16),u.connect(p),p.connect(w),w.connect(this.master),u.start(s,Math.random()*.5,.18);return}let d=this.ctx.createOscillator();d.type="sine",d.frequency.setValueAtTime(125+i%2*18,s),d.frequency.exponentialRampToValueAtTime(44,s+.075);let c=this.ctx.createGain();if(c.gain.setValueAtTime(r*1.1,s),c.gain.exponentialRampToValueAtTime(.001,s+.085),d.connect(c),c.connect(this.master),d.start(s),d.stop(s+.09),n==="wheat"){let u=this.ctx.createBufferSource();u.buffer=this.noiseBuf;let p=this.ctx.createBiquadFilter();p.type="highpass",p.frequency.value=2200;let w=this.ctx.createGain();w.gain.setValueAtTime(r*.42,s),w.gain.exponentialRampToValueAtTime(.001,s+.11),u.connect(p),p.connect(w),w.connect(this.master),u.start(s,Math.random()*.5,.12)}}update(n,t,i,s){if(!this.ctx)return;if(this.windGain&&this.windFilter){let d=s?.03+t*.085:.025,c=310+t*480;this.windGain.gain.setTargetAtTime(d,this.ctx.currentTime,.12),this.windFilter.frequency.setTargetAtTime(c,this.ctx.currentTime,.12)}if(!s)return;let r=Ve(.36,.24,t);if(this.stepTimer-=n,this.stepTimer<=0){this.stepTimer=r;let d=[[146.83,220,293.66,369.99,440,659.25],[123.47,185,246.94,329.63,369.99,587.33],[196,246.94,293.66,369.99,440,659.25],[110,220,277.18,329.63,440,554.37]],c=Math.floor(this.arpStep/6)%d.length,u=this.arpStep%6,p=[0,2,3,5,3,4],w=d[c][p[u]];if(this.playPluck(w,1.05,.065+t*.035),u===0&&(i>=1||t>.35)){let V=[293.66,246.94,196,220];this.playCello(V[c]*.5,r*5.6,.075+i*.01)}this.arpStep++}}};function Ve(e,n,t){return e+(n-e)*Math.max(0,Math.min(1,t))}function zt(e,n,t,i,s,r){let d=e.createVertexArray();e.bindVertexArray(d);let c=(w,V,L)=>{let g=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,g),e.bufferData(e.ARRAY_BUFFER,new Float32Array(V),e.STATIC_DRAW),e.enableVertexAttribArray(w),e.vertexAttribPointer(w,L,e.FLOAT,!1,0,0)};c(0,n,3),c(1,t,3),c(2,i,2),c(3,s,3);let u=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,u);let p=n.length/3>65e3;return e.bufferData(e.ELEMENT_ARRAY_BUFFER,p?new Uint32Array(r):new Uint16Array(r),e.STATIC_DRAW),e.bindVertexArray(null),{vao:d,count:r.length,indexType:p?e.UNSIGNED_INT:e.UNSIGNED_SHORT}}function ge(e){let n=[],t=[],i=[],s=[],r=[];[[[0,0,1],[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]],[[0,0,-1],[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]],[[0,1,0],[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5],[-.5,.5,-.5]],[[0,-1,0],[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5],[-.5,-.5,.5]],[[1,0,0],[.5,-.5,.5],[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5]],[[-1,0,0],[-.5,-.5,-.5],[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5]]].forEach(([E,C,S,B,tt],at)=>{let H=at*4;[C,S,B,tt].forEach(($,ht)=>{n.push($[0],$[1],$[2]),t.push(E[0],E[1],E[2]),i.push(ht===1||ht===2?1:0,ht>=2?1:0),s.push(1,1,1)}),r.push(H,H+1,H+2,H,H+2,H+3)});let c=zt(e,n,t,i,s,r),u=(E,C,S=14)=>{let B=[],tt=[],at=[],H=[],$=[],ht=C-E;for(let U=0;U<=S;U++){let W=U/S,it=W*Math.PI*2,dt=Math.cos(it),Z=Math.sin(it),Mt=Math.hypot(1,ht),ft=dt/Mt,Ft=ht/Mt,Ct=Z/Mt;B.push(dt*C,-.5,Z*C,dt*E,.5,Z*E),tt.push(ft,Ft,Ct,ft,Ft,Ct),at.push(W*2,0,W*2,1),H.push(1,1,1,1,1,1)}for(let U=0;U<S;U++){let W=U*2;$.push(W,W+2,W+3,W,W+3,W+1)}if(E>.01){let U=B.length/3;B.push(0,.5,0),tt.push(0,1,0),at.push(.5,.5),H.push(1,1,1);for(let W=0;W<=S;W++){let it=W/S*Math.PI*2;B.push(Math.cos(it)*E,.5,Math.sin(it)*E),tt.push(0,1,0),at.push(.5,.5),H.push(1,1,1)}for(let W=0;W<S;W++)$.push(U,U+W+2,U+W+1)}return zt(e,B,tt,at,H,$)},p=u(.5,.5,14),w=u(.03,.55,14),V=u(.02,.72,4),L=[],g=[],x=[],k=[],R=[],K=16,j=22;for(let E=0;E<=K;E++){let C=E/K,S=C*Math.PI;for(let B=0;B<=j;B++){let tt=B/j,at=tt*Math.PI*2,H=-Math.cos(at)*Math.sin(S),$=Math.cos(S),ht=Math.sin(at)*Math.sin(S);L.push(H*.5,$*.5,ht*.5),g.push(H,$,ht),x.push(tt*2,C*2),k.push(1,1,1)}}for(let E=0;E<K;E++)for(let C=0;C<j;C++){let S=E*(j+1)+C,B=S+j+1;R.push(S,B,S+1,B,B+1,S+1)}let F=zt(e,L,g,x,k,R),G=[],h=[],A=[],b=[],D=[],a=26,o=10,v=.5,I=.055;for(let E=0;E<=a;E++){let C=E/a*Math.PI*2,S=Math.cos(C),B=Math.sin(C);for(let tt=0;tt<=o;tt++){let at=tt/o*Math.PI*2,H=Math.cos(at),$=Math.sin(at),ht=(v+I*H)*S,U=(v+I*H)*B,W=I*$;G.push(ht,U,W),h.push(H*S,H*B,$),A.push(E/a,tt/o),b.push(1,1,1)}}for(let E=0;E<a;E++)for(let C=0;C<o;C++){let S=E*(o+1)+C,B=S+o+1;D.push(S,B,S+1,B,B+1,S+1)}let Y=zt(e,G,h,A,b,D),N=118,X=248,nt=[],ut=[],J=[],mt=[],At=[];for(let E=0;E<=N;E++){let C=(E/N-.5)*X;for(let S=0;S<=N;S++){let B=(S/N-.5)*X,tt=yt(B,C),at=ie(B,C);nt.push(B,tt,C),ut.push(at[0],at[1],at[2]),J.push(S*.5,E*.5);let H=qt(B,C),$=Yt(B,C),ht=Math.hypot(B,C+6),U=Q((ht-86)/28,0,1),W=Q((kt+.15-tt)*1.4,0,1),it=.075,dt=.185,Z=.285;it=q(it,.52,H),dt=q(dt,.38,H),Z=q(Z,.11,H),it=q(it,.46,$*.85),dt=q(dt,.34,$*.85),Z=q(Z,.17,$*.85),it=q(it,.13,U),dt=q(dt,.22,U),Z=q(Z,.42,U),it=q(it,.05,W),dt=q(dt,.12,W),Z=q(Z,.25,W),mt.push(it,dt,Z)}}for(let E=0;E<N;E++)for(let C=0;C<N;C++){let S=E*(N+1)+C,B=S+N+1;At.push(S,B,S+1,B,B+1,S+1)}let Ut=zt(e,nt,ut,J,mt,At),Vt=[],Bt=[],_t=[],Pt=[],Rt=[],Et=96;for(let E=0;E<=Et;E++){let C=(E/Et-.5)*244,S=vt(C);Vt.push(C,kt,S-10.5,C,kt,S+10.5),Bt.push(0,1,0,0,1,0),_t.push(E*.4,0,E*.4,1),Pt.push(1,1,1,1,1,1)}for(let E=0;E<Et;E++){let C=E*2;Rt.push(C,C+1,C+2,C+1,C+3,C+2)}let It=zt(e,Vt,Bt,_t,Pt,Rt);return{box:c,cyl:p,cone:w,roofPyr:V,sphere:F,torus:Y,terrain:Ut,river:It}}function be(e){let n=Qt(188906),t=[],i=[],s=[],r=(h,A,b,D,a,o,v,I,Y,N,X,nt,ut=.4,J=2,mt=1)=>{let At=_.create();_.trs(At,A,b,D,a,o,v,I,Y,N),t.push({mesh:h,m:At,mat:X,color:nt,params:[ut,J,mt]})};Ot.forEach(h=>{let A=vt(h),b=9;for(let D=0;D<b;D++){let o=((D+.5)/b-.5)*19.2,v=Math.cos(o/9.6*(Math.PI*.5)),I=o+1,Y=Math.cos(Q(I/9.6,-1,1)*(Math.PI*.5)),N=-Math.atan2((Y-v)*1.45,1),X=.42+v*1.45;r(e.box,h,X,A+o,N,0,0,7.6,.52,2.35,4,[.54,.46,.34],.55,2.4),r(e.box,h-3.65,X+.52,A+o,N,0,0,.42,.65,2.35,4,[.46,.4,.31],.6,2),r(e.box,h+3.65,X+.52,A+o,N,0,0,.42,.65,2.35,4,[.46,.4,.31],.6,2)}[-3.65,3.65].forEach(D=>{r(e.cyl,h+D,2.55,A,0,0,0,.18,1.4,.18,4,[.22,.24,.28]),r(e.sphere,h+D,3.35,A,0,0,0,.46,.46,.46,6,[1,.82,.32],1.8,1,1)})});{let b=yt(-24,-36);r(e.box,-24,b+2.8,-36+2.5,0,.18,0,6.2,5.6,9.6,4,[.56,.49,.36],.5,3),r(e.roofPyr,-24,b+7,-36+2.5,0,.18+Math.PI*.25,0,6.8,2.9,10.2,4,[.16,.3,.52],.45,2.6),r(e.box,-24,b+5.8,-36-2.6,0,.18,0,3.8,11.6,3.8,4,[.6,.52,.38],.5,3.2),r(e.cone,-24,b+16.2,-36-2.6,0,0,0,3.6,9.4,3.6,4,[.14,.28,.54],.4,3),r(e.sphere,-24+.35,b+8.8,-36-.65,0,0,0,1.15,1.15,.4,6,[1,.82,.28],1.9,1,1),i.push({x:-24,z:-36+.5,r:5.4})}let d=[[-33,-30,.2],[-14,-31,-.3],[-15,-23,.5],[-28,-22,-.15],[-38,-40,.4],[-11,-40,-.4],[-22,-47,.1],[12,-36,-.25],[19,-43,.35],[-42,-23,.6],[38,18,-.5],[42,44,.3]],c=[[.58,.49,.33],[.5,.46,.38],[.62,.48,.29],[.44,.47,.46]],u=[[.56,.27,.18],[.16,.31,.52],[.24,.38,.44]];d.forEach(([h,A,b],D)=>{let a=yt(h,A),o=4.2+D%3*.7,v=3.8+(D+1)%2*.9,I=3.2+D%2*.9;r(e.box,h,a+I*.5-.2,A,0,b,0,o,I,v,4,c[D%c.length],.55,2.2),r(e.roofPyr,h,a+I+.95,A,0,b+Math.PI*.25,0,o*1.18,2.3,v*1.18,4,u[D%u.length],.5,2.2);let Y=h+Math.sin(b)*(v*.51),N=A+Math.cos(b)*(v*.51);r(e.box,Y,a+I*.48,N,0,b,0,.95,.88,.12,6,[1,.78,.24],1.85,1,1),i.push({x:h,z:A,r:Math.max(o,v)*.56})}),[[52,37,-.65],[22,-48,.42],[-55,-14,.85]].forEach(([h,A,b])=>{let D=yt(h,A);r(e.cyl,h,D+4.2,A,0,b,0,4.2,8.8,4.2,4,[.58,.5,.36],.5,2.8),r(e.cone,h,D+9.6,A,0,b,0,4.6,2.8,4.6,4,[.16,.32,.54],.45,2.4),r(e.box,h+Math.sin(b)*2.12,D+5.2,A+Math.cos(b)*2.12,0,b,0,.85,1.1,.12,6,[1,.8,.28],1.8,1,1),s.push({x:h,y:D+7.6,z:A,yaw:b}),i.push({x:h,z:A,r:2.4})}),[[-42,16,1.35],[-53,28,1.55],[-46,33,1.15],[-30,12,1.25],[-18,22,1.05],[14,18,1.2],[26,28,1.3],[42,26,1.1],[56,29,1.4],[44,-14,1.25],[22,-12,1.05],[-8,-52,1.3],[10,-54,1.22],[-14,-66,1.45],[14,-66,1.42],[-58,4,1.32],[60,-4,1.28],[-64,-32,1.38],[58,-36,1.24],[-6,38,1.18],[18,48,1.35],[-28,46,1.28],[0,56,1.4],[-48,-48,1.3],[36,-56,1.25],[-68,20,1.42],[68,18,1.36],[-8,-22,1.12]].forEach(([h,A,b],D)=>{let a=yt(h,A);if(a<kt+.3)return;r(e.cyl,h,a+1*b,A,0,0,0,.65*b,2.2*b,.65*b,4,[.16,.12,.09],.7,1.5);for(let v=0;v<4;v++){let I=Math.sin(D*1.9+v*1.1)*.08,Y=Math.cos(D*1.3+v*.9)*.08,N=(2.8-v*.52)*b,X=(4.6-v*.45)*b,nt=a+(2.8+v*2.45)*b;r(e.cone,h+I*v*2.2,nt,A+Y*v*2.2,I,v*.8,Y,N,X,N,3,[1,1,1],.45,2.4)}let o=(D%2===0?1:-1)*.75*b;r(e.cone,h+o,a+3.8*b,A+.3,.05,D,-.06,1.4*b,5.4*b,1.4*b,3,[1,1,1],.45,2.2),i.push({x:h,z:A,r:1.05*b})});let L=[{name:"\u5929\u9E45\u5EA7 \xB7 \u67CF\u6811\u9AD8\u5730",x:-48,z:24},{name:"\u6634\u5BBF\u661F\u56E2 \xB7 \u91D1\u9EA6\u68AF\u7530",x:30,z:-24},{name:"\u53CC\u9C7C\u5EA7 \xB7 \u897F\u77F3\u6865\u7554",x:-34,z:vt(-34)-13.5},{name:"\u5317\u5195\u5EA7 \xB7 \u98CE\u8F66\u5C71\u810A",x:45,z:31},{name:"\u5317\u6597\u4E03\u661F \xB7 \u949F\u697C\u5317\u5761",x:-12,z:-44}].map((h,A)=>{let b=bt(h.x,h.z).y;return r(e.cyl,h.x,b+.35,h.z,0,0,0,3.2,.7,3.2,4,[.48,.44,.36],.5,2),r(e.cyl,h.x,b+.8,h.z,0,0,0,2.2,.35,2.2,4,[.6,.54,.4],.45,2),{id:A,name:h.name,x:h.x,y:b,z:h.z,lit:!1,litAnim:0}}),g=yt(0,-76);r(e.cyl,0,g+.35,-76,0,0,0,8.6,.8,8.6,4,[.5,.45,.36],.5,2.4),r(e.box,-3.2,g+4.1,-76,0,0,0,.72,7.2,.72,4,[.86,.66,.2],.28,2.2),r(e.box,3.2,g+4.1,-76,0,0,0,.72,7.2,.72,4,[.86,.66,.2],.28,2.2),r(e.box,0,g+7.55,-76,0,0,0,7.4,.82,.85,4,[.9,.7,.22],.26,2.2),r(e.box,0,g+.85,-76,0,0,0,7.2,.45,.82,4,[.82,.62,.18],.3,2.2);let x={x:0,y:g,z:-76,open:!1},k=[],R=(h,A,b,D,a,o=0)=>{for(let v=0;v<a;v++){let I=(v+.5)/a,Y=-(D-A),N=b-h,X=Math.hypot(Y,N)||1,nt=Math.sin(I*Math.PI)*o,ut=q(h,b,I)+Y/X*nt,J=q(A,D,I)+N/X*nt,mt=bt(ut,J).y+1.25;k.push({x:ut,y:mt,z:J,taken:!1,respawn:0,phase:n()*6.28})}};R(0,18,-34,vt(-34),8,-6),R(-34,vt(-34)-8,-48,24,7,7),R(4,14,32,vt(32),7,5),R(32,vt(32)-6,30,-24,6,-4),R(32,vt(32)+8,45,31,6,5),R(24,-28,-12,-44,6,-6),R(-10,-48,0,-71,5,3);let j=[{x:-34,z:vt(-34),yaw:0},{x:32,z:vt(32),yaw:0},{x:18,z:-18,yaw:.7},{x:-20,z:12,yaw:-.6},{x:38,z:10,yaw:.2},{x:-4,z:-60,yaw:.1}].map(h=>{let A=bt(h.x,h.z).y+2.35;return{x:h.x,y:A,z:h.z,yaw:h.yaw,cd:0}}),G=[[-22,4],[18,22],[26,-12],[-38,-14],[6,-34],[-14,34]].map(([h,A],b)=>({cx:h,cz:A,x:h,y:0,z:A,orbitR:8+b%3*3.5,ang:b*1.1,spd:(b%2===0?1:-1)*(.48+b*.04),respawn:0}));return{draws:t,obstacles:i,windmills:s,constellations:L,portal:x,starSeeds:k,skyHoops:j,whirlwinds:G}}function we(e,n=420){let t=Qt(890619),i=[-.16,0,0,.16,0,0,-.13,.52,0,.13,.52,0,0,1.05,0],s=[0,0,1,0,0,.52,1,.52,.5,1],r=[0,1,2,1,3,2,2,3,4],d=[],c=0,u=0;for(;c<1450&&u<18e3;){u++;let F=(t()-.5)*145,G=(t()-.5)*145,h=qt(F,G);if(h>.28&&Yt(F,G)<.55){let A=yt(F,G);if(A>kt+.25){let b=(.85+t()*.65)*(.65+.45*h),D=t(),a=q(.84,.99,D),o=q(.58,.8,D),v=q(.14,.28,D);d.push(F,A-.05,G,b,t()*6.28,0,t()*6.28,0,a,o,v,.95),c++}}}let p=[[.98,.82,.3,.72],[.24,.56,.86,.62],[.18,.46,.58,.58],[.68,.84,.96,.65]];for(let F=0;F<550;F++){let G=t()*Math.PI*2,h=10+t()*98,A=Math.cos(G)*h,b=Math.sin(G)*h-8,D=5.5+t()*34,a=.65+t()*1.45,o=p[F%p.length];d.push(A,D,b,a,G+1.57,(t()-.5)*.7,t()*6.28,1,o[0],o[1],o[2],o[3])}let w=d.length/12,V=w+n,L=new Float32Array(V*12);L.set(d,0);let g=e.createVertexArray();e.bindVertexArray(g);let x=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,x),e.bufferData(e.ARRAY_BUFFER,new Float32Array(i),e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,0,0);let k=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,k),e.bufferData(e.ARRAY_BUFFER,new Float32Array(s),e.STATIC_DRAW),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,2,e.FLOAT,!1,0,0);let R=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,R),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(r),e.STATIC_DRAW);let K=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,K),e.bufferData(e.ARRAY_BUFFER,L,e.DYNAMIC_DRAW);let j=48;for(let F=0;F<3;F++){let G=4+F;e.enableVertexAttribArray(G),e.vertexAttribPointer(G,4,e.FLOAT,!1,j,F*16),e.vertexAttribDivisor(G,1)}return e.bindVertexArray(null),{vao:g,instVBO:K,instanceData:L,indexCount:r.length,staticCount:w,maxDynamic:n}}var ve=_.create(),xe=_.create(),ye=_.create();function Te(e,n,t,i){let s=Q(Math.abs(t.speed)/18,0,1.25),r=Math.sin(t.gaitPhase*2)*.08*s,d=Math.cos(t.gaitPhase)*.055*s+t.pitch;_.trs(ve,t.x,t.y+1.18+r,t.z,d,t.yaw,t.bank,1,1,1);let c=(h,A,b,D,a,o,v,I,Y,N,X,nt,ut=.4,J=2.5,mt=1)=>{_.trs(xe,A,b,D,a,o,v,I,Y,N),_.mul(ye,ve,xe),e(h,ye,X,nt,ut,J,mt)},u=[.64,.39,.19],p=[.38,.22,.11],w=[.92,.74,.3],V=[.28,.16,.09];c(n.box,0,.04,0,0,0,0,.66,.62,1.56,4,u),c(n.sphere,0,.08,-.68,0,0,0,.72,.68,.76,4,u),c(n.sphere,0,.08,.66,0,0,0,.7,.66,.74,4,u);let L=Math.sin(t.gaitPhase+.6)*.1*s,g=t.steer*.22;c(n.cyl,0,.56,-.82,.55+L,g,0,.36,.92,.44,4,u),c(n.box,-g*.18,.94+L*.2,-1.14,.42+L,g,0,.3,.32,.64,4,u),c(n.box,-g*.22,.84+L*.2,-1.42,.42+L,g,0,.22,.22,.28,4,p),c(n.box,-g*.18,1.02+L*.2,-1.18,.42+L,g,0,.1,.18,.34,4,[.94,.9,.8]),c(n.cone,-.11,1.18,-.98,.15,g,.12,.1,.24,.1,4,u),c(n.cone,.11,1.18,-.98,.15,g,-.12,.1,.24,.1,4,u);for(let h=0;h<4;h++){let A=Math.sin(i*8+h*1.1)*.06;c(n.box,A,.46+h*.16,-.62-h*.09,.55,0,.2,.1,.22,.18,4,w)}let x=-.55-s*.55+Math.sin(i*7.5)*.12;c(n.cone,Math.sin(i*6)*.08,-.06,1.06,x,0,0,.24,.95,.24,4,w),[[-.24,-.62,0],[.24,-.62,.85],[-.25,.62,2.55],[.25,.62,3.4]].forEach(([h,A,b],D)=>{let a=t.gaitPhase+b,o=Math.sin(a)*.68*Math.min(1.1,s+.04),v=Math.max(0,Math.cos(a))*.65*s,I=o,Y=o-(D<2?v:-v*.75),N=-.34;c(n.cyl,h,N,A,I,0,0,.19,.58,.21,4,u);let X=h,nt=N-Math.cos(I)*.3,ut=A-Math.sin(I)*.3;c(n.cyl,X,nt-Math.cos(Y)*.26,ut-Math.sin(Y)*.26,Y,0,0,.13,.56,.14,4,p);let J=nt-Math.cos(Y)*.54,mt=ut-Math.sin(Y)*.54;c(n.box,X,J,mt,Y,0,0,.15,.11,.18,4,[.15,.13,.12])}),c(n.box,0,.36,-.04,0,0,0,.72,.16,.68,4,V);let R=-.14-s*.24-(t.dashT>0?.18:0),K=[.13,.31,.64],j=[.95,.77,.2],F=[.78,.36,.14];c(n.box,0,.74,-.04,R,0,0,.46,.62,.32,4,K),c(n.cyl,-.33,.22,-.06,.35,0,.18,.17,.62,.19,4,[.16,.22,.34]),c(n.cyl,.33,.22,-.06,.35,0,-.18,.17,.62,.19,4,[.16,.22,.34]),c(n.box,0,.8,.17,R-.08,0,.15,.44,.54,.06,4,[.92,.87,.74]),c(n.box,0,.8,.2,R-.08,0,-.22,.08,.78,.06,4,[.58,.38,.18]),c(n.sphere,0,1.18,-.1+R*.25,0,g*.5,0,.28,.3,.28,4,[.88,.68,.52]),c(n.box,0,1.11,-.21+R*.25,.15,g*.5,0,.2,.15,.12,4,F),c(n.cyl,0,1.31,-.09+R*.25,-.12,g*.5,0,.66,.05,.66,4,j,.35),c(n.cyl,0,1.39,-.08+R*.25,-.12,g*.5,0,.34,.16,.34,4,j,.35),c(n.cyl,0,1.34,-.08+R*.25,-.12,g*.5,0,.36,.04,.36,4,[.1,.24,.52]),c(n.cyl,-.28,.82,-.24,.85,.2,.2,.13,.48,.13,4,K),c(n.cyl,.3,.86,-.22,.72,-.25,-.35,.13,.48,.13,4,K);let G=Math.sin(i*5.2)*.06;c(n.sphere,.44+G,.74,-.44,0,0,0,.24,.3,.24,6,[1,.86,.34],2.4,1,1)}var m=e=>document.getElementById(e);function Me(e,n,t){let i=e.createShader(n);if(e.shaderSource(i,t),e.compileShader(i),!e.getShaderParameter(i,e.COMPILE_STATUS))throw new Error(e.getShaderInfoLog(i)||"Shader compile error");return i}function jt(e,n,t){let i=e.createProgram();if(e.attachShader(i,Me(e,e.VERTEX_SHADER,n)),e.attachShader(i,Me(e,e.FRAGMENT_SHADER,t)),e.linkProgram(i),!e.getProgramParameter(i,e.LINK_STATUS))throw new Error(e.getProgramInfoLog(i)||"Program link error");return i}function Le(){let e=m("nightrider-app"),n=m("nr-canvas"),t=n.getContext("webgl2",{antialias:!1,alpha:!1,depth:!0,powerPreference:"high-performance"});if(!t){m("nr-desc").textContent="\u5F53\u524D\u6D4F\u89C8\u5668\u73AF\u5883\u672A\u5F00\u542F WebGL2\uFF0C\u8BF7\u4F7F\u7528\u73B0\u4EE3\u6D4F\u89C8\u5668\u6253\u5F00\u4F53\u9A8C\u3002";return}let i=!1;try{let l=t.getExtension("WEBGL_debug_renderer_info"),P=String(l?t.getParameter(l.UNMASKED_RENDERER_WEBGL):t.getParameter(t.RENDERER));/SwiftShader|llvmpipe|Software/i.test(P)&&(i=!0)}catch{}let s=jt(t,ce,le),r=jt(t,ue,he),d=jt(t,fe,de),c=jt(t,pe,me),u={uProj:t.getUniformLocation(s,"uProj"),uView:t.getUniformLocation(s,"uView"),uCamPos:t.getUniformLocation(s,"uCamPos"),uTime:t.getUniformLocation(s,"uTime"),uConstLit:Array.from({length:5},(l,P)=>t.getUniformLocation(s,`uConstLit[${P}]`))},p={uProj:t.getUniformLocation(r,"uProj"),uView:t.getUniformLocation(r,"uView"),uModel:t.getUniformLocation(r,"uModel"),uMat:t.getUniformLocation(r,"uMat"),uColor:t.getUniformLocation(r,"uColor"),uParams:t.getUniformLocation(r,"uParams"),uCamPos:t.getUniformLocation(r,"uCamPos"),uLanternPos:t.getUniformLocation(r,"uLanternPos"),uTime:t.getUniformLocation(r,"uTime"),uDashGlow:t.getUniformLocation(r,"uDashGlow")},w={uProj:t.getUniformLocation(d,"uProj"),uView:t.getUniformLocation(d,"uView"),uRiderPos:t.getUniformLocation(d,"uRiderPos"),uTime:t.getUniformLocation(d,"uTime")},V={uTex:t.getUniformLocation(c,"uTex"),uRes:t.getUniformLocation(c,"uRes"),uBrushMode:t.getUniformLocation(c,"uBrushMode"),uTime:t.getUniformLocation(c,"uTime"),uSpeedBlur:t.getUniformLocation(c,"uSpeedBlur")},L=t.createVertexArray(),g=ge(t),x=be(g),k=we(t,420),R=new Xt,K=null,j=null,F=null,G=0,h=0;function A(l,P){K&&G===l&&h===P||(j&&t.deleteTexture(j),F&&t.deleteRenderbuffer(F),K&&t.deleteFramebuffer(K),G=Math.max(64,l),h=Math.max(64,P),K=t.createFramebuffer(),t.bindFramebuffer(t.FRAMEBUFFER,K),j=t.createTexture(),t.bindTexture(t.TEXTURE_2D,j),t.texImage2D(t.TEXTURE_2D,0,t.RGBA8,G,h,0,t.RGBA,t.UNSIGNED_BYTE,null),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_MIN_FILTER,t.LINEAR),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_MAG_FILTER,t.LINEAR),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_WRAP_S,t.CLAMP_TO_EDGE),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_WRAP_T,t.CLAMP_TO_EDGE),t.framebufferTexture2D(t.FRAMEBUFFER,t.COLOR_ATTACHMENT0,t.TEXTURE_2D,j,0),F=t.createRenderbuffer(),t.bindRenderbuffer(t.RENDERBUFFER,F),t.renderbufferStorage(t.RENDERBUFFER,t.DEPTH_COMPONENT24,G,h),t.framebufferRenderbuffer(t.FRAMEBUFFER,t.DEPTH_ATTACHMENT,t.RENDERBUFFER,F),t.bindFramebuffer(t.FRAMEBUFFER,null))}let b=["\u6E05\u900F\u539F\u753B","\u539A\u6D82\u540D\u753B","\u72C2\u91CE\u68B5\u9AD8"],D=[{name:"\u7ECF\u5178\u8FFD\u5C3E",dist:7.5,height:2.85,lookY:2.25},{name:"\u4EF0\u671B\u661F\u7A79",dist:6.1,height:1.55,lookY:3.05},{name:"\u5168\u666F\u753B\u5377",dist:11.2,height:4.35,lookY:2.15}],a={mode:"title",time:0,runTime:0,fps:60,quality:"high",brushMode:1,camMode:0,score:0,seedsCollected:0,purified:0,litCount:0,combo:0,comboTimer:0},o={x:2,y:bt(2,22).y,z:22,vy:0,yaw:.08,speed:0,steer:0,bank:0,pitch:0,grounded:!0,surf:"meadow",gaitPhase:0,lastBeat:-1,energy:100,dashT:0,boostT:0,hurtCd:0},v={x:2,y:5,z:30,orbitYaw:0,targetOrbit:0,fov:58},I=[];function Y(l,P,M,et,ct,lt,ot,wt=.42,st=1){I.length>=k.maxDynamic&&I.shift(),I.push({x:l,y:P,z:M,vx:et,vy:ct,vz:lt,r:ot[0],g:ot[1],b:ot[2],scale:wt,life:st,maxLife:st,rot:Math.random()*6.28})}function N(l,P,M,et=24,ct=!0){let lt=ct?[[1,.86,.28],[.98,.66,.18],[.36,.78,.98]]:[[.32,.72,.96],[.98,.84,.32],[.24,.62,.58]];for(let ot=0;ot<et;ot++){let wt=ot/et*Math.PI*2+Math.random()*.4,st=2.5+Math.random()*7.5,Kt=lt[ot%lt.length];Y(l,P,M,Math.cos(wt)*st,2.5+Math.random()*6.5,Math.sin(wt)*st,Kt,.48+Math.random()*.45,.9+Math.random()*.7)}}function X(){let l=e.getBoundingClientRect(),P=Math.max(320,l.width||window.innerWidth),M=Math.max(240,l.height||window.innerHeight),et=Math.min(window.devicePixelRatio||1,2),ct=a.quality==="low"?.64:a.quality==="med"?.82:1;i&&(ct=Math.min(ct,.65));let lt=Math.max(320,Math.round(P*et*ct)),ot=Math.max(200,Math.round(M*et*ct));(n.width!==lt||n.height!==ot)&&(n.width=lt,n.height=ot),A(lt,ot)}window.addEventListener("resize",X),typeof ResizeObserver<"u"&&new ResizeObserver(X).observe(e),X();let nt=0;function ut(l,P){m("nr-banner-title").textContent=l,m("nr-banner-sub").textContent=P,m("nr-banner").classList.add("show"),nt=3.4}function J(l){let P=m("nr-toast-feed"),M=document.createElement("div");for(M.className="nr-toast",M.textContent=l,P.appendChild(M);P.children.length>3;)P.removeChild(P.firstChild);setTimeout(()=>{M.parentNode&&M.parentNode.removeChild(M)},4200)}let mt=[];for(let l=0;l<6;l++){let P=document.createElement("div");P.className="nr-wp",m("nr-waypoints").appendChild(P),mt.push(P)}function At(){a.runTime=0,a.score=0,a.seedsCollected=0,a.purified=0,a.litCount=0,a.combo=0,a.comboTimer=0,o.x=2,o.z=22,o.y=bt(2,22).y,o.vy=0,o.yaw=.08,o.speed=6,o.steer=0,o.bank=0,o.pitch=0,o.grounded=!0,o.energy=100,o.dashT=0,o.boostT=0,o.hurtCd=0,x.constellations.forEach(l=>{l.lit=!1,l.litAnim=0}),x.portal.open=!1,x.starSeeds.forEach(l=>{l.taken=!1,l.respawn=0}),x.whirlwinds.forEach(l=>{l.respawn=0}),I.length=0,Ut()}function Ut(){document.querySelectorAll(".nr-star-pip").forEach((P,M)=>P.classList.toggle("lit",x.constellations[M]?.lit)),a.mode==="freeride"?(m("nr-stage-tag").textContent="\u81EA\u7531\u5199\u751F",m("nr-stage-desc").textContent="\u5723\u96F7\u7C73\u661F\u7A79\u5DF2\u5168\u90E8\u70B9\u4EAE \xB7 \u5C3D\u60C5\u7B56\u9A6C\u6F2B\u6E38"):a.litCount<5?(m("nr-stage-tag").textContent="\u661F\u7A79\u590D\u82CF",m("nr-stage-desc").textContent=`\u70B9\u4EAE\u5723\u96F7\u7C73\u661F\u8C61\u753B\u67B6 [${a.litCount} / 5]`):(m("nr-stage-tag").textContent="\u7EC8\u7AE0\u5F00\u542F",m("nr-stage-desc").textContent="\u524D\u5F80\u5317\u65B9\u300C\u65B0\u6708\u5C71\u5DC5\u300D\u8DC3\u5165\u5DE8\u578B\u91D1\u8272\u753B\u6846\uFF01")}function Vt(l=!1){R.init(),(l||a.mode==="title"||a.mode==="victory")&&At(),a.mode="playing",m("nr-overlay").classList.add("hide"),m("nr-hud").classList.add("active"),m("nr-debrief").classList.remove("show");try{window.focus(),n.focus({preventScroll:!0})}catch{}a.runTime<.2&&(ut("\u661F\u6708\u591C \xB7 \u7B56\u9A6C\u5165\u753B","\u6536\u96C6\u91D1\u8272\u661F\u8292 \xB7 \u70B9\u4EAE\u4E94\u5EA7\u661F\u8C61\u5723\u575B"),J("\u63D0\u793A\uFF1A\u6309 W \u52A0\u901F\u9A70\u9A8B\uFF0CShift \u6216\u5DE6\u952E\u91CA\u653E\u300C\u661F\u6D41\u753B\u7B14\u51B2\u523A\u300D\u649E\u788E\u591C\u9B47\u58A8\u6DA1\uFF01"))}function Bt(){a.mode!=="playing"&&a.mode!=="freeride"||(a.mode="paused",m("nr-kicker").textContent="SAINT-R\xC9MY, JUNE 1889 // \u753B\u5377\u6682\u6B47",m("nr-title").textContent="\u591C\u66F2\u6682\u6B47 \xB7 PAUSED",m("nr-desc").textContent="\u53EF\u968F\u65F6\u5207\u6362\u6CB9\u753B\u7B14\u89E6\u5F3A\u5EA6\u3001\u8BD5\u542C\u300C\u591C\u66F2\u7434\u623F\u300D\u7684\u5927\u63D0\u7434\u4E0E\u7AD6\u7434\u6CDB\u97F3\uFF0C\u6216\u7EE7\u7EED\u7B56\u9A6C\u9A70\u9A8B\u3002",m("nr-btn-start").textContent="\u7EE7\u7EED\u9A70\u9A8B",m("nr-btn-restart").style.display="inline-flex",m("nr-btn-freeride").style.display="none",m("nr-overlay").classList.remove("hide"))}function _t(){a.mode="victory",R.playConstellationHarp();let l=Math.floor(a.runTime/60),P=(a.runTime%60).toFixed(1).padStart(4,"0"),M=a.score>=3800&&a.runTime<150?"S+":a.score>=2600?"S":"A";m("st-time").textContent=`${String(l).padStart(2,"0")}:${P}`,m("st-seeds").textContent=`${a.seedsCollected}`,m("st-purified").textContent=`${a.purified}`,m("st-score").textContent=`${a.score}`,m("st-rank").textContent=M,m("nr-debrief").classList.add("show"),m("nr-kicker").textContent="MASTERPIECE COMPLETED // 1889 \u5723\u96F7\u7C73\u9986\u85CF\u8FBE\u6210",m("nr-title").textContent="\u661F\u6708\u591C \xB7 \u4F20\u4E16\u5B8C\u7BC7",m("nr-desc").textContent="\u4E94\u5EA7\u661F\u5BAB\u5DF2\u5728\u666E\u7F57\u65FA\u65AF\u591C\u7A7A\u7480\u74A8\u8FDE\u7ED3\uFF0C\u91D1\u8272\u661F\u6D41\u9A71\u6563\u4E86\u5168\u90E8\u591C\u9B47\u6697\u96FE\u3002\u4F60\u53EF\u4EE5\u7559\u5728\u753B\u4E2D\u65E0\u5C3D\u81EA\u7531\u6F2B\u6E38\uFF0C\u6216\u91CD\u65B0\u6311\u6218\u66F4\u9AD8\u753B\u4F5C\u8BC4\u7EA7\u3002",m("nr-btn-start").textContent="\u518D\u7ED8\u4E00\u5C40",m("nr-btn-restart").style.display="none",m("nr-btn-freeride").style.display="inline-flex",m("nr-overlay").classList.remove("hide")}function Pt(){o.dashT>.12||o.energy<22||(o.energy=Math.max(0,o.energy-28),o.dashT=.85,o.speed=Math.max(o.speed+6.5,20.5),R.playDashBrush(),N(o.x,o.y+1.2,o.z,12,!0))}function Rt(){o.grounded&&(o.vy=8.4,o.grounded=!1,R.playPluck(440,.5,.1),N(o.x,o.y+.3,o.z,8,!1))}function Et(){a.brushMode=(a.brushMode+1)%3,document.querySelectorAll(".brush-pill").forEach(l=>{l.classList.toggle("active",Number(l.dataset.b)===a.brushMode)}),J(`\u6CB9\u753B\u7B14\u89E6\u5207\u6362\uFF1A${b[a.brushMode]}`)}function It(){a.camMode=(a.camMode+1)%D.length,J(`\u6444\u5F71\u673A\u4F4D\u5207\u6362\uFF1A${D[a.camMode].name}`)}let E={},C={dragging:!1,lastX:null,normX:.5,inside:!1},S={active:!1,moveId:null,mx:0,my:0};if(window.addEventListener("keydown",l=>{if(E[l.code]=!0,l.code==="KeyP"||l.code==="Escape"&&(a.mode==="playing"||a.mode==="freeride")){Bt();return}a.mode!=="playing"&&a.mode!=="freeride"||((l.code==="Space"||l.code.startsWith("Arrow"))&&l.preventDefault(),l.code==="Space"?Rt():l.code==="ShiftLeft"||l.code==="ShiftRight"?Pt():l.code==="KeyB"?Et():l.code==="KeyC"&&It())}),window.addEventListener("keyup",l=>{E[l.code]=!1}),n.addEventListener("contextmenu",l=>l.preventDefault()),n.addEventListener("mouseenter",()=>{C.inside=!0}),n.addEventListener("mouseleave",()=>{C.inside=!1,C.dragging=!1,C.lastX=null,v.targetOrbit=0}),n.addEventListener("mousedown",l=>{if(!(a.mode!=="playing"&&a.mode!=="freeride")){R.init();try{window.focus(),n.focus({preventScroll:!0})}catch{}l.button===0?(C.dragging=!0,C.lastX=l.clientX,Pt()):l.button===2&&Rt()}}),window.addEventListener("mouseup",()=>{C.dragging=!1}),window.addEventListener("mousemove",l=>{if(a.mode!=="playing"&&a.mode!=="freeride")return;let P=n.getBoundingClientRect();if(C.normX=Q((l.clientX-P.left)/Math.max(1,P.width),0,1),C.dragging&&C.lastX!==null){let M=l.clientX-C.lastX;v.targetOrbit=Q(v.targetOrbit-M*.006,-1.6,1.6)}else v.targetOrbit=(.5-C.normX)*.55;C.lastX=l.clientX}),m("nr-btn-start").addEventListener("click",()=>{Vt(a.mode==="victory")}),m("nr-btn-restart").addEventListener("click",()=>Vt(!0)),m("nr-btn-freeride").addEventListener("click",()=>{a.mode="freeride",m("nr-overlay").classList.add("hide"),m("nr-hud").classList.add("active"),Ut(),ut("\u65E0\u5C3D\u5199\u751F\u6F2B\u6E38","\u5723\u96F7\u7C73\u591C\u7A7A\u5DF2\u6C38\u6052\u95EA\u8000 \xB7 \u81EA\u7531\u9A70\u9A8B")}),m("btn-pause")&&m("btn-pause").addEventListener("click",Bt),m("btn-brush")&&m("btn-brush").addEventListener("click",Et),m("btn-cam")&&m("btn-cam").addEventListener("click",It),m("btn-tall")){let l=()=>{let P=e.classList.contains("tall");m("btn-tall").textContent=P?"\u6536\u8D77":"\u5927\u5C4F",m("menu-btn-tall")&&(m("menu-btn-tall").textContent=P?"\u6062\u590D\u7D27\u51D1\u9AD8\u5EA6":"\u5C55\u5F00\u5927\u5C4F\u89C6\u91CE"),X(),setTimeout(X,220)};m("btn-tall").addEventListener("click",()=>{e.classList.toggle("tall"),l()}),m("menu-btn-tall")&&m("menu-btn-tall").addEventListener("click",()=>{e.classList.toggle("tall"),l()})}m("btn-fs")&&m("btn-fs").addEventListener("click",()=>{document.fullscreenElement?document.exitFullscreen?.().catch?.(()=>{}):(e.requestFullscreen||e.webkitRequestFullscreen)?.call(e)?.catch?.(()=>{})}),m("nr-btn-studio").addEventListener("click",()=>{R.init(),m("nr-studio").classList.toggle("open")}),document.querySelectorAll(".studio-trigger").forEach(l=>{l.addEventListener("click",()=>{R.init();let P=l.dataset.s;P==="guitar"?R.playPluck(293.66,1.3,.18):P==="cello"?R.playCello(146.83,2.2,.16):P==="harp"?R.playConstellationHarp():P==="chime"?R.playStarChime(Math.floor(Math.random()*8)):P==="dash"?R.playDashBrush():P==="hoof-bridge"?R.playHoof("bridge",.9,0):P==="hoof-water"&&R.playHoof("water",.9,0)})}),document.querySelectorAll(".brush-pill").forEach(l=>{l.addEventListener("click",()=>{a.brushMode=Number(l.dataset.b),document.querySelectorAll(".brush-pill").forEach(P=>P.classList.toggle("active",P===l))})}),document.querySelectorAll(".nr-q-pill").forEach(l=>{l.addEventListener("click",()=>{a.quality=l.dataset.q,document.querySelectorAll(".nr-q-pill").forEach(P=>P.classList.toggle("active",P===l)),X()})}),m("nr-vol").addEventListener("input",l=>{R.init(),R.setVolume(parseFloat(l.target.value)/100)}),("ontouchstart"in window||navigator.maxTouchPoints>0)&&(S.active=!0,m("nr-touch").classList.add("show"));let B=m("nr-t-pad"),tt=m("nr-t-knob");B.addEventListener("touchstart",l=>{l.preventDefault(),R.init(),S.moveId=l.changedTouches[0].identifier},{passive:!1}),B.addEventListener("touchmove",l=>{l.preventDefault();for(let P of l.changedTouches)if(P.identifier===S.moveId){let M=B.getBoundingClientRect(),et=M.width*.4,ct=P.clientX-(M.left+M.width*.5),lt=P.clientY-(M.top+M.height*.5),ot=Math.hypot(ct,lt);ot>et&&(ct=ct/ot*et,lt=lt/ot*et),tt.style.transform=`translate(${ct}px, ${lt}px)`,S.mx=ct/et,S.my=lt/et}},{passive:!1});let at=l=>{for(let P of l.changedTouches)P.identifier===S.moveId&&(S.moveId=null,S.mx=0,S.my=0,tt.style.transform="")};B.addEventListener("touchend",at),B.addEventListener("touchcancel",at),m("nr-tb-dash").addEventListener("touchstart",l=>{l.preventDefault(),Pt()}),m("nr-tb-jump").addEventListener("touchstart",l=>{l.preventDefault(),Rt()});let H=_.create(),$=_.create(),ht=_.create(),U=_.create(),W=_.create(),it=_.create(),dt=m("nr-scope"),Z=dt?dt.getContext("2d"):null,Mt=new Uint8Array(512);function ft(l,P,M,et,ct=.4,lt=2.2,ot=1){t.uniformMatrix4fv(p.uModel,!1,P),t.uniform1i(p.uMat,M),t.uniform3fv(p.uColor,et),t.uniform3f(p.uParams,ct,lt,ot),t.bindVertexArray(l.vao),t.drawElements(t.TRIANGLES,l.count,l.indexType,0)}let Ft=performance.now(),Ct=0,$t=0;function Jt(l){requestAnimationFrame(Jt);let P=(l-Ft)*.001;Ft=l;let M=Math.min(P,.05);if(a.time+=M,Ct+=P,$t++,Ct>=.5&&(a.fps=Math.round($t/Ct),Ct=0,$t=0,m("nr-perf").textContent=`${a.fps} FPS \xB7 ${b[a.brushMode]}`),Z&&m("nr-studio").classList.contains("open")&&R.analyser){R.analyser.getByteTimeDomainData(Mt),Z.fillStyle="#071126",Z.fillRect(0,0,560,64),Z.strokeStyle="#f4c534",Z.lineWidth=2,Z.beginPath();for(let y=0;y<Mt.length;y++){let f=y/Mt.length*560,z=Mt[y]/255*64;y===0?Z.moveTo(f,z):Z.lineTo(f,z)}Z.stroke()}let et=a.mode==="playing"||a.mode==="freeride";if(et){a.mode==="playing"&&(a.runTime+=M);let y=(E.KeyW||E.ArrowUp?1:0)-(E.KeyS||E.ArrowDown?1:0)-S.my,f=(E.KeyA||E.ArrowLeft?1:0)-(E.KeyD||E.ArrowRight?1:0)-S.mx;o.dashT=Math.max(0,o.dashT-M),o.boostT=Math.max(0,o.boostT-M),o.hurtCd=Math.max(0,o.hurtCd-M),o.energy=Math.min(100,o.energy+9.5*M);let z=o.dashT>0?23.5:o.boostT>0?21:o.surf==="water"?11.2:16.5;if(y>.05)o.speed=gt(o.speed,z*Math.min(1,y),3.6,M);else if(y<-.05)o.speed=gt(o.speed,-4.5,4.5,M);else{let O=o.dashT>0?19.5:0;o.speed=Math.max(O,gt(o.speed,0,1.65,M))}o.steer=gt(o.steer,Q(f,-1,1),8.5,M);let xt=q(2.25,1.48,Q(Math.abs(o.speed)/22,0,1));o.yaw=re(o.yaw+o.steer*xt*M),o.bank=gt(o.bank,o.steer*Q(o.speed/15,.15,1)*.22,8,M);let rt=-Math.sin(o.yaw),pt=-Math.cos(o.yaw);o.x+=rt*o.speed*M,o.z+=pt*o.speed*M;let Tt=Math.hypot(o.x,o.z+6);if(Tt>95){let O=(Tt-95)*.65;o.x-=o.x/Tt*O,o.z-=(o.z+6)/Tt*O}for(let O=0;O<x.obstacles.length;O++){let T=x.obstacles[O],Dt=o.x-T.x,ae=o.z-T.z,Zt=T.r+.95,Wt=Math.hypot(Dt,ae);Wt<Zt&&Wt>.001&&(o.x=T.x+Dt/Wt*Zt,o.z=T.z+ae/Wt*Zt)}o.vy-=21*M,o.y+=o.vy*M;let Nt=bt(o.x,o.z),Ae=bt(o.x+rt*1.2,o.z+pt*1.2);o.surf=Nt.surf,o.y<=Nt.y+.02&&o.vy<=0?(o.y=Nt.y,o.vy=0,o.grounded=!0):o.grounded=!1;let Pe=o.grounded?Q(Math.atan2(Ae.y-Nt.y,1.2),-.45,.45):Q(o.vy*.035,-.38,.42);o.pitch=gt(o.pitch,Pe,9,M);let Lt=Math.abs(o.speed);if(Lt>.4&&(o.gaitPhase+=M*(3.2+Lt*.68),o.grounded)){let O=Math.floor(o.gaitPhase/(Math.PI*2)*4)%4;if(O!==o.lastBeat&&(o.lastBeat=O,R.playHoof(o.surf,Q(Lt/18,0,1),O),Lt>8.5||o.dashT>0||o.surf==="water")){let T=o.dashT>0?[1,.86,.3]:o.surf==="water"?[.42,.8,.98]:[.95,.74,.24];Y(o.x-rt*.6+(Math.random()-.5)*.5,o.y+.25,o.z-pt*.6+(Math.random()-.5)*.5,-rt*1.8+(Math.random()-.5)*1.6,1.4+Math.random()*1.8,-pt*1.8+(Math.random()-.5)*1.6,T,o.dashT>0?.52:.32,.65)}}a.comboTimer>0&&(a.comboTimer-=M,a.comboTimer<=0&&(a.combo=0));for(let O=0;O<x.starSeeds.length;O++){let T=x.starSeeds[O];if(T.taken){T.respawn-=M,T.respawn<=0&&(T.taken=!1);continue}Math.hypot(T.x-o.x,T.z-o.z)<2.45&&Math.abs(T.y-(o.y+1.2))<2.6&&(T.taken=!0,T.respawn=28,a.seedsCollected++,a.combo++,a.comboTimer=5.5,a.score+=50+Math.min(a.combo,10)*10,o.energy=Math.min(100,o.energy+18),R.playStarChime(a.combo-1),N(T.x,T.y,T.z,8,!0))}for(let O=0;O<x.skyHoops.length;O++){let T=x.skyHoops[O];T.cd=Math.max(0,T.cd-M),T.cd<=0&&Math.hypot(T.x-o.x,T.z-o.z)<2.85&&Math.abs(T.y-(o.y+1.5))<2.8&&(T.cd=6,o.boostT=2.6,o.speed=Math.max(o.speed+5.5,21),o.energy=Math.min(100,o.energy+35),a.combo+=2,a.comboTimer=6,a.score+=300,R.playHoopBoost(),N(T.x,T.y,T.z,20,!0),J("\u8DC3\u7A7F\u661F\u73AF \xB7 \u6781\u901F\u661F\u6D41 +300"))}for(let O=0;O<x.constellations.length;O++){let T=x.constellations[O];if(T.lit){T.litAnim=Math.min(1,T.litAnim+M*.9);continue}Math.hypot(T.x-o.x,T.z-o.z)<4.2&&(T.lit=!0,T.litAnim=.05,a.litCount++,a.score+=500,o.energy=100,R.playConstellationHarp(),N(T.x,T.y+2.2,T.z,36,!0),Ut(),a.litCount<5?(ut(`\u70B9\u4EAE \xB7 ${T.name}`,`\u5723\u96F7\u7C73\u661F\u5BAB\u5DF2\u590D\u82CF [${a.litCount} / 5]`),J(`\u661F\u8C61\u590D\u82CF\uFF1A${T.name} (+500)`)):(x.portal.open=!0,ut("\u4E94\u66DC\u8FDE\u73E0 \xB7 \u753B\u6846\u4E4B\u95E8\u5F00\u542F","\u7B56\u9A6C\u767B\u9876\u5317\u65B9\u300C\u65B0\u6708\u5C71\u5DC5\u300D\u5B8C\u6210\u4F20\u4E16\u753B\u4F5C\uFF01"),J("\u7EC8\u7AE0\u5F00\u542F\uFF1A\u524D\u5F80\u5317\u65B9\u65B0\u6708\u5C71\u5DC5\u8DC3\u5165\u91D1\u8272\u5DE8\u578B\u753B\u6846\uFF01")))}for(let O=0;O<x.whirlwinds.length;O++){let T=x.whirlwinds[O];if(T.respawn>0){T.respawn-=M;continue}T.ang+=T.spd*M,T.x=T.cx+Math.cos(T.ang)*T.orbitR,T.z=T.cz+Math.sin(T.ang)*T.orbitR,T.y=bt(T.x,T.z).y,Math.hypot(T.x-o.x,T.z-o.z)<2.65&&(o.dashT>0||o.boostT>0?(T.respawn=18,a.purified++,a.combo+=2,a.comboTimer=6,a.score+=250,o.energy=Math.min(100,o.energy+30),R.playPurifyGloom(),N(T.x,T.y+1.8,T.z,28,!0),J("\u661F\u6D41\u6325\u6BEB \xB7 \u51C0\u9664\u591C\u9B47\u58A8\u6DA1 +250")):o.hurtCd<=0&&(o.hurtCd=1.4,o.speed*=.35,a.combo=0,o.energy=Math.max(0,o.energy-18),R.playGloomBump(),J("\u89E6\u78B0\u591C\u9B47\u58A8\u6DA1\uFF01\u6309 Shift / \u5DE6\u952E\u661F\u6D41\u51B2\u523A\u53EF\u5C06\u5176\u7ED8\u6210\u91D1\u661F")))}x.portal.open&&a.mode==="playing"&&Math.hypot(x.portal.x-o.x,x.portal.z-o.z)<4.1&&(a.score+=1e3,_t()),v.orbitYaw=gt(v.orbitYaw,v.targetOrbit,6,M);let Gt=D[a.camMode],te=o.yaw+v.orbitYaw,ee=o.x+Math.sin(te)*Gt.dist,oe=o.z+Math.cos(te)*Gt.dist,Re=bt(ee,oe).y,Ee=Math.max(Re+1.05,o.y+Gt.height);v.x=gt(v.x,ee,10,M),v.y=gt(v.y,Ee,9,M),v.z=gt(v.z,oe,10,M);let Ce=o.dashT>0?68:o.boostT>0?65:58+Q(Lt/18,0,1)*5;v.fov=gt(v.fov,Ce,7,M),_.lookAt($,v.x,v.y,v.z,o.x+rt*3.2,o.y+Gt.lookY,o.z+pt*3.2,0,1,0),m("nr-score-val").textContent=`${a.score}`,m("nr-combo-val").textContent=a.combo>1?`\u8FDE\u51FB \xD7${a.combo}`:"\u661F\u5F69\u5199\u751F",m("nr-speed-val").textContent=`${Math.round(Lt*3.2)}`,m("nr-energy-fill").style.width=`${Math.round(o.energy)}%`;let ne=(Math.round(-o.yaw*180/Math.PI)%360+360)%360,Se=["\u5317 N","\u4E1C\u5317","\u4E1C E","\u4E1C\u5357","\u5357 S","\u897F\u5357","\u897F W","\u897F\u5317"];m("nr-compass").textContent=`${Se[Math.round(ne/45)%8]} \xB7 ${String(ne).padStart(3,"0")}\xB0`}else{let y=a.time*.14;v.x=Math.sin(y)*32-6,v.z=Math.cos(y)*32-12,v.y=Math.max(bt(v.x,v.z).y+4.5,9.5+Math.sin(a.time*.3)*1.5),v.fov=58,_.lookAt($,v.x,v.y,v.z,-10,7.5,-34,0,1,0)}nt>0&&(nt-=M,nt<=0&&m("nr-banner").classList.remove("show")),R.update(M,Q(Math.abs(o.speed)/18,0,1),a.litCount,et);for(let y=I.length-1;y>=0;y--){let f=I[y];if(f.life-=M,f.life<=0){I.splice(y,1);continue}f.vy-=5.2*M,f.x+=f.vx*M,f.y+=f.vy*M,f.z+=f.vz*M}let ct=G/Math.max(1,h);if(_.perspective(H,v.fov*Math.PI/180,ct,.35,750),_.mul(ht,H,$),et){let y=e.getBoundingClientRect();x.constellations.forEach((z,xt)=>{let rt=mt[xt];if(z.lit){rt.style.display="none";return}let pt=_.projectToScreen(ht,z.x,z.y+4.2,z.z,y.width,y.height);if(!pt||pt.x<16||pt.x>y.width-16||pt.y<16||pt.y>y.height-16)rt.style.display="none";else{let Tt=Math.round(Math.hypot(z.x-o.x,z.z-o.z));rt.style.display="flex",rt.style.transform=`translate(${pt.x}px, ${pt.y}px) translate(-50%, -50%)`,rt.innerHTML=`<i class="wp-diamond"></i><span>${z.name.split(" \xB7 ")[0]} \xB7 ${Tt}m</span>`}});let f=mt[5];if(x.portal.open&&a.mode==="playing"){let z=_.projectToScreen(ht,x.portal.x,x.portal.y+6,x.portal.z,y.width,y.height);if(z&&z.x>16&&z.x<y.width-16&&z.y>16&&z.y<y.height-16){let xt=Math.round(Math.hypot(x.portal.x-o.x,x.portal.z-o.z));f.style.display="flex",f.style.transform=`translate(${z.x}px, ${z.y}px) translate(-50%, -50%)`,f.innerHTML=`<i class="wp-diamond gold"></i><span>\u65B0\u6708\u5C71\u5DC5\u753B\u6846 \xB7 ${xt}m</span>`}else f.style.display="none"}else f.style.display="none"}t.bindFramebuffer(t.FRAMEBUFFER,K),t.viewport(0,0,G,h),t.enable(t.DEPTH_TEST),t.depthMask(!0),t.disable(t.BLEND),t.clearColor(.05,.11,.25,1),t.clear(t.COLOR_BUFFER_BIT|t.DEPTH_BUFFER_BIT),t.useProgram(s),t.depthMask(!1),t.uniformMatrix4fv(u.uProj,!1,H),t.uniformMatrix4fv(u.uView,!1,$),t.uniform3f(u.uCamPos,v.x,v.y,v.z),t.uniform1f(u.uTime,a.time);for(let y=0;y<5;y++)t.uniform1f(u.uConstLit[y],x.constellations[y].litAnim);t.bindVertexArray(g.sphere.vao),t.drawElements(t.TRIANGLES,g.sphere.count,g.sphere.indexType,0),t.depthMask(!0),t.useProgram(r),t.uniformMatrix4fv(p.uProj,!1,H),t.uniformMatrix4fv(p.uView,!1,$),t.uniform3f(p.uCamPos,v.x,v.y,v.z);let lt=o.x-Math.sin(o.yaw-.5)*.65,ot=o.z-Math.cos(o.yaw-.5)*.65;t.uniform3f(p.uLanternPos,lt,o.y+1.9,ot),t.uniform1f(p.uTime,a.time),t.uniform1f(p.uDashGlow,o.dashT>0?1:o.boostT>0?.6:0),_.trs(U,0,0,0,0,0,0,1,1,1),ft(g.terrain,U,1,[1,1,1],.55,1.8,1),ft(g.river,U,2,[1,1,1],.25,1,1);for(let y=0;y<x.draws.length;y++){let f=x.draws[y];ft(f.mesh,f.m,f.mat,f.color,f.params[0],f.params[1],f.params[2])}x.windmills.forEach((y,f)=>{let z=y.x+Math.sin(y.yaw)*2.25,xt=y.z+Math.cos(y.yaw)*2.25,rt=a.time*.95+f*1.2;_.trs(U,z,y.y,xt,0,y.yaw,rt,1,1,1),_.trs(W,0,0,0,0,0,0,.28,7.6,.14),ft(g.box,_.mul(it,U,W),4,[.84,.72,.42],.45,2),_.trs(W,0,0,0,0,0,0,7.6,.28,.14),ft(g.box,_.mul(it,U,W),4,[.84,.72,.42],.45,2)});for(let y=0;y<x.starSeeds.length;y++){let f=x.starSeeds[y];if(f.taken)continue;let z=f.y+Math.sin(a.time*3.4+f.phase)*.24;_.trs(U,f.x,z,f.z,.4,a.time*2.2+f.phase,.4,.62,.62,.62),ft(g.sphere,U,6,[1,.86,.28],1.95,1,1)}for(let y=0;y<x.skyHoops.length;y++){let f=x.skyHoops[y];_.trs(U,f.x,f.y,f.z,0,f.yaw,a.time*.8,4.2,4.2,4.2);let z=f.cd>0?[.42,.72,.95]:[1,.82,.24];ft(g.torus,U,6,z,1.85,1,1)}for(let y=0;y<x.constellations.length;y++){let f=x.constellations[y],z=f.lit?[1,.86,.3]:[.38,.72,.98];_.trs(U,f.x,f.y+2.35,f.z,0,a.time*(f.lit?1.8:.7),0,3.1,3.1,3.1),ft(g.torus,U,6,z,f.lit?2.2:1.5,1,1),_.trs(U,f.x,f.y+2.35,f.z,.5,-a.time*1.2,.5,.75,.75,.75),ft(g.sphere,U,6,z,2.2,1,1)}for(let y=0;y<x.whirlwinds.length;y++){let f=x.whirlwinds[y];if(!(f.respawn>0))for(let z=0;z<4;z++){let xt=1.2+z*.72,rt=Math.sin(a.time*5+z)*.22;_.trs(U,f.x+rt,f.y+.65+z*.92,f.z-rt,Math.PI*.5+rt*.2,a.time*(4.5-z*.7),0,xt,xt,xt*1.2),ft(g.torus,U,4,[.05,.11,.2],.7,2,1)}}Te(ft,g,o,a.time),t.enable(t.BLEND),t.blendFunc(t.SRC_ALPHA,t.ONE_MINUS_SRC_ALPHA),t.depthMask(!1);let wt=Math.min(I.length,k.maxDynamic),st=k.staticCount*12;for(let y=0;y<wt;y++){let f=I[y],z=Q(f.life/f.maxLife,0,1);k.instanceData[st]=f.x,k.instanceData[st+1]=f.y,k.instanceData[st+2]=f.z,k.instanceData[st+3]=f.scale*(.5+.5*z),k.instanceData[st+4]=f.rot,k.instanceData[st+5]=0,k.instanceData[st+6]=0,k.instanceData[st+7]=2,k.instanceData[st+8]=f.r,k.instanceData[st+9]=f.g,k.instanceData[st+10]=f.b,k.instanceData[st+11]=z*.95,st+=12}t.useProgram(d),t.uniformMatrix4fv(w.uProj,!1,H),t.uniformMatrix4fv(w.uView,!1,$),t.uniform3f(w.uRiderPos,o.x,o.y,o.z),t.uniform1f(w.uTime,a.time),t.bindVertexArray(k.vao),wt>0&&(t.bindBuffer(t.ARRAY_BUFFER,k.instVBO),t.bufferSubData(t.ARRAY_BUFFER,k.staticCount*12*4,k.instanceData.subarray(k.staticCount*12,(k.staticCount+wt)*12))),t.drawElementsInstanced(t.TRIANGLES,k.indexCount,t.UNSIGNED_SHORT,0,k.staticCount+wt),t.blendFunc(t.SRC_ALPHA,t.ONE),t.useProgram(r);for(let y=0;y<x.constellations.length;y++){let f=x.constellations[y],z=Math.hypot(f.x-v.x,f.z-v.z),xt=Q((z-3.5)/8.5,.08,1),rt=f.lit?[1,.85,.32]:[.25,.62,.96],pt=(f.lit?.16:.09)*xt,Tt=f.lit?.42:.28;_.trs(U,f.x,f.y+42,f.z,0,a.time*.5,0,Tt,84,Tt),ft(g.cyl,U,6,rt,1.4,1,pt)}{let y=x.portal.open,f=y?[1,.86,.32]:[.22,.52,.88];_.trs(U,x.portal.x,x.portal.y+4.2,x.portal.z,0,0,0,5.7,6.2,.18),ft(g.box,U,6,f,y?2.1:.9,1,y?.52:.16),y&&(_.trs(U,x.portal.x,x.portal.y+48,x.portal.z,0,a.time,0,2.2,96,2.2),ft(g.cyl,U,6,[1,.86,.34],1.8,1,.28))}t.depthMask(!0),t.disable(t.BLEND),t.bindFramebuffer(t.FRAMEBUFFER,null),t.viewport(0,0,n.width,n.height),t.disable(t.DEPTH_TEST),t.useProgram(c),t.activeTexture(t.TEXTURE0),t.bindTexture(t.TEXTURE_2D,j),t.uniform1i(V.uTex,0),t.uniform2f(V.uRes,G,h),t.uniform1i(V.uBrushMode,a.brushMode),t.uniform1f(V.uTime,a.time);let Kt=o.dashT>0?1:o.boostT>0?.75:Q((Math.abs(o.speed)-12)/10,0,.45);t.uniform1f(V.uSpeedBlur,et?Kt:0),t.bindVertexArray(L),t.drawArrays(t.TRIANGLES,0,3)}window.__NIGHTRIDER__={state:a,rider:o,world:x,gl:t,startRide:Vt,triggerDash:Pt,triggerJump:Rt,cycleBrushMode:Et},requestAnimationFrame(Jt)}Le();</script>
+</body>
+</html>

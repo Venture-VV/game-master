@@ -1,0 +1,684 @@
+/* Museum-Grade Van Gogh Provençal Nocturne UI — Vanilla CSS */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: #f5edd8;
+  font-family: "Optima", "Georgia", "Songti SC", "STSong", "Noto Serif SC", "PingFang SC", serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body.standalone-body {
+  background: #060f23;
+  overflow: hidden;
+}
+
+#nightrider-app {
+  --prussian: rgba(8, 19, 42, 0.84);
+  --prussian-deep: rgba(5, 13, 30, 0.92);
+  --linen: #f5edd8;
+  --linen-muted: rgba(245, 237, 216, 0.72);
+  --hairline: rgba(245, 237, 216, 0.22);
+  --hairline-strong: rgba(245, 237, 216, 0.42);
+  --cadmium: #f4c534;
+  --ochre: #e59628;
+  --cerulean: #5ca8e6;
+
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #060f23;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  font-variant-numeric: tabular-nums;
+  touch-action: none;
+  transition: height 0.22s ease;
+}
+
+#nightrider-app.tall {
+  height: 720px;
+}
+
+#nightrider-app.standalone {
+  height: 100vh;
+  border-radius: 0;
+  border: 0;
+}
+
+#nightrider-app:fullscreen,
+#nightrider-app:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+#nr-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  outline: none;
+}
+
+#nr-canvas:active {
+  cursor: grabbing;
+}
+
+/* In-Game Painterly HUD */
+#nr-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+#nr-hud.active {
+  opacity: 1;
+}
+
+#nr-perf {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  color: var(--linen-muted);
+  background: rgba(6, 15, 34, 0.62);
+  padding: 4px 8px;
+  border: 1px solid var(--hairline);
+}
+
+#nr-top-center {
+  position: absolute;
+  top: 10px;
+  left: 43%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: min(320px, 42%);
+}
+
+#nr-compass {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--cadmium);
+  background: var(--prussian);
+  padding: 3px 12px;
+  border: 1px solid var(--hairline);
+}
+
+#nr-quest-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: var(--prussian);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(8px);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#nr-stage-tag {
+  color: var(--cadmium);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.nr-pips {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.nr-star-pip {
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border: 1px solid var(--cadmium);
+  background: transparent;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.nr-star-pip.lit {
+  background: var(--cadmium);
+  transform: rotate(45deg) scale(1.18);
+}
+
+#nr-quick-bar {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.nr-mini-btn {
+  padding: 4px 9px;
+  background: var(--prussian);
+  color: var(--linen);
+  border: 1px solid var(--hairline);
+  font-size: 12px;
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.nr-mini-btn:hover {
+  background: rgba(244, 197, 52, 0.18);
+  border-color: var(--hairline-strong);
+}
+
+/* Waypoints & Center Banner */
+#nr-waypoints {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nr-wp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  background: rgba(7, 17, 38, 0.78);
+  border: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  color: var(--linen);
+  white-space: nowrap;
+}
+
+.wp-diamond {
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: var(--cerulean);
+  display: inline-block;
+}
+
+.wp-diamond.gold {
+  background: var(--cadmium);
+}
+
+#nr-banner {
+  position: absolute;
+  top: 23%;
+  left: 50%;
+  transform: translate(-50%, -8px);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  background: rgba(6, 15, 34, 0.76);
+  padding: 10px 22px;
+  border-top: 1px solid var(--hairline-strong);
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+#nr-banner.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+#nr-banner-title {
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--cadmium);
+  font-weight: 700;
+}
+
+#nr-banner-sub {
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--linen);
+  margin-top: 3px;
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+}
+
+#nr-toast-feed {
+  position: absolute;
+  top: 78px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 248px;
+}
+
+.nr-toast {
+  padding: 5px 10px;
+  background: var(--prussian);
+  border-left: 2px solid var(--cadmium);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--linen);
+}
+
+/* Bottom HUD Cards */
+#nr-energy-card {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  min-width: 186px;
+  padding: 8px 12px;
+  background: var(--prussian);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.card-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-lbl {
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--linen-muted);
+}
+
+#nr-speed-val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--linen);
+  line-height: 1;
+}
+
+.energy-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(245, 237, 216, 0.16);
+}
+
+#nr-energy-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--cadmium);
+  transition: width 0.14s ease;
+}
+
+#nr-score-card {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  min-width: 154px;
+  padding: 8px 12px;
+  background: var(--prussian);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#nr-score-val {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cadmium);
+  line-height: 1;
+}
+
+#nr-combo-val {
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--linen-muted);
+}
+
+#nr-controls-tip {
+  position: absolute;
+  bottom: 14px;
+  left: 53%;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  background: rgba(7, 17, 38, 0.76);
+  border: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  color: var(--linen-muted);
+  white-space: nowrap;
+}
+
+/* Title, Pause & Masterpiece Debrief Overlay */
+#nr-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: radial-gradient(circle at 52% 42%, rgba(7, 18, 42, 0.36), rgba(4, 10, 24, 0.86));
+  transition: opacity 0.32s ease;
+}
+
+#nr-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nr-placard {
+  width: min(760px, 96%);
+  max-height: 95%;
+  overflow-y: auto;
+  background: var(--prussian-deep);
+  border: 1px solid var(--hairline-strong);
+  backdrop-filter: blur(14px);
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nr-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--cadmium);
+}
+
+.nr-placard h1 {
+  font-size: clamp(22px, 3.4vw, 32px);
+  letter-spacing: 3px;
+  line-height: 1.12;
+  color: var(--linen);
+}
+
+.nr-desc {
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--linen-muted);
+  max-width: 68ch;
+}
+
+#nr-debrief {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(245, 237, 216, 0.05);
+  border: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+}
+
+#nr-debrief.show {
+  display: grid;
+}
+
+.db-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--linen-muted);
+}
+
+.db-cell strong {
+  font-size: 18px;
+  color: var(--linen);
+}
+
+.db-cell.gold strong {
+  color: var(--cadmium);
+}
+
+.nr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.nr-btn-primary {
+  padding: 8px 20px;
+  background: var(--cadmium);
+  color: #08132a;
+  border: 1px solid var(--cadmium);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: transform 0.14s ease, background 0.14s ease;
+}
+
+.nr-btn-primary:hover {
+  background: #ffd659;
+  transform: translateY(-1px);
+}
+
+.nr-btn-secondary {
+  padding: 8px 13px;
+  background: rgba(245, 237, 216, 0.07);
+  color: var(--linen);
+  border: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.nr-btn-secondary:hover {
+  background: rgba(245, 237, 216, 0.15);
+  border-color: var(--hairline-strong);
+}
+
+/* Acoustic Nocturne Studio Panel */
+#nr-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 12px;
+  background: rgba(4, 10, 24, 0.85);
+  border: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+}
+
+#nr-studio.open {
+  display: flex;
+}
+
+.studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--cadmium);
+}
+
+#nr-scope {
+  width: 100%;
+  height: 54px;
+  background: #071126;
+  border: 1px solid var(--hairline);
+}
+
+.studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.studio-trigger {
+  padding: 4px 9px;
+  background: rgba(245, 237, 216, 0.08);
+  color: var(--linen);
+  border: 1px solid var(--hairline);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.studio-trigger:hover {
+  border-color: var(--cadmium);
+  color: var(--cadmium);
+}
+
+/* Settings & Compact Key Guide */
+.nr-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 6px;
+  border-top: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  color: var(--linen-muted);
+}
+
+.set-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.brush-pill,
+.nr-q-pill {
+  padding: 3px 8px;
+  background: transparent;
+  color: var(--linen-muted);
+  border: 1px solid var(--hairline);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.brush-pill.active,
+.nr-q-pill.active {
+  background: rgba(244, 197, 52, 0.22);
+  color: var(--cadmium);
+  border-color: var(--cadmium);
+}
+
+#nr-vol {
+  width: 78px;
+  accent-color: var(--cadmium);
+}
+
+.nr-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 12px;
+  padding-top: 6px;
+  border-top: 1px solid var(--hairline);
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  font-size: 12px;
+  color: var(--linen-muted);
+}
+
+.nr-keys-grid div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.nr-keys-grid kbd {
+  color: var(--cadmium);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Mobile Touch Overlay */
+#nr-touch {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: none;
+  pointer-events: none;
+}
+
+#nr-touch.show {
+  display: block;
+}
+
+#nr-t-pad {
+  position: absolute;
+  left: 18px;
+  bottom: 78px;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-strong);
+  background: rgba(8, 19, 42, 0.45);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#nr-t-knob {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(244, 197, 52, 0.68);
+}
+
+.nr-t-actions {
+  position: absolute;
+  right: 18px;
+  bottom: 84px;
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.nr-t-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--prussian);
+  color: var(--linen);
+  border: 1px solid var(--hairline-strong);
+  font-size: 12px;
+}
+
+.nr-t-btn.gold {
+  border-color: var(--cadmium);
+  color: var(--cadmium);
+}
+
+@media (max-width: 720px) {
+  #nr-controls-tip {
+    display: none;
+  }
+  .nr-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #nr-debrief {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

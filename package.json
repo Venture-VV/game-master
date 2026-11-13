@@ -1,7 +1,7 @@
 {
   "name": "saltline-black-tide",
   "version": "1.0.0",
-  "description": "断潮行动 (SALTLINE: BLACK TIDE) — Zero-external-asset procedural 3D WebGL2 tactical FPS inspired by viral Fable 5.2 browser AAA games",
+  "description": "Fable 5.2 纯代码 3D 网页游戏双作集 — 星月夜骑士 (Starry Nightrider) & 断潮行动 (Saltline: Black Tide)",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
