@@ -1,0 +1,714 @@
+/* Monet & Little-Prince Storybook Water Palette — Scoped Vanilla CSS (>=12px Typography, Zero Global Custom Properties) */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #071620;
+  overflow: hidden;
+}
+
+#water-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #071620;
+  color: #f4f1e6;
+  border: 1px solid rgba(79, 209, 197, 0.28);
+}
+
+#water-app.tall {
+  height: 720px;
+}
+
+#water-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#wk-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: pointer;
+}
+
+/* In-Game Poetic HUD */
+#wk-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#wk-hud.visible {
+  opacity: 1;
+}
+
+#wk-perf {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  background: rgba(9, 24, 34, 0.84);
+  border: 1px solid rgba(79, 209, 197, 0.28);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #4fd1c5;
+  white-space: nowrap;
+}
+
+#wk-top-center {
+  position: absolute;
+  top: 10px;
+  left: 37%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+#wk-quest-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 11px;
+  background: rgba(9, 24, 34, 0.88);
+  border: 1px solid rgba(245, 196, 81, 0.36);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#wk-realm-tag {
+  padding: 1px 6px;
+  background: #f5c451;
+  color: #071620;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+#wk-mem-desc {
+  color: #f4f1e6;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+#wk-realm-bar {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  pointer-events: auto;
+}
+
+.wk-realm-pill {
+  min-width: 22px;
+  height: 21px;
+  padding: 0 5px;
+  background: rgba(9, 24, 34, 0.84);
+  border: 1px solid rgba(79, 209, 197, 0.26);
+  color: rgba(244, 241, 230, 0.82);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.wk-realm-pill:hover {
+  border-color: #4fd1c5;
+  color: #ffffff;
+}
+
+.wk-realm-pill.active {
+  background: #4fd1c5;
+  border-color: #9ff3ea;
+  color: #071620;
+  font-weight: 700;
+}
+
+.wk-realm-pill.next {
+  border-color: rgba(245, 196, 81, 0.42);
+  color: #f5c451;
+}
+
+/* Quick Action Bar Top-Right */
+#wk-quick-bar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.wk-mini-btn {
+  padding: 4px 7px;
+  background: rgba(9, 24, 34, 0.86);
+  border: 1px solid rgba(79, 209, 197, 0.28);
+  color: #f4f1e6;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wk-mini-btn:hover {
+  background: rgba(18, 46, 62, 0.95);
+  border-color: #f5c451;
+}
+
+.wk-mini-btn.active-toggle {
+  background: rgba(79, 209, 197, 0.22);
+  border-color: #4fd1c5;
+  color: #9ef4eb;
+}
+
+/* Toast Feed Top-Right below Quick Bar */
+#wk-toast-feed {
+  position: absolute;
+  top: 44px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 224px;
+}
+
+.wk-toast {
+  padding: 4px 9px;
+  background: rgba(9, 24, 34, 0.88);
+  border-right: 3px solid #f5c451;
+  font-size: 12px;
+  text-align: right;
+  color: #f4f1e6;
+  animation: wkToastIn 0.22s ease-out;
+}
+
+@keyframes wkToastIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 3D Memory Pearl Waypoint Markers */
+#wk-waypoints {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.wk-wp {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5c451;
+  text-shadow: 0 1px 3px rgba(4, 12, 18, 0.95);
+  white-space: nowrap;
+}
+
+.wk-wp-diamond {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border: 1.5px solid #f5c451;
+  background: rgba(79, 209, 197, 0.45);
+}
+
+.wk-wp.awakened .wk-wp-diamond {
+  border-color: #fff3c4;
+  background: #f5c451;
+}
+
+/* Poetic Realm Transition Banner */
+#wk-banner {
+  position: absolute;
+  top: 31%;
+  left: 42%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  max-width: 380px;
+  padding: 7px 16px;
+  background: rgba(9, 24, 34, 0.86);
+  border-top: 1px solid rgba(245, 196, 81, 0.58);
+  border-bottom: 1px solid rgba(79, 209, 197, 0.48);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+#wk-banner.show {
+  opacity: 1;
+}
+
+#wk-banner-title {
+  font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #f5c451;
+}
+
+#wk-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: rgba(244, 241, 230, 0.88);
+}
+
+/* Bottom Telemetry Cards */
+#wk-skiff-card {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  width: 186px;
+  padding: 7px 10px;
+  background: rgba(9, 24, 34, 0.86);
+  border: 1px solid rgba(79, 209, 197, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.skiff-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#wk-speed-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  color: #f5c451;
+}
+
+.skiff-unit {
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.76);
+}
+
+.wk-meter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.80);
+}
+
+.wk-meter-lbl {
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.wk-meter-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.11);
+}
+
+#wk-oar-fill {
+  width: 25%;
+  height: 100%;
+  background: #4fd1c5;
+  transition: width 0.08s linear;
+}
+
+#wk-chime-fill {
+  width: 100%;
+  height: 100%;
+  background: #f5c451;
+  transition: width 0.12s linear;
+}
+
+#wk-voyage-fill {
+  width: 0%;
+  height: 100%;
+  background: #f28b66;
+  transition: width 0.18s linear;
+}
+
+#wk-controls-tip {
+  position: absolute;
+  bottom: 10px;
+  left: 54%;
+  transform: translateX(-50%);
+  padding: 5px 11px;
+  background: rgba(9, 24, 34, 0.82);
+  border: 1px solid rgba(79, 209, 197, 0.24);
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.84);
+  white-space: nowrap;
+}
+
+#wk-score-card {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 7px 12px;
+  background: rgba(9, 24, 34, 0.86);
+  border: 1px solid rgba(245, 196, 81, 0.30);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#wk-score-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  color: #f5c451;
+}
+
+#wk-state-val {
+  font-size: 12px;
+  color: #4fd1c5;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+/* Coarse Pointer Touch Controls */
+#wk-touch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@media (pointer: coarse) {
+  #wk-touch.active {
+    display: block;
+  }
+  #wk-controls-tip {
+    display: none;
+  }
+}
+
+#wk-t-pad {
+  position: absolute;
+  left: 16px;
+  bottom: 92px;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: rgba(9, 24, 34, 0.58);
+  border: 1px solid rgba(79, 209, 197, 0.48);
+  pointer-events: auto;
+}
+
+#wk-t-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgba(79, 209, 197, 0.88);
+}
+
+.wk-t-actions {
+  position: absolute;
+  right: 16px;
+  bottom: 92px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.wk-t-btn {
+  padding: 11px 14px;
+  background: rgba(9, 24, 34, 0.86);
+  border: 1px solid rgba(79, 209, 197, 0.52);
+  color: #f4f1e6;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.wk-t-btn.gold {
+  background: #f5c451;
+  border-color: #ffe08a;
+  color: #071620;
+}
+
+/* Title / Pause / Sanctuary Arrival Overlay */
+#wk-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(7, 22, 32, 0.58) 0%, rgba(7, 22, 32, 0.84) 100%);
+  overflow-y: auto;
+}
+
+#wk-overlay.hidden {
+  display: none;
+}
+
+.wk-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 15px 20px;
+  background: rgba(9, 24, 34, 0.90);
+  border: 1px solid rgba(79, 209, 197, 0.34);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wk-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.8px;
+  color: #4fd1c5;
+}
+
+.wk-placard h1 {
+  font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(21px, 3vw, 30px);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #f7f3e6;
+  margin-top: 2px;
+}
+
+.wk-desc {
+  font-size: 13px;
+  line-height: 1.52;
+  color: rgba(244, 241, 230, 0.84);
+  margin-top: 3px;
+}
+
+/* Sanctuary Arrival Debrief */
+#wk-debrief {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+#wk-debrief.show {
+  display: grid;
+}
+
+.wk-db-cell {
+  padding: 7px 10px;
+  background: rgba(14, 36, 49, 0.86);
+  border: 1px solid rgba(79, 209, 197, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.74);
+}
+
+.wk-db-cell strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  color: #f7f3e6;
+}
+
+.wk-db-cell.gold strong {
+  color: #f5c451;
+}
+
+/* Action Buttons Row */
+.wk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.wk-btn-primary {
+  padding: 8px 17px;
+  background: #f5c451;
+  border: 1px solid #ffe08a;
+  color: #071620;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.wk-btn-primary:hover {
+  background: #ffd166;
+  transform: translateY(-1px);
+}
+
+.wk-btn-secondary {
+  padding: 7px 12px;
+  background: rgba(14, 36, 49, 0.88);
+  border: 1px solid rgba(79, 209, 197, 0.32);
+  color: #f4f1e6;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wk-btn-secondary:hover {
+  background: rgba(22, 54, 72, 0.96);
+  border-color: #f5c451;
+}
+
+/* Impressionist Acoustic Studio & Oscilloscope */
+#wk-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 12px;
+  background: rgba(6, 17, 25, 0.90);
+  border: 1px solid rgba(79, 209, 197, 0.28);
+}
+
+#wk-studio.open {
+  display: flex;
+}
+
+.wk-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #4fd1c5;
+}
+
+#wk-scope {
+  width: 100%;
+  height: 54px;
+  background: #051119;
+  border: 1px solid rgba(79, 209, 197, 0.20);
+}
+
+.wk-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wk-sfx-trigger {
+  padding: 5px 10px;
+  background: rgba(14, 36, 49, 0.92);
+  border: 1px solid rgba(79, 209, 197, 0.26);
+  color: #f4f1e6;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.wk-sfx-trigger:hover {
+  border-color: #f5c451;
+  background: rgba(24, 58, 76, 0.96);
+}
+
+/* Settings & Compact Keybinds */
+.wk-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 7px;
+  border-top: 1px solid rgba(79, 209, 197, 0.16);
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.80);
+}
+
+.wk-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wk-pill {
+  padding: 3px 8px;
+  background: rgba(14, 36, 49, 0.86);
+  border: 1px solid rgba(79, 209, 197, 0.25);
+  color: rgba(244, 241, 230, 0.84);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.wk-pill.active {
+  background: #4fd1c5;
+  border-color: #9ff3ea;
+  color: #071620;
+  font-weight: 700;
+}
+
+#wk-vol {
+  width: 82px;
+  accent-color: #4fd1c5;
+}
+
+.wk-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 12px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(79, 209, 197, 0.16);
+  font-size: 12px;
+  color: rgba(244, 241, 230, 0.78);
+}
+
+.wk-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(245, 196, 81, 0.14);
+  border: 1px solid rgba(245, 196, 81, 0.36);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5c451;
+}
+
+@media (max-width: 760px) {
+  #wk-controls-tip {
+    display: none;
+  }
+  .wk-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #wk-debrief {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

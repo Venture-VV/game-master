@@ -1,0 +1,745 @@
+/* Surreal Architectural Sandstone Ivory, Horizon Turquoise, Solar Brass & Obsidian Monolith */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #090d14;
+  overflow: hidden;
+}
+
+#portals-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #090d14;
+  color: #f5efe4;
+  border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+#portals-app.tall {
+  height: 720px;
+}
+
+#portals-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#ep-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: crosshair;
+}
+
+/* In-Game Flight HUD */
+#ep-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+#ep-hud.visible {
+  opacity: 1;
+}
+
+#ep-perf {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  padding: 4px 9px;
+  background: rgba(11, 16, 23, 0.86);
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #2dd4bf;
+  white-space: nowrap;
+}
+
+#ep-top-center {
+  position: absolute;
+  top: 10px;
+  left: 41%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 316px;
+}
+
+#ep-world-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 11px;
+  background: rgba(11, 16, 23, 0.88);
+  border: 1px solid rgba(245, 158, 11, 0.36);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#ep-world-tag {
+  padding: 1px 6px;
+  background: #f59e0b;
+  color: #090d14;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+#ep-world-name {
+  color: #f5efe4;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.ep-pips {
+  display: inline-flex;
+  gap: 5px;
+  margin-left: 2px;
+}
+
+.ep-pip {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  transform: rotate(45deg);
+  border: 1px solid #2dd4bf;
+  background: rgba(45, 212, 191, 0.14);
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+
+.ep-pip.done {
+  background: #f59e0b;
+  border-color: #fde68a;
+  transform: rotate(45deg) scale(1.18);
+}
+
+.ep-portal-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(245, 239, 228, 0.14);
+}
+
+#ep-portal-fill {
+  width: 0%;
+  height: 100%;
+  background: #2dd4bf;
+  transition: width 0.08s linear;
+}
+
+/* Quick Action Bar Top-Right */
+#ep-quick-bar {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: flex;
+  gap: 5px;
+  pointer-events: auto;
+}
+
+.ep-mini-btn {
+  padding: 4px 8px;
+  background: rgba(11, 16, 23, 0.88);
+  border: 1px solid rgba(245, 239, 228, 0.24);
+  color: #f5efe4;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.ep-mini-btn:hover {
+  background: rgba(20, 30, 42, 0.96);
+  border-color: #f59e0b;
+}
+
+.ep-mini-btn.active {
+  background: rgba(45, 212, 191, 0.20);
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+  font-weight: 700;
+}
+
+/* Toast Feed */
+#ep-toast-feed {
+  position: absolute;
+  top: 44px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 212px;
+}
+
+.ep-toast {
+  padding: 4px 9px;
+  background: rgba(11, 16, 23, 0.88);
+  border-right: 3px solid #2dd4bf;
+  font-size: 12px;
+  text-align: right;
+  color: #f5efe4;
+  animation: epToastIn 0.22s ease-out;
+}
+
+@keyframes epToastIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 3D Portal Waypoint Reticle */
+#ep-waypoints {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ep-wp {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5efe4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+  white-space: nowrap;
+}
+
+.ep-wp-diamond {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border: 1.5px solid #f59e0b;
+  background: rgba(45, 212, 191, 0.42);
+}
+
+/* Center World Arrival Banner */
+#ep-banner {
+  position: absolute;
+  top: 30%;
+  left: 43%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  max-width: 390px;
+  padding: 7px 18px;
+  background: rgba(11, 16, 23, 0.88);
+  border-top: 1px solid rgba(245, 158, 11, 0.62);
+  border-bottom: 1px solid rgba(45, 212, 191, 0.62);
+  opacity: 0;
+  transition: opacity 0.30s ease;
+}
+
+#ep-banner.show {
+  opacity: 1;
+}
+
+#ep-banner-title {
+  font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #f5efe4;
+}
+
+#ep-banner-sub {
+  margin-top: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  color: #2dd4bf;
+}
+
+/* Bottom Flight Telemetry Cards */
+#ep-glider-card {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  width: 188px;
+  padding: 7px 10px;
+  background: rgba(11, 16, 23, 0.88);
+  border: 1px solid rgba(245, 239, 228, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.glider-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#ep-speed-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.glider-unit {
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.74);
+}
+
+.ep-meter-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.80);
+}
+
+.ep-meter-lbl {
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.ep-meter-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(245, 239, 228, 0.12);
+}
+
+#ep-boost-fill {
+  width: 85%;
+  height: 100%;
+  background: #2dd4bf;
+  transition: width 0.08s linear;
+}
+
+.ep-combo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.74);
+}
+
+#ep-combo-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f59e0b;
+}
+
+#ep-controls-tip {
+  position: absolute;
+  bottom: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  background: rgba(11, 16, 23, 0.84);
+  border: 1px solid rgba(245, 239, 228, 0.18);
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.84);
+  white-space: nowrap;
+}
+
+#ep-score-card {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  min-width: 158px;
+  padding: 7px 12px;
+  background: rgba(11, 16, 23, 0.88);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#ep-score-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+#ep-state-val {
+  font-size: 12px;
+  color: #2dd4bf;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+/* Mobile / Coarse Pointer Touch Controls */
+#ep-touch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@media (pointer: coarse) {
+  #ep-touch.active {
+    display: block;
+  }
+  #ep-controls-tip {
+    display: none;
+  }
+}
+
+#ep-t-pad {
+  position: absolute;
+  left: 18px;
+  bottom: 92px;
+  width: 94px;
+  height: 94px;
+  border-radius: 50%;
+  background: rgba(11, 16, 23, 0.58);
+  border: 1px solid rgba(45, 212, 191, 0.48);
+  pointer-events: auto;
+}
+
+#ep-t-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgba(45, 212, 191, 0.88);
+}
+
+.ep-t-actions {
+  position: absolute;
+  right: 18px;
+  bottom: 92px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.ep-t-btn {
+  padding: 11px 14px;
+  background: rgba(11, 16, 23, 0.86);
+  border: 1px solid rgba(245, 158, 11, 0.50);
+  color: #f5efe4;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ep-t-btn.brass {
+  background: #f59e0b;
+  color: #090d14;
+}
+
+.ep-t-btn.turquoise {
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+}
+
+/* Title & Pause Architectural Placard Overlay */
+#ep-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: rgba(9, 13, 20, 0.62);
+  overflow-y: auto;
+}
+
+#ep-overlay.hidden {
+  display: none;
+}
+
+.ep-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px 20px;
+  background: rgba(11, 16, 23, 0.88);
+  border: 1px solid rgba(245, 158, 11, 0.34);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ep-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  color: #2dd4bf;
+}
+
+.ep-placard h1 {
+  font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(22px, 3.1vw, 31px);
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: #f5efe4;
+  margin-top: 3px;
+}
+
+.ep-desc {
+  font-size: 13px;
+  line-height: 1.52;
+  color: rgba(245, 239, 228, 0.84);
+  margin-top: 4px;
+}
+
+/* Pause / Flight Telemetry Grid */
+#ep-debrief {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+#ep-debrief.show {
+  display: grid;
+}
+
+.ep-db-cell {
+  padding: 7px 10px;
+  background: rgba(18, 25, 36, 0.88);
+  border: 1px solid rgba(245, 239, 228, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.72);
+}
+
+.ep-db-cell strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  color: #f5efe4;
+}
+
+.ep-db-cell.brass strong {
+  color: #f59e0b;
+}
+
+/* Primary & Secondary Action Row */
+.ep-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.ep-btn-primary {
+  padding: 8px 17px;
+  background: #f59e0b;
+  border: 1px solid #fbbf24;
+  color: #090d14;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.ep-btn-primary:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+}
+
+.ep-btn-turquoise {
+  padding: 8px 15px;
+  background: rgba(45, 212, 191, 0.16);
+  border: 1px solid #2dd4bf;
+  color: #2dd4bf;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ep-btn-turquoise:hover {
+  background: #2dd4bf;
+  color: #090d14;
+}
+
+.ep-btn-secondary {
+  padding: 8px 12px;
+  background: rgba(18, 26, 38, 0.90);
+  border: 1px solid rgba(245, 239, 228, 0.26);
+  color: #f5efe4;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ep-btn-secondary:hover {
+  background: rgba(28, 40, 56, 0.96);
+  border-color: #f59e0b;
+}
+
+/* Generative Portal Synth Studio + Oscilloscope */
+#ep-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 12px;
+  background: rgba(7, 11, 17, 0.92);
+  border: 1px solid rgba(45, 212, 191, 0.30);
+}
+
+#ep-studio.open {
+  display: flex;
+}
+
+.ep-studio-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #2dd4bf;
+}
+
+#ep-scope {
+  width: 100%;
+  height: 54px;
+  background: #060a10;
+  border: 1px solid rgba(245, 239, 228, 0.16);
+}
+
+.ep-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ep-sfx-trigger {
+  padding: 5px 10px;
+  background: rgba(18, 26, 38, 0.92);
+  border: 1px solid rgba(245, 239, 228, 0.24);
+  color: #f5efe4;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ep-sfx-trigger:hover {
+  border-color: #2dd4bf;
+  color: #2dd4bf;
+}
+
+/* World Seed Jumper, Quality & Volume Settings */
+.ep-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 239, 228, 0.14);
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.78);
+}
+
+.ep-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#ep-seed-input {
+  width: 62px;
+  padding: 3px 6px;
+  background: rgba(7, 11, 17, 0.92);
+  border: 1px solid rgba(45, 212, 191, 0.40);
+  color: #f5efe4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+.ep-pill {
+  padding: 3px 8px;
+  background: rgba(18, 26, 38, 0.88);
+  border: 1px solid rgba(245, 239, 228, 0.24);
+  color: rgba(245, 239, 228, 0.84);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ep-pill.active {
+  background: #f59e0b;
+  border-color: #fbbf24;
+  color: #090d14;
+  font-weight: 700;
+}
+
+#ep-vol {
+  width: 80px;
+  accent-color: #2dd4bf;
+}
+
+.ep-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 239, 228, 0.14);
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.76);
+}
+
+.ep-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f59e0b;
+}
+
+@media (max-width: 740px) {
+  #ep-controls-tip {
+    display: none;
+  }
+  .ep-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #ep-debrief {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

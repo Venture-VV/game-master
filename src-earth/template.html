@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>镜像地球 MIRROR EARTH — 零外部素材 WebGL2 实时星球沙盒与行星防御</title>
+  <meta name="description" content="致敬 Fable 5.2 Mirror Earth 的零外部素材 WebGL2 3D 数字孪生地球沙盒：全球无缝环飞、UTC 实时晨昏线与夜半球城市灯火、台风极光四重实时气象、动态陨石造坑与创世造陆。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="earth-app" class="__APP_CLASS__">
+    <canvas id="me-canvas" tabindex="0"></canvas>
+
+    <section id="me-hud" aria-label="镜像地球轨道遥测界面">
+      <div id="me-top-left">
+        <div id="me-perf">60 FPS · 实时晴空同步 · UTC 12:00</div>
+        <div id="me-gps">27.98°N · 086.92°E · ALT 15.5 KM</div>
+        <div id="me-quest-pill">
+          <span id="me-mode-tag">星球沙盒</span>
+          <span id="me-mode-desc">自由环飞造物 · 按 [M] 开启行星防御</span>
+          <span id="me-def-pips" class="me-pips" style="display:none">
+            <i class="me-pip"></i>
+            <i class="me-pip"></i>
+            <i class="me-pip"></i>
+            <i class="me-pip"></i>
+            <i class="me-pip"></i>
+            <i class="me-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="me-top-right">
+        <div id="me-quick-bar">
+          <button id="btn-weather" class="me-mini-btn" type="button">气象 [G]</button>
+          <button id="btn-cam" class="me-mini-btn" type="button">机位 [C]</button>
+          <button id="btn-defense" class="me-mini-btn" type="button">防御 [M]</button>
+          <!--__HUD_MODE_BTNS__-->
+          <button id="btn-fs" class="me-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="me-mini-btn" type="button">暂停 [P]</button>
+        </div>
+
+        <div id="me-warp-bar" aria-label="全球六大地标跃迁栏">
+          <button class="me-warp-btn" data-lm="0" type="button">珠峰</button>
+          <button class="me-warp-btn" data-lm="1" type="button">金字塔</button>
+          <button class="me-warp-btn" data-lm="2" type="button">曼哈顿</button>
+          <button class="me-warp-btn" data-lm="3" type="button">富士山</button>
+          <button class="me-warp-btn" data-lm="4" type="button">铁塔</button>
+          <button class="me-warp-btn" data-lm="5" type="button">北极站</button>
+        </div>
+
+        <div id="me-toast-feed"></div>
+      </div>
+
+      <div id="me-waypoints"></div>
+
+      <div id="me-reticle" aria-hidden="true">
+        <i class="ret-ring"></i>
+        <i class="ret-dot"></i>
+      </div>
+
+      <div id="me-banner">
+        <div id="me-banner-title"></div>
+        <div id="me-banner-sub"></div>
+      </div>
+
+      <div id="me-craft-card">
+        <div class="craft-card-top">
+          <span id="me-speed-val">4.2</span>
+          <span class="craft-unit">MACH · 轨道航速</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">轨道高度</span>
+          <div class="meter-track"><div id="me-alt-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">离子推进</span>
+          <div class="meter-track"><div id="me-boost-fill"></div></div>
+        </div>
+        <div class="bio-row">
+          <span>生态圈完整度</span>
+          <strong id="me-bio-val">100%</strong>
+        </div>
+      </div>
+
+      <div id="me-bottom-center">
+        <div id="me-tool-bar">
+          <button id="tool-meteor" class="me-tool-btn active-amber" type="button">[1] 陨石冲击</button>
+          <button id="tool-terra" class="me-tool-btn" type="button">[2] 造陆生态</button>
+          <button id="tool-laser" class="me-tool-btn" type="button">[Space] 激光</button>
+          <button id="btn-solar" class="me-tool-btn" type="button">UTC [T]</button>
+        </div>
+        <div id="me-controls-tip">WASD 环飞 · Q/E 升降轨 · Shift 超音速</div>
+      </div>
+
+      <div id="me-score-card">
+        <span id="me-score-val">0</span>
+        <span id="me-state-val">近地轨道巡航</span>
+        <span id="me-geo-stats">陨石坑 0 · 造陆 0</span>
+      </div>
+    </section>
+
+    <div id="me-touch">
+      <div id="me-t-pad"><div id="me-t-knob"></div></div>
+      <div class="me-t-actions">
+        <button id="me-tb-meteor" class="me-t-btn amber" type="button">陨石冲击</button>
+        <button id="me-tb-terra" class="me-t-btn emerald" type="button">造陆生态</button>
+        <button id="me-tb-laser" class="me-t-btn" type="button">拦截激光</button>
+      </div>
+    </div>
+
+    <main id="me-overlay">
+      <div class="me-placard">
+        <header>
+          <div id="me-kicker" class="me-kicker">ORBITAL DIGITAL TWIN // 零外部素材 WebGL2 实时可破坏地球沙盒</div>
+          <h1 id="me-title">镜像地球 · MIRROR EARTH</h1>
+          <p id="me-desc" class="me-desc">
+            整颗地球悬浮眼前：实时同步 UTC 晨昏线与夜半球黄金城市灯群，无缝切换西太平洋超强台风眼、北极绿金极光带与全球雷暴闪电云。驾驶轨道侦察艇俯冲掠海，投射天基陨石凿刻熔岩火山口，或释放创世生态光束隆起翡翠群岛、拦截末日小行星！
+          </p>
+        </header>
+
+        <section id="me-debrief" aria-label="行星防御战役结算">
+          <div class="me-db-cell"><span>防御耗时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="me-db-cell"><span>拦截陨石</span><strong id="st-int">0 / 6</strong></div>
+          <div class="me-db-cell"><span>生态完整度</span><strong id="st-bio">100%</strong></div>
+          <div class="me-db-cell"><span>守护总分</span><strong id="st-score">0</strong></div>
+          <div class="me-db-cell emerald"><span>行星评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="me-actions">
+          <button id="me-btn-sandbox" class="me-btn-primary" type="button">进入镜像地球 · 自由沙盒</button>
+          <button id="me-btn-defense" class="me-btn-emerald" type="button">行星防御战役 · 拦截末日陨石</button>
+          <button id="me-btn-reset-earth" class="me-btn-secondary" type="button" style="display:none">重塑初始地貌</button>
+          <button id="me-btn-studio" class="me-btn-secondary" type="button">轨道声学合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="me-studio" aria-label="纯代码轨道与地壳声学合成台">
+          <div class="me-studio-head">
+            <span>ORBITAL &amp; TECTONIC WEB AUDIO · 零采样深空遥测与地壳震波合成</span>
+            <span>NASA TELEMETRY</span>
+          </div>
+          <canvas id="me-scope" width="560" height="52"></canvas>
+          <div class="me-studio-btns">
+            <button class="me-sfx-trigger" data-s="pad" type="button">深空轨道环境垫音</button>
+            <button class="me-sfx-trigger" data-s="meteor" type="button">天基陨石地壳轰鸣</button>
+            <button class="me-sfx-trigger" data-s="terra" type="button">造陆生态创世脉冲</button>
+            <button class="me-sfx-trigger" data-s="ping" type="button">NASA 遥测声呐信标</button>
+            <button class="me-sfx-trigger" data-s="laser" type="button">轨道拦截等离子炮</button>
+            <button class="me-sfx-trigger" data-s="boom" type="button">低空超音速破障风啸</button>
+          </div>
+        </section>
+
+        <div class="me-settings">
+          <div class="me-set-group">
+            <span>实时气象</span>
+            <button class="me-pill wx-pill active" data-w="0" type="button">晴空同步</button>
+            <button class="me-pill wx-pill" data-w="1" type="button">超强台风</button>
+            <button class="me-pill wx-pill" data-w="2" type="button">极夜极光</button>
+            <button class="me-pill wx-pill" data-w="3" type="button">雷暴闪电</button>
+          </div>
+          <div class="me-set-group">
+            <label for="me-solar-range">晨昏时轴</label>
+            <input id="me-solar-range" type="range" min="0" max="240" value="120" />
+            <span id="me-solar-lbl">UTC 实时</span>
+          </div>
+          <div class="me-set-group">
+            <span>画质</span>
+            <button class="me-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="me-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="me-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="me-set-group">
+            <label for="me-vol">音量</label>
+            <input id="me-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="me-keys-grid">
+          <div><span>环飞推进 / 侧倾转向</span><span><kbd>W S</kbd> / <kbd>A D</kbd></span></div>
+          <div><span>爬升轨道 / 俯冲掠海</span><span><kbd>Q</kbd> 升轨 / <kbd>E</kbd> 掠海</span></div>
+          <div><span>天基陨石冲击（造熔岩坑）</span><span><kbd>1</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>造陆生态脉冲（隆起群岛）</span><span><kbd>2</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>轨道拦截激光 / 超音速</span><span><kbd>Space</kbd> / <kbd>Shift</kbd></span></div>
+          <div><span>切换气象 / 防御战役</span><span><kbd>G</kbd> 气象 / <kbd>M</kbd> 战役</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

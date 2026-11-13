@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>水之所存 · WHAT THE WATER KEEPS — 零外部素材 3D 印象派泛舟梦境网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 现象级治愈代表作 What the Water Keeps：零外部素材 WebGL2 莫奈水彩水面、双桨木舟物理划行、船首风铃涟漪与八重梦境水域实时印象派声学合成。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="water-app" class="__APP_CLASS__">
+    <canvas id="wk-canvas" tabindex="0"></canvas>
+
+    <section id="wk-hud" aria-label="泛舟梦境导航界面">
+      <div id="wk-perf">60 FPS · 莫奈水彩</div>
+
+      <div id="wk-top-center">
+        <div id="wk-quest-pill">
+          <span id="wk-realm-tag">01 · 晨雾睡莲</span>
+          <span id="wk-mem-desc">水之记忆 [0 / 16]</span>
+        </div>
+        <div id="wk-realm-bar" role="group" aria-label="八重水域跃迁">
+          <button class="wk-realm-pill active" data-r="0" type="button" title="01 · 晨雾睡莲">1</button>
+          <button class="wk-realm-pill" data-r="1" type="button" title="02 · 水上朱门">2</button>
+          <button class="wk-realm-pill" data-r="2" type="button" title="03 · 琥珀河灯">3</button>
+          <button class="wk-realm-pill" data-r="3" type="button" title="04 · 幽海星母">4</button>
+          <button class="wk-realm-pill" data-r="4" type="button" title="05 · 溺水钟楼">5</button>
+          <button class="wk-realm-pill" data-r="5" type="button" title="06 · 绯叶秋峡">6</button>
+          <button class="wk-realm-pill" data-r="6" type="button" title="07 · 极光镜海">7</button>
+          <button class="wk-realm-pill" data-r="7" type="button" title="08 · 彼岸灯塔">8</button>
+          <button id="btn-next-realm" class="wk-realm-pill next" type="button" title="跃迁下一水域 [N]">N▸</button>
+        </div>
+      </div>
+
+      <div id="wk-quick-bar">
+        <button id="btn-auto" class="wk-mini-btn" type="button">泛舟 [T]</button>
+        <button id="btn-brush" class="wk-mini-btn" type="button">画境 [B]</button>
+        <button id="btn-cam" class="wk-mini-btn" type="button">视角 [C]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="wk-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="wk-mini-btn" type="button">暂停</button>
+      </div>
+
+      <div id="wk-toast-feed"></div>
+      <div id="wk-waypoints"></div>
+
+      <div id="wk-banner">
+        <div id="wk-banner-title"></div>
+        <div id="wk-banner-sub"></div>
+      </div>
+
+      <div id="wk-skiff-card">
+        <div class="skiff-card-top">
+          <span id="wk-speed-val">0.0</span>
+          <span class="skiff-unit">KNOTS · 舟行水速</span>
+        </div>
+        <div class="wk-meter-row">
+          <span class="wk-meter-lbl">双桨韵律</span>
+          <div class="wk-meter-track"><div id="wk-oar-fill"></div></div>
+        </div>
+        <div class="wk-meter-row">
+          <span class="wk-meter-lbl">风铃共鸣</span>
+          <div class="wk-meter-track"><div id="wk-chime-fill"></div></div>
+        </div>
+        <div class="wk-meter-row">
+          <span class="wk-meter-lbl">航程进度</span>
+          <div class="wk-meter-track"><div id="wk-voyage-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="wk-controls-tip">W/左键 双桨划行 · A/D 转向 · 空格/右键 船首风铃 · 1-8 幻境跃迁</div>
+
+      <div id="wk-score-card">
+        <span id="wk-score-val">0</span>
+        <span id="wk-state-val">晨雾待航</span>
+      </div>
+    </section>
+
+    <div id="wk-touch">
+      <div id="wk-t-pad"><div id="wk-t-knob"></div></div>
+      <div class="wk-t-actions">
+        <button id="wk-tb-row" class="wk-t-btn gold" type="button">双桨划行</button>
+        <button id="wk-tb-chime" class="wk-t-btn" type="button">敲响风铃</button>
+      </div>
+    </div>
+
+    <main id="wk-overlay">
+      <div class="wk-placard">
+        <header>
+          <div id="wk-kicker" class="wk-kicker">IMPRESSIONIST RIVER-SEA ODYSSEY // 零外部素材 WebGL2 莫奈水境泛舟</div>
+          <h1 id="wk-title">水之所存 · WHAT THE WATER KEEPS</h1>
+          <p id="wk-desc" class="wk-desc">
+            执双木桨泛一叶提灯轻舟，沿 880 米无缝印象派水路穿越晨雾睡莲、水上朱门、琥珀河灯、幽海星母、溺水钟楼、绯叶秋峡、极光镜海与彼岸灯塔。轻敲船首铜铃荡开金色涟漪，唤醒散落水面的十六枚「水之记忆」，让微光在彼岸升作永恒星座。
+          </p>
+        </header>
+
+        <section id="wk-debrief" aria-label="彼岸归航结语">
+          <div class="wk-db-cell"><span>泛舟历时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="wk-db-cell"><span>水之记忆</span><strong id="st-mem">0 / 16</strong></div>
+          <div class="wk-db-cell"><span>风铃回响</span><strong id="st-chime">0</strong></div>
+          <div class="wk-db-cell"><span>微光总分</span><strong id="st-score">0</strong></div>
+          <div class="wk-db-cell gold"><span>诗意评级</span><strong id="st-rank">星河归舟</strong></div>
+        </section>
+
+        <div class="wk-actions">
+          <button id="wk-btn-start" class="wk-btn-primary" type="button">解缆启航 · 执桨泛舟</button>
+          <button id="wk-btn-autorow" class="wk-btn-secondary" type="button">伴流自动泛舟</button>
+          <button id="wk-btn-continue" class="wk-btn-secondary" type="button" style="display:none">继续自由漫游八境</button>
+          <button id="wk-btn-restart" class="wk-btn-secondary" type="button" style="display:none">重返晨雾起点</button>
+          <button id="wk-btn-studio" class="wk-btn-secondary" type="button">印象派水声琴房</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="wk-studio" aria-label="纯代码印象派水声合成琴房">
+          <div class="wk-studio-head">
+            <span>DEBUSSY WATER ACOUSTICS · 零采样木桨清波、风铃与毡音钢琴实时合成</span>
+            <span>LYDIAN &amp; PENTATONIC</span>
+          </div>
+          <canvas id="wk-scope" width="560" height="54"></canvas>
+          <div class="wk-studio-btns">
+            <button class="wk-sfx-trigger" data-s="oar" type="button">木桨入水清波水珠</button>
+            <button class="wk-sfx-trigger" data-s="chime" type="button">船首铜铃金色涟漪</button>
+            <button class="wk-sfx-trigger" data-s="piano" type="button">德彪西柔毡钢琴</button>
+            <button class="wk-sfx-trigger" data-s="memory" type="button">水之记忆钢片琴</button>
+            <button class="wk-sfx-trigger" data-s="cello" type="button">幽海独奏大提琴</button>
+            <button class="wk-sfx-trigger" data-s="bell" type="button">溺水钟楼古海钟</button>
+          </div>
+        </section>
+
+        <div class="wk-settings">
+          <div class="wk-set-group">
+            <span>绘本笔触</span>
+            <button class="wk-pill brush-pill" data-b="0" type="button">清透水色</button>
+            <button class="wk-pill brush-pill active" data-b="1" type="button">莫奈水彩</button>
+            <button class="wk-pill brush-pill" data-b="2" type="button">绘本厚涂</button>
+          </div>
+          <div class="wk-set-group">
+            <span>画质</span>
+            <button class="wk-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="wk-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="wk-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="wk-set-group">
+            <label for="wk-vol">琴音水声</label>
+            <input id="wk-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="wk-keys-grid">
+          <div><span>同步双桨划行 / 倒桨缓停</span><span><kbd>W S</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>左右偏桨转向微调</span><span><kbd>A D</kbd> / 方向键</span></div>
+          <div><span>敲响船首风铃（唤起记忆珠）</span><span><kbd>Space</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>伴流自动泛舟（冥想模式）</span><span><kbd>T</kbd></span></div>
+          <div><span>切换水彩笔触 / 摄影机位</span><span><kbd>B</kbd> / <kbd>C</kbd></span></div>
+          <div><span>八重水域瞬移 / 下一幻境</span><span><kbd>1-8</kbd> / <kbd>N</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>无尽传送门 ENDLESS PORTALS — 零外部素材双界实景穿越 3D 网页游戏</title>
+  <meta name="description" content="致敬 Ethan Mollick 现象级杰作 Portals: Endless Worlds：零外部素材 WebGL2 实时双界 FBO 传送门渲染，飞跃 8 大超现实建筑母题、450+ 命名星界与多调式生成式合唱竖琴音景。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="portals-app" class="__APP_CLASS__">
+    <canvas id="ep-canvas" tabindex="0"></canvas>
+
+    <section id="ep-hud" aria-label="天翼跨界飞行仪表">
+      <div id="ep-perf">60 FPS · 实景星门</div>
+
+      <div id="ep-top-center">
+        <div id="ep-world-pill">
+          <span id="ep-world-tag">WORLD #001</span>
+          <span id="ep-world-name">悬空日晷圣殿</span>
+          <span class="ep-pips" title="本界星界共振环">
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+          </span>
+        </div>
+        <div class="ep-portal-track" title="前方实景传送门距离">
+          <div id="ep-portal-fill"></div>
+        </div>
+      </div>
+
+      <div id="ep-quick-bar">
+        <button id="btn-auto" class="ep-mini-btn" type="button">巡航 [T]</button>
+        <button id="btn-next" class="ep-mini-btn" type="button">跃迁 [N]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="ep-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="ep-mini-btn" type="button">暂停 [P]</button>
+      </div>
+
+      <div id="ep-toast-feed"></div>
+      <div id="ep-waypoints"></div>
+
+      <div id="ep-banner">
+        <div id="ep-banner-title">WORLD #001 · 悬空日晷圣殿</div>
+        <div id="ep-banner-sub">SUNDIAL SANCTUM // F-LYDIAN</div>
+      </div>
+
+      <div id="ep-glider-card">
+        <div class="glider-card-top">
+          <span id="ep-speed-val">138</span>
+          <span class="glider-unit">KM/H · 天翼航速</span>
+        </div>
+        <div class="ep-meter-row">
+          <span class="ep-meter-lbl">跃迁引擎</span>
+          <div class="ep-meter-track"><div id="ep-boost-fill"></div></div>
+        </div>
+        <div class="ep-combo-row">
+          <span>星界共鸣</span>
+          <strong id="ep-combo-val">×1 · 谐波稳定</strong>
+        </div>
+      </div>
+
+      <div id="ep-controls-tip">WASD/鼠标 转向 · Shift 冲刺 · Space 翻滚 · [T] 巡航 · [N] 跃迁</div>
+
+      <div id="ep-score-card">
+        <span id="ep-score-val">0</span>
+        <span id="ep-state-val">穿越 0 界 · 手动滑翔</span>
+      </div>
+    </section>
+
+    <div id="ep-touch">
+      <div id="ep-t-pad"><div id="ep-t-knob"></div></div>
+      <div class="ep-t-actions">
+        <button id="ep-tb-roll" class="ep-t-btn turquoise" type="button">气旋翻滚</button>
+        <button id="ep-tb-boost" class="ep-t-btn brass" type="button">跃迁冲刺</button>
+      </div>
+    </div>
+
+    <main id="ep-overlay">
+      <div class="ep-placard">
+        <header>
+          <div id="ep-kicker" class="ep-kicker">LIVE DUAL-WORLD FBO PORTAL ENGINE // 450+ 命名超现实建筑星界无缝穿越</div>
+          <h1 id="ep-title">无尽传送门 · ENDLESS PORTALS</h1>
+          <p id="ep-desc" class="ep-desc">
+            每一座巨石拱门内都实时渲染着下一个异星世界的真实天空、烈日与神殿视差。驾驭黄金天翼滑翔机掠过日晷云海、熔金神塔、深海螺碑、几何水渠、荧光巨蕈与星环书院，或开启「自动巡航漫游」静赏万界流转。
+          </p>
+        </header>
+
+        <section id="ep-debrief" aria-label="航行统计">
+          <div class="ep-db-cell"><span>当前星界</span><strong id="st-world">#001</strong></div>
+          <div class="ep-db-cell"><span>已穿星门</span><strong id="st-portals">0</strong></div>
+          <div class="ep-db-cell"><span>共振光环</span><strong id="st-rings">0</strong></div>
+          <div class="ep-db-cell brass"><span>星界总分</span><strong id="st-score">0</strong></div>
+        </section>
+
+        <div class="ep-actions">
+          <button id="ep-btn-start" class="ep-btn-primary" type="button">展翼升空 · 手动滑翔</button>
+          <button id="ep-btn-auto" class="ep-btn-turquoise" type="button">自动巡航漫游 [T]</button>
+          <button id="ep-btn-nextworld" class="ep-btn-secondary" type="button">跃迁下一界 [N]</button>
+          <button id="ep-btn-studio" class="ep-btn-secondary" type="button">星门谐波合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="ep-studio" aria-label="纯代码多调式星门谐波合成台">
+          <div class="ep-studio-head">
+            <span>GENERATIVE PORTAL SYNTH · 零采样合唱长音与竖琴马林巴琶音</span>
+            <span id="ep-scale-readout">F-LYDIAN · 悬空圣殿调式</span>
+          </div>
+          <canvas id="ep-scope" width="560" height="54"></canvas>
+          <div class="ep-studio-btns">
+            <button class="ep-sfx-trigger" data-s="portal" type="button">跨界星门谐波涌浪</button>
+            <button class="ep-sfx-trigger" data-s="ring" type="button">共振光环竖琴琶音</button>
+            <button class="ep-sfx-trigger" data-s="shard" type="button">星芒晶簇马林巴泛音</button>
+            <button class="ep-sfx-trigger" data-s="pad" type="button">圣殿唱诗合成长音</button>
+            <button class="ep-sfx-trigger" data-s="boost" type="button">天翼跃迁气流推进</button>
+            <button class="ep-sfx-trigger" data-s="roll" type="button">旋翼上升气旋滑音</button>
+          </div>
+        </section>
+
+        <div class="ep-settings">
+          <div class="ep-set-group">
+            <label for="ep-seed-input">星界坐标 #</label>
+            <input id="ep-seed-input" type="number" min="1" max="999" value="1" />
+            <button id="ep-btn-jump" class="ep-pill active" type="button">定向跃迁</button>
+          </div>
+          <div class="ep-set-group">
+            <span>画质</span>
+            <button class="ep-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="ep-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="ep-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="ep-set-group">
+            <label for="ep-vol">谐波音量</label>
+            <input id="ep-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="ep-keys-grid">
+          <div><span>天翼俯仰转向</span><span><kbd>WASD</kbd> / 鼠标</span></div>
+          <div><span>星界跃迁冲刺</span><span><kbd>Shift</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>上升气旋翻滚</span><span><kbd>Space</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>自动巡航漫游</span><span><kbd>T</kbd> / 巡航键</span></div>
+          <div><span>瞬时跨界 / 机位</span><span><kbd>N</kbd> / <kbd>C</kbd></span></div>
+          <div><span>星界坐标与合成台</span><span><kbd>P</kbd> / <kbd>Esc</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

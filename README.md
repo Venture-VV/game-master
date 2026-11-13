@@ -1,64 +1,48 @@
-# Fable 5.2 纯代码 3D 网页游戏三作典藏集 (Zero-Asset WebGL2 Trilogy)
+# Fable 5.2 浏览器 3D 游戏八作典藏集 (Zero-Asset WebGL2 Octet)
 
-**零外部贴图 · 零外部 3D 模型 · 零外部音频文件 · 浏览器即开即玩的三款截然不同的 3D 网页游戏**
+**零外部贴图 · 零外部 3D 模型 · 零外部音频文件 · 浏览器即开即玩的八款截然不同的纯代码 3D 网页游戏**
 
 在线即玩地址（GitHub Pages）：**https://venture-vv.github.io/game-master/**
 
-致敬近期 GitHub 爆火的 **Claude Fable 5.2「纯代码浏览器 3A 视觉范式」**（[`awesome-fable-5.2`](https://github.com/fengyiqicoder/awesome-fable-5.2)），本仓库收录了三款美术风格、镜头尺度与声学引擎截然不同的单文件 3D 游戏，并提供统一的 **三作典藏切换门户 [`index.html`](./index.html)**：
+致敬 GitHub 爆火的 **Claude Fable 5.2「纯代码浏览器 3A 视觉范式」**（[`awesome-fable-5.2`](https://github.com/fengyiqicoder/awesome-fable-5.2)），本仓库完整复刻了社区热度榜 **Top 5 作品** 与 **三部曲代表作**，全部基于单文件 HTML + 程序化着色器 + Web Audio 实时物理声学合成，并提供统一的 **八作典藏门户 [`index.html`](./index.html)**（支持数字键 `1`–`8` 一键启动）：
 
-1. **作品一：《沙丘巨虫 · SHAI-RIDER: SPICE CONVOY》**（[`worm-rider.html`](./worm-rider.html)，单文件原生 WebGL2）
-   - 致敬 *Worm Rider* 沙丘巨物驾驭动作。双日西沉大气散射、实时热浪海市蜃楼畸变滤镜、26 节百米多体沙虫潜沙鼓包与破沙鲸跃物理，以及巨物低音铜管 *Braaam*、机械沙槌与中东希贾兹战鼓实时合成。
-2. **作品二：《星月夜骑士 · STARRY NIGHTRIDER》**（[`starry-nightrider.html`](./starry-nightrider.html)，单文件原生 WebGL2）
-   - 致敬榜一作品 *Starry Nightrider* 与 *Oil Paint*。实时各向异性 Kuwahara 厚涂油画笔触滤镜、随风起伏且随马蹄分开的 1,450 株金色麦浪、1889 圣雷米漩涡星穹，以及纯代码古典木吉他/揉弦大提琴/竖琴原声合成。
-3. **作品三：《断潮行动 · SALTLINE: BLACK TIDE》**（[`saltline.html`](./saltline.html)，单文件 Three.js + PBR）
-   - 致敬 *Saltline* 第一人称战术射击。半浮点 HDR 风暴钠灯环境反射、湿地积水涟漪 PBR 材质、44m 岸桥起重机与 205m 货轮、MK-18 全息红点步枪，以及室内外机库卷积混响实时物理枪声。
-
----
-
-## 作品一：《沙丘巨虫 · SHAI-RIDER: SPICE CONVOY》
-
-### 核心亮点
-- **厄拉科斯双日热浪渲染管线（WebGL2 `#version 300 es` 四通道）**
-  - **双日余晖与闪耀香料沙海**：天穹同时悬照巨型熔金主恒星与白金伴星，地表沙脊具备风蚀波纹法线扰动与迎光闪烁的微米石英/美琅脂香料结晶颗粒。
-  - **潜沙地震鼓包与热浪蜃景后处理**：当沙虫潜入地底（`uBurrow`）时，沙海网格实时隆起 3.2m 移动沙浪；全屏后处理叠加远方地平线热浪海市蜃楼扭曲（支持 `H` 键三档切换）、水平变形宽银幕日耀眩光与破沙径向冲刺残影。
-- **两阶段弗雷曼驭虫仪式与潜沙鲸跃狩猎**
-  - **阶段一（沙槌召唤）**：立于沙脊敲响弗雷曼机械沙槌，目睹百米巨虫在地底掀起滚滚沙浪破土而出，射出造物主双钩撬鳞登虫。
-  - **阶段二（深漠狩猎 & 旗舰决战）**：驾驭 26 节百米夏胡鲁，按住 `Space` / `左键` 潜入流沙蓄力并规避轨道热能光矛，在 **3 座哈肯尼香料母车** 正下方松开按键发动 **「破沙鲸跃」** 一口秒吞，顺势在半空扑碎蜻蜓四翼 **帝国扑翼机**，最终跃击摧毁 **哈肯号轨道指挥护卫舰** 的舰腹反应炉！
-- **100% 纯代码沙漠史诗声学引擎（「沙丘震音合成台」）**
-  - 实时合成维伦纽瓦式巨物低音铜管号角（*Braaam*）、机械弹簧沙槌地震波、造物主双钩金属咬合、地底低通闷响流沙、中东达布卡高脚鼓（*Doum / Tek / Ka*）与 D-Hijaz 调式双簧杜杜克管独奏。
-
-### 操作指南（沙丘巨虫）
-| 动作 | 键鼠操作 | 触屏操作 |
-| :--- | :--- | :--- |
-| **勒钩转向 / 巡航调速** | `A` `D`（`W` `S` 微调）或 `方向键` | 左侧虚拟摇杆 |
-| **潜入流沙蓄力（躲避轨道激光）** | **按住** `Space` 或 `鼠标左键` | **按住** `潜沙/鲸跃` 按钮 |
-| **破沙鲸跃（秒吞母车 / 扑杀扑翼机）** | **松开** `Space` 或 `鼠标左键` | **松开** `潜沙/鲸跃` 按钮 |
-| **香料狂暴冲刺** | `Shift` 或 `鼠标右键` | `香料冲刺` 按钮 |
-| **切换热浪蜃景 / 巨物机位 / 暂停** | `H` / `C` / `P` 或 `ESC` | 顶栏快捷按钮 |
-
----
-
-## 作品二：《星月夜骑士 · STARRY NIGHTRIDER》
-- **实时各向异性 Kuwahara 油画滤镜**：按 `B` 键在「清透原画 / 厚涂名画 / 狂野梵高」三档切换，骑乘四足双关节奔马穿越 1,450 株金色麦浪、石拱桥与风车山脊，收集星芒颜料冲碎墨涡，点亮五座圣雷米星宫。
-
-## 作品三：《断潮行动 · SALTLINE: BLACK TIDE》
-- **雨夜港区战术射击**：手持 MK-18 全息红点步枪潜入暴雨集装箱码头，利用室内外声学遮蔽与 `Q` 键 EMP 破盾手雷击败「港务官」重装机甲，切断三处上行中继并登艇撤离。
+| 编号 | 作品 | 独立单文件入口 | 题材与核心纯代码技术亮点 |
+| :---: | :--- | :--- | :--- |
+| **[1]** | **《曼哈顿街区狂飙 · CROSSTOWN NYC》** | [`crosstown.html`](./crosstown.html) | **Top 1 (♥ 7.5k)** · 48 栋摩天楼（帝国大厦/时代广场/东河大桥/中央公园）、湿地柏油反射、撞碎消防栓喷泉与 V8 Funk 律动 |
+| **[2]** | **《水之所存 · WHAT THE WATER KEEPS》** | [`water-keeps.html`](./water-keeps.html) | **Top 2 (♥ 4.2k)** · 八重梦境水城双桨泛舟、Gerstner 船尾航迹与铜铃涟漪、Kuwahara 水彩纸纹滤镜与德彪西毡音钢琴 |
+| **[3]** | **《失控乒乓 · TENNIS: GO WILD》** | [`hyper-tennis.html`](./hyper-tennis.html) | **Top 3 (♥ 3.0k)** · 五纪元跨时代进化：从 1972 俯视 Pong 蜕变为 3D 弹珠引力场、机甲彗星慢镜头扣杀与日冕奇点首领战 |
+| **[4]** | **《镜像地球 · MIRROR EARTH》** | [`mirror-earth.html`](./mirror-earth.html) | **Top 4 (♥ 2.4k)** · 瑞利大气与极光台风、夜间黄金城市灯群、实时球面陨石坑/创世造山网格形变与末日小行星轨道拦截 |
+| **[5]** | **《无尽传送门 · ENDLESS PORTALS》** | [`endless-portals.html`](./endless-portals.html) | **Top 5 (♥ 1.9k)** · 双 FBO 屏空间实时传送门视窗、999 种子异星世界（海底焦散/双日荒漠/云海圣殿）无缝滑翔穿越 |
+| **[6]** | **《沙丘巨虫 · SHAI-RIDER》** | [`worm-rider.html`](./worm-rider.html) | **巨物驾驭** · 双日西沉热浪海市蜃楼滤镜、沙槌召唤 26 节百米沙虫潜沙躲避轨道光矛、破沙鲸跃秒吞香料母车与巨物铜管 *Braaam* |
+| **[7]** | **《星月夜骑士 · STARRY NIGHTRIDER》** | [`starry-nightrider.html`](./starry-nightrider.html) | **油画骑乘** · 实时各向异性 Kuwahara 厚涂油画滤镜、1,450 株随马蹄分开的金色麦浪、圣雷米漩涡星穹与古典木吉他/大提琴合成 |
+| **[8]** | **《断潮行动 · SALTLINE: BLACK TIDE》** | [`saltline.html`](./saltline.html) | **战术 FPS** · 半浮点 HDR 暴雨港区积水涟漪 PBR、MK-18 全息红点步枪、EMP 破盾手雷决战重装机甲与室内外机库混响枪声 |
 
 ---
 
 ## 快速运行与重新构建
 
-仓库根目录已内置打包好的四个零依赖独立文件，克隆后可直接启动静态服务打开：
+仓库根目录已内置打包好的 **9 个零依赖独立静态文件**（`index.html` 大厅 + 8 款单文件游戏），克隆后直接启动任意静态服务即可畅玩：
+
 ```bash
 npx http-server . -p 8080 -c-1
 ```
-- `index.html`：三作典藏动态画布门户（按数字键 `1` / `2` / `3` 快速启动对应作品）
-- `worm-rider.html`：《沙丘巨虫 · SHAI-RIDER》独立单文件版
-- `starry-nightrider.html`：《星月夜骑士 · STARRY NIGHTRIDER》独立单文件版
-- `saltline.html`：《断潮行动 · SALTLINE: BLACK TIDE》独立单文件版
 
-修改源码后一键重新内联打包：
+修改源码后一键重新内联打包全部八款作品：
+
 ```bash
 npm install
 npm run build
 ```
+
+## 目录结构
+
+- `src-hub/`：八作典藏门户页源码（输出 `index.html`）
+- `src-crosstown/`：《曼哈顿街区狂飙 · CROSSTOWN NYC》源码（输出 `crosstown.html`）
+- `src-water/`：《水之所存 · WHAT THE WATER KEEPS》源码（输出 `water-keeps.html`）
+- `src-tennis/`：《失控乒乓 · TENNIS: GO WILD》源码（输出 `hyper-tennis.html`）
+- `src-earth/`：《镜像地球 · MIRROR EARTH》源码（输出 `mirror-earth.html`）
+- `src-portals/`：《无尽传送门 · ENDLESS PORTALS》源码（输出 `endless-portals.html`）
+- `src-wormrider/`：《沙丘巨虫 · SHAI-RIDER》源码（输出 `worm-rider.html`）
+- `src-nightrider/`：《星月夜骑士 · STARRY NIGHTRIDER》源码（输出 `starry-nightrider.html`）
+- `src/`：《断潮行动 · SALTLINE: BLACK TIDE》源码（输出 `saltline.html`）
+- `scripts/build.mjs`：基于 `esbuild` 的零外部依赖单文件 HTML 打包器

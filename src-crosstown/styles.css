@@ -1,0 +1,703 @@
+/* NYC Taxi Saffron, Sodium Amber, Hudson Cyan & Asphalt Slate — Scoped Vanilla CSS (>=12px Typography) */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #0b0e13;
+  overflow: hidden;
+}
+
+#crosstown-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #0b0e13;
+  color: #f4f6f8;
+  border: 1px solid rgba(245, 184, 46, 0.28);
+}
+
+#crosstown-app.tall {
+  height: 720px;
+}
+
+#crosstown-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#ct-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: crosshair;
+}
+
+/* In-Game HUD */
+#ct-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+#ct-hud.visible {
+  opacity: 1;
+}
+
+#ct-perf {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.26);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: #f5b82e;
+  white-space: nowrap;
+}
+
+#ct-top-center {
+  position: absolute;
+  top: 10px;
+  left: 37%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+#ct-compass {
+  padding: 3px 9px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.24);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #f8d47c;
+  white-space: nowrap;
+}
+
+#ct-quest-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  background: rgba(12, 16, 22, 0.90);
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#ct-stage-tag {
+  padding: 1px 5px;
+  background: #f5b82e;
+  color: #0b0e13;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+#ct-stage-desc {
+  color: #f4f6f8;
+  font-weight: 600;
+}
+
+.ct-pips {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ct-pips.hidden {
+  display: none;
+}
+
+.ct-pip {
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  transform: rotate(45deg);
+  border: 1px solid #f5b82e;
+  background: rgba(245, 184, 46, 0.14);
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+
+.ct-pip.done {
+  background: #38bdf8;
+  border-color: #93e2fe;
+  transform: rotate(45deg) scale(1.16);
+}
+
+/* Quick Action Bar Top-Right */
+#ct-quick-bar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.ct-mini-btn {
+  padding: 4px 7px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  color: #f4f6f8;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ct-mini-btn:hover {
+  background: rgba(24, 32, 44, 0.96);
+  border-color: #f5b82e;
+}
+
+/* Toast Feed Top-Right below quick-bar */
+#ct-toast-feed {
+  position: absolute;
+  top: 46px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 216px;
+}
+
+.ct-toast {
+  padding: 4px 9px;
+  background: rgba(12, 16, 22, 0.88);
+  border-right: 3px solid #f5b82e;
+  font-size: 12px;
+  text-align: right;
+  color: #f4f6f8;
+  animation: ctToastIn 0.22s ease-out;
+}
+
+@keyframes ctToastIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 3D Screen-Space Beacon Waypoints */
+#ct-waypoints {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ct-wp {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f5b82e;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.96);
+  white-space: nowrap;
+}
+
+.ct-wp-diamond {
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  border: 2px solid #f5b82e;
+  background: rgba(56, 189, 248, 0.52);
+}
+
+/* Center Milestone Banner */
+#ct-banner {
+  position: absolute;
+  top: 32%;
+  left: 44%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  max-width: 360px;
+  padding: 7px 16px;
+  background: rgba(12, 16, 22, 0.88);
+  border-top: 1px solid rgba(245, 184, 46, 0.58);
+  border-bottom: 1px solid rgba(245, 184, 46, 0.58);
+  opacity: 0;
+  transition: opacity 0.26s ease;
+}
+
+#ct-banner.show {
+  opacity: 1;
+}
+
+#ct-banner-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #f5b82e;
+}
+
+#ct-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.84);
+}
+
+/* Bottom-Left Speedometer & Telemetry Card */
+#ct-car-card {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  width: 192px;
+  padding: 7px 10px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.car-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#ct-speed-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 21px;
+  font-weight: 700;
+  color: #f5b82e;
+}
+
+.car-unit {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.78);
+}
+
+.meter-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.80);
+}
+
+.meter-lbl {
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.meter-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#ct-nitro-fill {
+  width: 85%;
+  height: 100%;
+  background: #38bdf8;
+  transition: width 0.08s linear;
+}
+
+#ct-drift-fill {
+  width: 0%;
+  height: 100%;
+  background: #f08c2b;
+  transition: width 0.08s linear;
+}
+
+#ct-controls-tip {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  background: rgba(12, 16, 22, 0.84);
+  border: 1px solid rgba(245, 184, 46, 0.22);
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.84);
+  white-space: nowrap;
+}
+
+#ct-score-card {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  min-width: 158px;
+  padding: 7px 12px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#ct-score-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5b82e;
+}
+
+#ct-state-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: #38bdf8;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+#ct-state-val.hot {
+  color: #f08c2b;
+}
+
+/* Coarse Pointer Touch Controls */
+#ct-touch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@media (pointer: coarse) {
+  #ct-touch.active {
+    display: block;
+  }
+  #ct-controls-tip {
+    display: none;
+  }
+}
+
+#ct-t-pad {
+  position: absolute;
+  left: 18px;
+  bottom: 88px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(12, 16, 22, 0.62);
+  border: 1px solid rgba(245, 184, 46, 0.45);
+  pointer-events: auto;
+}
+
+#ct-t-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border-radius: 50%;
+  background: rgba(245, 184, 46, 0.88);
+}
+
+.ct-t-actions {
+  position: absolute;
+  right: 18px;
+  bottom: 88px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.ct-t-btn {
+  padding: 12px 14px;
+  background: rgba(12, 16, 22, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.52);
+  color: #f4f6f8;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ct-t-btn.saffron {
+  background: #f5b82e;
+  color: #0b0e13;
+}
+
+.ct-t-btn.cyan {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+/* Title / Pause / Victory Debrief Overlay */
+#ct-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(10, 14, 20, 0.64) 0%, rgba(10, 14, 20, 0.86) 100%);
+  overflow-y: auto;
+}
+
+#ct-overlay.hidden {
+  display: none;
+}
+
+.ct-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px 20px;
+  background: rgba(12, 16, 22, 0.90);
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.ct-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.8px;
+  color: #f5b82e;
+}
+
+.ct-placard h1 {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #f8fafc;
+  margin-top: 3px;
+}
+
+.ct-desc {
+  font-size: 13px;
+  line-height: 1.52;
+  color: rgba(244, 246, 248, 0.84);
+  margin-top: 4px;
+}
+
+/* Debrief Summary Grid */
+#ct-debrief {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+#ct-debrief.show {
+  display: grid;
+}
+
+.ct-db-cell {
+  padding: 8px 10px;
+  background: rgba(20, 26, 36, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.72);
+}
+
+.ct-db-cell strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  color: #f8fafc;
+}
+
+.ct-db-cell.saffron strong {
+  color: #f5b82e;
+}
+
+/* Action Buttons Row */
+.ct-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.ct-btn-primary {
+  padding: 9px 18px;
+  background: #f5b82e;
+  border: 1px solid #ffd269;
+  color: #0b0e13;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.ct-btn-primary:hover {
+  background: #ffc642;
+  transform: translateY(-1px);
+}
+
+.ct-btn-secondary {
+  padding: 8px 13px;
+  background: rgba(20, 27, 38, 0.90);
+  border: 1px solid rgba(245, 184, 46, 0.30);
+  color: #f4f6f8;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ct-btn-secondary:hover {
+  background: rgba(32, 43, 58, 0.96);
+  border-color: #f5b82e;
+}
+
+/* NYC Acoustic Studio & Oscilloscope Drawer */
+#ct-studio {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(9, 13, 18, 0.92);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+}
+
+#ct-studio.open {
+  display: flex;
+}
+
+.ct-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5b82e;
+}
+
+#ct-scope {
+  width: 100%;
+  height: 54px;
+  background: #070a0f;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+}
+
+.ct-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ct-sfx-trigger {
+  padding: 5px 10px;
+  background: rgba(20, 27, 38, 0.92);
+  border: 1px solid rgba(245, 184, 46, 0.26);
+  color: #f4f6f8;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ct-sfx-trigger:hover {
+  border-color: #38bdf8;
+  background: rgba(28, 39, 54, 0.96);
+}
+
+/* Settings & Compact Keybinds */
+.ct-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 184, 46, 0.16);
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.78);
+}
+
+.ct-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ct-pill {
+  padding: 3px 8px;
+  background: rgba(20, 27, 38, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.24);
+  color: rgba(244, 246, 248, 0.82);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ct-pill.active {
+  background: #f5b82e;
+  border-color: #ffd269;
+  color: #0b0e13;
+  font-weight: 700;
+}
+
+#ct-vol {
+  width: 82px;
+  accent-color: #f5b82e;
+}
+
+.ct-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(245, 184, 46, 0.16);
+  font-size: 12px;
+  color: rgba(244, 246, 248, 0.78);
+}
+
+.ct-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(245, 184, 46, 0.14);
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5b82e;
+}
+
+@media (max-width: 740px) {
+  #ct-controls-tip {
+    display: none;
+  }
+  .ct-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #ct-debrief {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

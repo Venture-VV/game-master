@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>无尽传送门 ENDLESS PORTALS — 零外部素材双界实景穿越 3D 网页游戏</title>
+  <meta name="description" content="致敬 Ethan Mollick 现象级杰作 Portals: Endless Worlds：零外部素材 WebGL2 实时双界 FBO 传送门渲染，飞跃 8 大超现实建筑母题、450+ 命名星界与多调式生成式合唱竖琴音景。" />
+  <style>*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:0;background:transparent;font-family:system-ui,-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,sans-serif;-webkit-font-smoothing:antialiased;user-select:none}body.standalone-body{background:#090d14;overflow:hidden}#portals-app{position:relative;width:100%;height:446px;overflow:hidden;background:#090d14;color:#f5efe4;border:1px solid rgba(245,158,11,.28)}#portals-app.tall{height:720px}#portals-app.standalone{height:100vh;border:none}#ep-canvas{display:block;width:100%;height:100%;outline:none;cursor:crosshair}#ep-hud{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity .28s ease}#ep-hud.visible{opacity:1}#ep-perf{position:absolute;top:10px;left:12px;padding:4px 9px;background:#0b1017db;border:1px solid rgba(45,212,191,.28);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.4px;color:#2dd4bf;white-space:nowrap}#ep-top-center{position:absolute;top:10px;left:41%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;max-width:316px}#ep-world-pill{display:flex;align-items:center;gap:8px;padding:4px 11px;background:#0b1017e0;border:1px solid rgba(245,158,11,.36);font-size:12px;white-space:nowrap}#ep-world-tag{padding:1px 6px;background:#f59e0b;color:#090d14;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:12px;letter-spacing:.5px}#ep-world-name{color:#f5efe4;font-weight:600;font-size:12px}.ep-pips{display:inline-flex;gap:5px;margin-left:2px}.ep-pip{width:8px;height:8px;display:inline-block;transform:rotate(45deg);border:1px solid #2dd4bf;background:#2dd4bf24;transition:background .22s ease,transform .22s ease}.ep-pip.done{background:#f59e0b;border-color:#fde68a;transform:rotate(45deg) scale(1.18)}.ep-portal-track{width:100%;height:4px;background:#f5efe424}#ep-portal-fill{width:0%;height:100%;background:#2dd4bf;transition:width .08s linear}#ep-quick-bar{position:absolute;top:10px;right:12px;display:flex;gap:5px;pointer-events:auto}.ep-mini-btn{padding:4px 8px;background:#0b1017e0;border:1px solid rgba(245,239,228,.24);color:#f5efe4;font-size:12px;font-family:inherit;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}.ep-mini-btn:hover{background:#141e2af5;border-color:#f59e0b}.ep-mini-btn.active{background:#2dd4bf33;border-color:#2dd4bf;color:#2dd4bf;font-weight:700}#ep-toast-feed{position:absolute;top:44px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:212px}.ep-toast{padding:4px 9px;background:#0b1017e0;border-right:3px solid #2dd4bf;font-size:12px;text-align:right;color:#f5efe4;animation:epToastIn .22s ease-out}@keyframes epToastIn{0%{opacity:0;transform:translate(10px)}to{opacity:1;transform:translate(0)}}#ep-waypoints{position:absolute;inset:0;overflow:hidden}.ep-wp{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:2px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f5efe4;text-shadow:0 1px 3px rgba(0,0,0,.95);white-space:nowrap}.ep-wp-diamond{width:9px;height:9px;transform:rotate(45deg);border:1.5px solid #f59e0b;background:#2dd4bf6b}#ep-banner{position:absolute;top:30%;left:43%;transform:translate(-50%,-50%);text-align:center;max-width:390px;padding:7px 18px;background:#0b1017e0;border-top:1px solid rgba(245,158,11,.62);border-bottom:1px solid rgba(45,212,191,.62);opacity:0;transition:opacity .3s ease}#ep-banner.show{opacity:1}#ep-banner-title{font-family:Optima,Georgia,"Noto Serif SC",Songti SC,serif;font-size:17px;font-weight:700;letter-spacing:1.2px;color:#f5efe4}#ep-banner-sub{margin-top:2px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:.8px;color:#2dd4bf}#ep-glider-card{position:absolute;left:12px;bottom:10px;width:188px;padding:7px 10px;background:#0b1017e0;border:1px solid rgba(245,239,228,.22);display:flex;flex-direction:column;gap:4px}.glider-card-top{display:flex;justify-content:space-between;align-items:baseline}#ep-speed-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:20px;font-weight:700;color:#f59e0b}.glider-unit{font-size:12px;color:#f5efe4bd}.ep-meter-row{display:flex;align-items:center;gap:7px;font-size:12px;color:#f5efe4cc}.ep-meter-lbl{width:52px;flex-shrink:0}.ep-meter-track{flex:1;height:6px;background:#f5efe41f}#ep-boost-fill{width:85%;height:100%;background:#2dd4bf;transition:width .08s linear}.ep-combo-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#f5efe4bd}#ep-combo-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f59e0b}#ep-controls-tip{position:absolute;bottom:11px;left:50%;transform:translate(-50%);padding:5px 12px;background:#0b1017d6;border:1px solid rgba(245,239,228,.18);font-size:12px;color:#f5efe4d6;white-space:nowrap}#ep-score-card{position:absolute;right:12px;bottom:10px;min-width:158px;padding:7px 12px;background:#0b1017e0;border:1px solid rgba(245,158,11,.28);text-align:right;display:flex;flex-direction:column;gap:2px}#ep-score-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:20px;font-weight:700;color:#f59e0b}#ep-state-val{font-size:12px;color:#2dd4bf;letter-spacing:.4px;white-space:nowrap}#ep-touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:6}@media(pointer:coarse){#ep-touch.active{display:block}#ep-controls-tip{display:none}}#ep-t-pad{position:absolute;left:18px;bottom:92px;width:94px;height:94px;border-radius:50%;background:#0b101794;border:1px solid rgba(45,212,191,.48);pointer-events:auto}#ep-t-knob{position:absolute;top:50%;left:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:#2dd4bfe0}.ep-t-actions{position:absolute;right:18px;bottom:92px;display:flex;gap:8px;pointer-events:auto}.ep-t-btn{padding:11px 14px;background:#0b1017db;border:1px solid rgba(245,158,11,.5);color:#f5efe4;font-size:12px;font-weight:700}.ep-t-btn.brass{background:#f59e0b;color:#090d14}.ep-t-btn.turquoise{border-color:#2dd4bf;color:#2dd4bf}#ep-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:10px 14px;background:#090d149e;overflow-y:auto}#ep-overlay.hidden{display:none}.ep-placard{width:min(760px,100%);max-height:100%;overflow-y:auto;padding:16px 20px;background:#0b1017e0;border:1px solid rgba(245,158,11,.34);backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:10px}.ep-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1.6px;color:#2dd4bf}.ep-placard h1{font-family:Optima,Georgia,"Noto Serif SC",Songti SC,serif;font-size:clamp(22px,3.1vw,31px);font-weight:700;letter-spacing:1.8px;color:#f5efe4;margin-top:3px}.ep-desc{font-size:13px;line-height:1.52;color:#f5efe4d6;margin-top:4px}#ep-debrief{display:none;grid-template-columns:repeat(4,1fr);gap:8px}#ep-debrief.show{display:grid}.ep-db-cell{padding:7px 10px;background:#121924e0;border:1px solid rgba(245,239,228,.18);display:flex;flex-direction:column;gap:2px;font-size:12px;color:#f5efe4b8}.ep-db-cell strong{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;color:#f5efe4}.ep-db-cell.brass strong{color:#f59e0b}.ep-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ep-btn-primary{padding:8px 17px;background:#f59e0b;border:1px solid #fbbf24;color:#090d14;font-size:13px;font-weight:700;letter-spacing:.8px;cursor:pointer;font-family:inherit;transition:background .15s ease,transform .12s ease}.ep-btn-primary:hover{background:#fbbf24;transform:translateY(-1px)}.ep-btn-turquoise{padding:8px 15px;background:#2dd4bf29;border:1px solid #2dd4bf;color:#2dd4bf;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;font-family:inherit;transition:background .15s ease,color .15s ease}.ep-btn-turquoise:hover{background:#2dd4bf;color:#090d14}.ep-btn-secondary{padding:8px 12px;background:#121a26e6;border:1px solid rgba(245,239,228,.26);color:#f5efe4;font-size:12px;text-decoration:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;transition:background .15s ease,border-color .15s ease}.ep-btn-secondary:hover{background:#1c2838f5;border-color:#f59e0b}#ep-studio{display:none;flex-direction:column;gap:7px;padding:9px 12px;background:#070b11eb;border:1px solid rgba(45,212,191,.3)}#ep-studio.open{display:flex}.ep-studio-head{display:flex;justify-content:space-between;gap:8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#2dd4bf}#ep-scope{width:100%;height:54px;background:#060a10;border:1px solid rgba(245,239,228,.16)}.ep-studio-btns{display:flex;flex-wrap:wrap;gap:6px}.ep-sfx-trigger{padding:5px 10px;background:#121a26eb;border:1px solid rgba(245,239,228,.24);color:#f5efe4;font-size:12px;cursor:pointer;font-family:inherit}.ep-sfx-trigger:hover{border-color:#2dd4bf;color:#2dd4bf}.ep-settings{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:8px;border-top:1px solid rgba(245,239,228,.14);font-size:12px;color:#f5efe4c7}.ep-set-group{display:inline-flex;align-items:center;gap:5px}#ep-seed-input{width:62px;padding:3px 6px;background:#070b11eb;border:1px solid rgba(45,212,191,.4);color:#f5efe4;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.ep-pill{padding:3px 8px;background:#121a26e0;border:1px solid rgba(245,239,228,.24);color:#f5efe4d6;font-size:12px;cursor:pointer;font-family:inherit}.ep-pill.active{background:#f59e0b;border-color:#fbbf24;color:#090d14;font-weight:700}#ep-vol{width:80px;accent-color:#2dd4bf}.ep-keys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px 12px;padding-top:8px;border-top:1px solid rgba(245,239,228,.14);font-size:12px;color:#f5efe4c2}.ep-keys-grid>div{display:flex;justify-content:space-between;gap:6px}kbd{padding:1px 5px;background:#f59e0b24;border:1px solid rgba(245,158,11,.34);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f59e0b}@media(max-width:740px){#ep-controls-tip{display:none}.ep-keys-grid{grid-template-columns:1fr 1fr}#ep-debrief{grid-template-columns:repeat(2,1fr)}}</style>
+</head>
+<body class="standalone-body">
+  <div id="portals-app" class="standalone">
+    <canvas id="ep-canvas" tabindex="0"></canvas>
+
+    <section id="ep-hud" aria-label="天翼跨界飞行仪表">
+      <div id="ep-perf">60 FPS · 实景星门</div>
+
+      <div id="ep-top-center">
+        <div id="ep-world-pill">
+          <span id="ep-world-tag">WORLD #001</span>
+          <span id="ep-world-name">悬空日晷圣殿</span>
+          <span class="ep-pips" title="本界星界共振环">
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+            <i class="ep-pip"></i>
+          </span>
+        </div>
+        <div class="ep-portal-track" title="前方实景传送门距离">
+          <div id="ep-portal-fill"></div>
+        </div>
+      </div>
+
+      <div id="ep-quick-bar">
+        <button id="btn-auto" class="ep-mini-btn" type="button">巡航 [T]</button>
+        <button id="btn-next" class="ep-mini-btn" type="button">跃迁 [N]</button>
+        <a href="./worm-rider.html" class="ep-mini-btn">⇄ 沙丘巨虫</a><a href="./index.html" class="ep-mini-btn">⌂ 八作大厅</a>
+        <button id="btn-fs" class="ep-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="ep-mini-btn" type="button">暂停 [P]</button>
+      </div>
+
+      <div id="ep-toast-feed"></div>
+      <div id="ep-waypoints"></div>
+
+      <div id="ep-banner">
+        <div id="ep-banner-title">WORLD #001 · 悬空日晷圣殿</div>
+        <div id="ep-banner-sub">SUNDIAL SANCTUM // F-LYDIAN</div>
+      </div>
+
+      <div id="ep-glider-card">
+        <div class="glider-card-top">
+          <span id="ep-speed-val">138</span>
+          <span class="glider-unit">KM/H · 天翼航速</span>
+        </div>
+        <div class="ep-meter-row">
+          <span class="ep-meter-lbl">跃迁引擎</span>
+          <div class="ep-meter-track"><div id="ep-boost-fill"></div></div>
+        </div>
+        <div class="ep-combo-row">
+          <span>星界共鸣</span>
+          <strong id="ep-combo-val">×1 · 谐波稳定</strong>
+        </div>
+      </div>
+
+      <div id="ep-controls-tip">WASD/鼠标 转向 · Shift 冲刺 · Space 翻滚 · [T] 巡航 · [N] 跃迁</div>
+
+      <div id="ep-score-card">
+        <span id="ep-score-val">0</span>
+        <span id="ep-state-val">穿越 0 界 · 手动滑翔</span>
+      </div>
+    </section>
+
+    <div id="ep-touch">
+      <div id="ep-t-pad"><div id="ep-t-knob"></div></div>
+      <div class="ep-t-actions">
+        <button id="ep-tb-roll" class="ep-t-btn turquoise" type="button">气旋翻滚</button>
+        <button id="ep-tb-boost" class="ep-t-btn brass" type="button">跃迁冲刺</button>
+      </div>
+    </div>
+
+    <main id="ep-overlay">
+      <div class="ep-placard">
+        <header>
+          <div id="ep-kicker" class="ep-kicker">LIVE DUAL-WORLD FBO PORTAL ENGINE // 450+ 命名超现实建筑星界无缝穿越</div>
+          <h1 id="ep-title">无尽传送门 · ENDLESS PORTALS</h1>
+          <p id="ep-desc" class="ep-desc">
+            每一座巨石拱门内都实时渲染着下一个异星世界的真实天空、烈日与神殿视差。驾驭黄金天翼滑翔机掠过日晷云海、熔金神塔、深海螺碑、几何水渠、荧光巨蕈与星环书院，或开启「自动巡航漫游」静赏万界流转。
+          </p>
+        </header>
+
+        <section id="ep-debrief" aria-label="航行统计">
+          <div class="ep-db-cell"><span>当前星界</span><strong id="st-world">#001</strong></div>
+          <div class="ep-db-cell"><span>已穿星门</span><strong id="st-portals">0</strong></div>
+          <div class="ep-db-cell"><span>共振光环</span><strong id="st-rings">0</strong></div>
+          <div class="ep-db-cell brass"><span>星界总分</span><strong id="st-score">0</strong></div>
+        </section>
+
+        <div class="ep-actions">
+          <button id="ep-btn-start" class="ep-btn-primary" type="button">展翼升空 · 手动滑翔</button>
+          <button id="ep-btn-auto" class="ep-btn-turquoise" type="button">自动巡航漫游 [T]</button>
+          <button id="ep-btn-nextworld" class="ep-btn-secondary" type="button">跃迁下一界 [N]</button>
+          <button id="ep-btn-studio" class="ep-btn-secondary" type="button">星门谐波合成台</button>
+          <a href="./worm-rider.html" class="ep-btn-secondary">⇄ 沙丘巨虫</a><a href="./index.html" class="ep-btn-secondary">⌂ 八作典藏大厅</a>
+        </div>
+
+        <section id="ep-studio" aria-label="纯代码多调式星门谐波合成台">
+          <div class="ep-studio-head">
+            <span>GENERATIVE PORTAL SYNTH · 零采样合唱长音与竖琴马林巴琶音</span>
+            <span id="ep-scale-readout">F-LYDIAN · 悬空圣殿调式</span>
+          </div>
+          <canvas id="ep-scope" width="560" height="54"></canvas>
+          <div class="ep-studio-btns">
+            <button class="ep-sfx-trigger" data-s="portal" type="button">跨界星门谐波涌浪</button>
+            <button class="ep-sfx-trigger" data-s="ring" type="button">共振光环竖琴琶音</button>
+            <button class="ep-sfx-trigger" data-s="shard" type="button">星芒晶簇马林巴泛音</button>
+            <button class="ep-sfx-trigger" data-s="pad" type="button">圣殿唱诗合成长音</button>
+            <button class="ep-sfx-trigger" data-s="boost" type="button">天翼跃迁气流推进</button>
+            <button class="ep-sfx-trigger" data-s="roll" type="button">旋翼上升气旋滑音</button>
+          </div>
+        </section>
+
+        <div class="ep-settings">
+          <div class="ep-set-group">
+            <label for="ep-seed-input">星界坐标 #</label>
+            <input id="ep-seed-input" type="number" min="1" max="999" value="1" />
+            <button id="ep-btn-jump" class="ep-pill active" type="button">定向跃迁</button>
+          </div>
+          <div class="ep-set-group">
+            <span>画质</span>
+            <button class="ep-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="ep-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="ep-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="ep-set-group">
+            <label for="ep-vol">谐波音量</label>
+            <input id="ep-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="ep-keys-grid">
+          <div><span>天翼俯仰转向</span><span><kbd>WASD</kbd> / 鼠标</span></div>
+          <div><span>星界跃迁冲刺</span><span><kbd>Shift</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>上升气旋翻滚</span><span><kbd>Space</kbd> / <kbd>右键</kbd></span></div>
+          <div><span>自动巡航漫游</span><span><kbd>T</kbd> / 巡航键</span></div>
+          <div><span>瞬时跨界 / 机位</span><span><kbd>N</kbd> / <kbd>C</kbd></span></div>
+          <div><span>星界坐标与合成台</span><span><kbd>P</kbd> / <kbd>Esc</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">var I=(e,t,o)=>e<t?t:e>o?o:e,N=(e,t,o)=>e+(t-e)*o,z=(e,t,o,a)=>N(e,t,1-Math.exp(-o*a)),U=(e,t,o)=>{let a=I((o-e)/(t-e),0,1);return a*a*(3-2*a)};function ot(e){let t=e>>>0;return function(){t|=0,t=t+1831565813|0;let o=Math.imul(t^t>>>15,1|t);return o=o+Math.imul(o^o>>>7,61|o)^o,((o^o>>>14)>>>0)/4294967296}}function He(e,t){let o=Math.sin(e*127.1+t*311.7)*43758.5453123;return o-Math.floor(o)}function To(e,t){let o=Math.floor(e),a=Math.floor(t),l=e-o,n=t-a,u=l*l*(3-2*l),c=n*n*(3-2*n),i=He(o,a),d=He(o+1,a),r=He(o,a+1),h=He(o+1,a+1);return N(N(i,d,u),N(r,h,u),c)}function Eo(e,t){let o=0,a=.5,l=e,n=t;for(let u=0;u<4;u++){o+=a*To(l,n);let c=l*1.62+n*1.18,i=-l*1.18+n*1.62;l=c,n=i,a*=.5}return o}var k=-115,Q=55,J=Q-k;function L(e,t){let o=I((Q-t)/J,0,1),a=Math.sin(o*Math.PI);return Math.sin(o*Math.PI*e.curveFreq+e.curvePhase)*e.curveAmp*a*a}function Ro(e,t){let o=Math.hypot(e*.85,(t-k)*.65),a=Math.hypot(e*.85,(t-Q)*.65),l=1-U(10,24,o),n=1-U(10,24,a);return Math.max(l,n)}function _(e,t,o){let a=L(e,o),l=t-a,n=Math.abs(l),u=t*.028+e.noiseOffX,c=o*.028+e.noiseOffZ,i=Eo(u,c),d=e.archIdx,r=0;if(d===0){let m=U(15,38,n),p=Math.floor(m*4)*3.2;r=-5.2+i*2.6+m*8+p*.45}else if(d===1){let m=U(13,44,n),p=Math.floor(m*5)*3.6;r=-2.2+m*14+p*.55+(i-.4)*5*m}else if(d===2){let m=U(14,46,n);r=-1.8+Math.sin(t*.22+o*.14+i*4)*.65+m*(9.5+i*8)}else if(d===3){let m=U(14,50,n);r=-1.4+Math.round(m*6)/6*18+Math.round(i*3)*.9*m}else if(d===4){let m=U(12,45,n);r=-1.6+Math.sin(t*.09+e.curvePhase)*1.1+m*(11+i*9)}else if(d===5){let m=1-Math.abs(Math.sin((t*.055+o*.038+i*1.8)*Math.PI)),p=U(13.5,42,n);r=-1.5+m*3.2+p*(16.5+m*7.5)}else if(d===6){let m=U(14,44,n),p=Math.abs(i-.5)*16;r=-1.6+m*(13+p)}else{let m=1-U(6.5,11.5,n),p=U(24,58,n);r=N(-8.5+i*2.2+p*14,-.6,m*.85)}let h=Ro(t,o);return N(r,0,h)}function Lt(e,t,o){let l=_(e,t-.9,o),n=_(e,t+.9,o),u=_(e,t,o-.9),c=_(e,t,o+.9),i=l-n,d=2*.9,r=u-c,h=1/(Math.hypot(i,d,r)||1);return[i*h,d*h,r*h]}var V={create(){let e=new Float32Array(16);return e[0]=e[5]=e[10]=e[15]=1,e},identity(e){return e.fill(0),e[0]=e[5]=e[10]=e[15]=1,e},perspective(e,t,o,a,l){let n=1/Math.tan(t*.5);return e.fill(0),e[0]=n/o,e[5]=n,e[10]=(l+a)/(a-l),e[11]=-1,e[14]=2*l*a/(a-l),e},lookAt(e,t,o,a,l,n,u,c=0,i=1,d=0){let r=t-l,h=o-n,m=a-u,p=Math.hypot(r,h,m)||1;r/=p,h/=p,m/=p;let A=i*m-d*h,E=d*r-c*m,M=c*h-i*r;p=Math.hypot(A,E,M)||1,A/=p,E/=p,M/=p;let S=h*M-m*E,T=m*A-r*M,v=r*E-h*A;return e[0]=A,e[1]=S,e[2]=r,e[3]=0,e[4]=E,e[5]=T,e[6]=h,e[7]=0,e[8]=M,e[9]=v,e[10]=m,e[11]=0,e[12]=-(A*t+E*o+M*a),e[13]=-(S*t+T*o+v*a),e[14]=-(r*t+h*o+m*a),e[15]=1,e},mul(e,t,o){let a=t[0],l=t[1],n=t[2],u=t[3],c=t[4],i=t[5],d=t[6],r=t[7],h=t[8],m=t[9],p=t[10],A=t[11],E=t[12],M=t[13],S=t[14],T=t[15];for(let v=0;v<4;v++){let y=o[v*4],x=o[v*4+1],R=o[v*4+2],B=o[v*4+3];e[v*4]=y*a+x*c+R*h+B*E,e[v*4+1]=y*l+x*i+R*m+B*M,e[v*4+2]=y*n+x*d+R*p+B*S,e[v*4+3]=y*u+x*r+R*A+B*T}return e},trs(e,t,o,a,l,n,u,c,i,d){let r=Math.cos(l),h=Math.sin(l),m=Math.cos(n),p=Math.sin(n),A=Math.cos(u),E=Math.sin(u);return e[0]=(m*A+p*h*E)*c,e[1]=r*E*c,e[2]=(-p*A+m*h*E)*c,e[3]=0,e[4]=(-m*E+p*h*A)*i,e[5]=r*A*i,e[6]=(p*E+m*h*A)*i,e[7]=0,e[8]=p*r*d,e[9]=-h*d,e[10]=m*r*d,e[11]=0,e[12]=t,e[13]=o,e[14]=a,e[15]=1,e},projectToScreen(e,t,o,a,l,n){let u=e[0]*t+e[4]*o+e[8]*a+e[12],c=e[1]*t+e[5]*o+e[9]*a+e[13],i=e[3]*t+e[7]*o+e[11]*a+e[15];if(i<=.05)return null;let d=u/i,r=c/i;return{x:(d*.5+.5)*l,y:(.5-r*.5)*n}}};var Ft=`#version 300 es
+precision highp float;
+precision highp int;
+layout(location = 0) in vec3 aPos;
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uCamPos;
+out vec3 vDir;
+void main() {
+  vDir = aPos;
+  gl_Position = uProj * uView * vec4(uCamPos + aPos * 640.0, 1.0);
+}`,Nt=`#version 300 es
+precision highp float;
+precision highp int;
+in vec3 vDir;
+uniform vec3 uSkyZenith;
+uniform vec3 uSkyMid;
+uniform vec3 uSkyHorizon;
+uniform vec3 uSunDir;
+uniform vec3 uSunCol;
+uniform int uArchType;
+uniform float uSeed;
+uniform float uTime;
+out vec4 fragColor;
+
+float hash21(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float vnoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
+    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
+    u.y
+  );
+}
+
+void main() {
+  vec3 d = normalize(vDir);
+  float el = clamp(d.y, -0.25, 1.0);
+  float az = atan(d.x, -d.z);
+
+  vec3 sky = mix(uSkyMid, uSkyZenith, smoothstep(0.14, 0.82, max(el, 0.0)));
+  sky = mix(uSkyHorizon, sky, smoothstep(-0.02, 0.28, el));
+  sky = mix(uSkyHorizon * 0.78, sky, smoothstep(-0.22, 0.0, el));
+
+  vec3 sDir = normalize(uSunDir);
+  float sunAng = acos(clamp(dot(d, sDir), -1.0, 1.0));
+
+  // Atmospheric cloud / caustic / nebula strata per archetype
+  float n1 = vnoise(vec2(az * 3.8 + uSeed + uTime * 0.025, el * 11.0));
+  float n2 = vnoise(vec2(az * 7.6 - uSeed - uTime * 0.04, el * 22.0));
+  float strata = smoothstep(0.36, 0.84, n1 * 0.65 + n2 * 0.35);
+
+  if (uArchType == 0) {
+    // Sundial Sanctum: Luminous golden cloud-sea near horizon & high cirrus wisps
+    float cloudSea = (1.0 - smoothstep(-0.08, 0.18, el)) * (0.55 + 0.45 * n1);
+    sky += vec3(0.98, 0.80, 0.42) * cloudSea * 0.42;
+    sky += vec3(0.95, 0.88, 0.72) * strata * 0.14 * (1.0 - smoothstep(0.2, 0.75, el));
+  } else if (uArchType == 1) {
+    // Obsidian Ziggurat: Volcanic ash bands & molten caldera horizon glow
+    float caldera = exp(-max(el + 0.04, 0.0) * 7.5);
+    sky += vec3(0.95, 0.38, 0.06) * caldera * 0.45;
+    sky -= vec3(0.08, 0.05, 0.03) * strata * 0.4;
+  } else if (uArchType == 2) {
+    // Abyssal Coralhenge: Sunlit pelagic ocean surface rays & turquoise caustics overhead
+    float c1 = vnoise(d.xz / (abs(d.y) + 0.32) * 3.2 + uTime * 0.35);
+    float c2 = vnoise(d.xz / (abs(d.y) + 0.32) * 5.8 - uTime * 0.28);
+    float caustic = pow(clamp(1.0 - abs(c1 - c2) * 2.4, 0.0, 1.0), 3.0);
+    float godRay = sin(az * 14.0 + uTime * 0.5) * 0.5 + 0.5;
+    sky += vec3(0.22, 0.90, 0.84) * caustic * smoothstep(-0.05, 0.65, el) * 0.38;
+    sky += vec3(0.16, 0.72, 0.70) * godRay * exp(-sunAng * 2.5) * 0.22;
+  } else if (uArchType == 4) {
+    // Emerald Mycelia: Bioluminescent emerald-turquoise canopy mist ribbons
+    float rib = sin(az * 5.0 + n1 * 4.2 + uTime * 0.18) * 0.5 + 0.5;
+    sky += vec3(0.10, 0.78, 0.62) * pow(rib, 3.0) * smoothstep(0.05, 0.6, el) * 0.26;
+  } else if (uArchType == 5) {
+    // Origami Wind-Canyon: Binary Companion Second Sun!
+    vec3 sun2 = normalize(sDir + vec3(0.32, 0.18, 0.0));
+    float a2 = acos(clamp(dot(d, sun2), -1.0, 1.0));
+    float disc2 = 1.0 - smoothstep(0.026, 0.032, a2);
+    sky += vec3(1.0, 0.88, 0.58) * exp(-a2 * 10.0) * 0.48;
+    sky = mix(sky, vec3(1.0, 0.97, 0.86), disc2);
+  } else if (uArchType == 6) {
+    // Arctic Prism Spire: 22-Degree Ice Halo & Twin Parhelia (Sun-Dogs)!
+    float haloRing = exp(-pow((sunAng - 0.36) * 14.0, 2.0)) * 0.34;
+    vec3 dogL = normalize(sDir + vec3(-0.36, 0.0, 0.0));
+    vec3 dogR = normalize(sDir + vec3(0.36, 0.0, 0.0));
+    float dogs = exp(-acos(clamp(dot(d, dogL), -1.0, 1.0)) * 12.0)
+               + exp(-acos(clamp(dot(d, dogR), -1.0, 1.0)) * 12.0);
+    sky += vec3(0.75, 0.96, 1.0) * haloRing + vec3(1.0, 0.88, 0.58) * dogs * 0.35;
+  } else if (uArchType == 7) {
+    // Astral Armillary: Crisp Starfield + Golden-Turquoise Celestial Band (Zero Purple!)
+    vec2 starCell = floor(vec2(az * 95.0, el * 140.0));
+    float sRnd = hash21(starCell + uSeed);
+    if (sRnd > 0.976 && el > -0.05) {
+      float tw = 0.55 + 0.45 * sin(uTime * 4.2 + sRnd * 80.0);
+      vec3 sTint = (fract(sRnd * 31.7) > 0.45) ? vec3(1.0, 0.88, 0.58) : vec3(0.38, 0.94, 0.88);
+      sky += sTint * tw * 0.92;
+    }
+    float band = exp(-pow((el - 0.28 - sin(az * 2.0 + uSeed) * 0.16) * 5.2, 2.0));
+    sky += mix(vec3(0.08, 0.46, 0.50), vec3(0.76, 0.56, 0.18), n1) * band * 0.36;
+  } else {
+    // Monument Aqueducts: Crisp architectural sunlit strata
+    sky += uSunCol * strata * 0.11 * (1.0 - smoothstep(0.15, 0.7, el));
+  }
+
+  // Primary Sun / Celestial Orb
+  float discR = (uArchType == 7) ? 0.042 : 0.062;
+  float disc = 1.0 - smoothstep(discR, discR + 0.008, sunAng);
+  float mie = exp(-sunAng * 4.5) * 0.68 + exp(-sunAng * 15.0) * 0.48;
+  sky += uSunCol * mie * ((uArchType == 7) ? 0.55 : 0.88);
+  sky = mix(sky, mix(uSunCol, vec3(1.0, 0.98, 0.90), 0.55), disc);
+
+  fragColor = vec4(sky, 1.0);
+}`,Dt=`#version 300 es
+precision highp float;
+precision highp int;
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec2 aUV;
+layout(location = 3) in vec4 aColMat;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+uniform vec4 uTintOverride; // rgb: color override, w: > -0.5 overrides matId, < -0.5 uses vertex aColMat
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec2 vUV;
+out vec4 vColMat;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vec3 nrm = normalize(mat3(uModel) * aNorm);
+  vWorldPos = wp.xyz;
+  vNormal = nrm;
+  vUV = aUV;
+  if (uTintOverride.w > -0.5) {
+    vColMat = vec4(aColMat.rgb * uTintOverride.rgb, uTintOverride.w);
+  } else {
+    vColMat = aColMat;
+  }
+  gl_Position = uProj * uView * wp;
+}`,Ot=`#version 300 es
+precision highp float;
+precision highp int;
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec2 vUV;
+in vec4 vColMat;
+
+uniform vec3 uCamPos;
+uniform vec3 uSunDir;
+uniform vec3 uSunCol;
+uniform vec3 uFogCol;
+uniform float uFogDensity;
+uniform int uArchType;
+uniform float uTime;
+uniform float uClipMinZ;
+uniform float uClipMaxZ;
+uniform int uCutPortalBox;
+
+out vec4 fragColor;
+
+float hash21(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+void main() {
+  if (vWorldPos.z < uClipMinZ || vWorldPos.z > uClipMaxZ) {
+    discard;
+  }
+  if (uCutPortalBox == 1) {
+    if (abs(vWorldPos.x) < 5.42 && vWorldPos.y > 0.28 && vWorldPos.y < 15.72 &&
+        vWorldPos.z < -114.95 && vWorldPos.z > -117.2) {
+      discard;
+    }
+  }
+
+  vec3 base = vColMat.rgb;
+  float matId = vColMat.a;
+  float dist = length(uCamPos - vWorldPos);
+  float fogF = 1.0 - exp(-dist * uFogDensity);
+
+  // Pure Emissive Materials (matId >= 2.5: Runes, Portal Energy Trim, Resonance Rings, Astral Shards, Kelp)
+  if (matId >= 2.5) {
+    float glowAmt = matId - 2.0;
+    vec3 glow = base * glowAmt;
+    glow = mix(glow, uFogCol, fogF * 0.42);
+    fragColor = vec4(glow, 1.0);
+    return;
+  }
+
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 N = normalize(vNormal);
+  vec3 L = normalize(uSunDir);
+  vec3 H = normalize(L + V);
+
+  // Terrain Special Surface Effects when matId < -0.2 (Terrain Mesh uses matId = -1.0)
+  if (matId < -0.2) {
+    if (uArchType == 0 && vWorldPos.y < -2.4) {
+      // Golden Cloud-Sea billows below floating marble colonnades
+      float billow = sin(vWorldPos.x * 0.18 + uTime * 0.6) * cos(vWorldPos.z * 0.15 - uTime * 0.4);
+      vec3 cloudCol = mix(vec3(0.92, 0.72, 0.38), vec3(1.0, 0.94, 0.80), billow * 0.5 + 0.5);
+      cloudCol = mix(cloudCol, uFogCol, fogF * 0.86);
+      fragColor = vec4(cloudCol, 1.0);
+      return;
+    }
+    if (uArchType == 1 && vWorldPos.y < -1.35) {
+      // Flowing Molten Gold-Amber Magma Channel
+      float flow = sin(vWorldPos.x * 0.65 + sin(vWorldPos.z * 0.14 + uTime * 0.8) * 2.2);
+      float crust = smoothstep(-0.2, 0.55, flow);
+      vec3 lava = mix(vec3(1.15, 0.46, 0.06), vec3(0.14, 0.09, 0.08), crust * 0.78);
+      lava = mix(lava, uFogCol, fogF * 0.72);
+      fragColor = vec4(lava, 1.0);
+      return;
+    }
+    if (uArchType == 5) {
+      // Wind-rippled Desert Sandstone Micro-Ridges
+      float rip = sin(vWorldPos.x * 2.8 - vWorldPos.z * 1.6);
+      N = normalize(N + vec3(0.7, 0.0, -0.5) * rip * 0.10);
+    }
+    if (uArchType == 7) {
+      // Astral Causeway Golden-Teal Starlight Grid
+      float gx = smoothstep(0.94, 0.995, cos(vWorldPos.x * 1.5708));
+      float gz = smoothstep(0.95, 0.995, cos(vWorldPos.z * 0.7854));
+      float line = max(gx, gz) * (1.0 - smoothstep(10.0, 26.0, abs(vWorldPos.x)));
+      base += vec3(0.20, 0.78, 0.72) * line * 0.45;
+    }
+  }
+
+  // Architectural Stratified Carving Detail on Stone / Terracotta
+  if (matId >= -0.1 && matId < 0.5) {
+    float band = sin(vWorldPos.y * 3.2) * 0.045;
+    base *= (1.0 + band);
+  }
+
+  float ndl = max(dot(N, L), 0.0);
+  float hemi = N.y * 0.5 + 0.5;
+  vec3 bounceCol = uFogCol * 0.36 + vec3(0.08, 0.08, 0.07);
+  vec3 topAmb = mix(uFogCol * 0.52, vec3(0.36, 0.44, 0.48), 0.35);
+  vec3 amb = mix(bounceCol, topAmb, hemi);
+
+  float shininess = (matId > 1.5) ? 48.0 : (matId > 0.5 ? 36.0 : 14.0);
+  float specStr = (matId > 1.5) ? 0.78 : (matId > 0.5 ? 0.46 : 0.12);
+  float spec = pow(max(dot(N, H), 0.0), shininess) * specStr;
+
+  vec3 col = base * (amb + uSunCol * ndl * 0.88);
+  vec3 specTint = (matId > 1.5) ? vec3(1.0, 0.86, 0.48) : vec3(1.0, 0.97, 0.90);
+  col += specTint * spec;
+
+  // Underwater Turquoise Caustics across Coralhenge Seabed & Monoliths!
+  if (uArchType == 2) {
+    float cA = sin(vWorldPos.x * 0.75 + uTime * 1.9 + sin(vWorldPos.z * 0.45));
+    float cB = cos(vWorldPos.z * 0.68 - uTime * 1.5 + cos(vWorldPos.x * 0.52));
+    float caus = pow(clamp(cA * cB * 0.5 + 0.5, 0.0, 1.0), 4.0);
+    col += vec3(0.18, 0.92, 0.82) * caus * max(N.y, 0.15) * 0.42;
+  }
+
+  // Translucent Glacier Rim Scatter for Arctic Ice Prisms & Polished Marble
+  float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0);
+  if (uArchType == 6 && matId > 0.5 && matId < 1.5) {
+    col += vec3(0.36, 0.88, 0.98) * rim * 0.48;
+  } else {
+    col += uSunCol * rim * 0.18;
+  }
+
+  col = mix(col, uFogCol, fogF * 0.88);
+  fragColor = vec4(col, 1.0);
+}`,Vt=`#version 300 es
+precision highp float;
+precision highp int;
+layout(location = 0) in vec3 aPos;
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+out vec3 vWorldPos;
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  gl_Position = uProj * uView * wp;
+}`,wt=`#version 300 es
+precision highp float;
+precision highp int;
+in vec3 vWorldPos;
+uniform sampler2D uPortalTex;
+uniform vec2 uViewportSize;
+uniform vec3 uCamPos;
+uniform float uTime;
+out vec4 fragColor;
+
+void main() {
+  vec2 screenUV = gl_FragCoord.xy / uViewportSize;
+
+  // Normalized coordinates inside the 10.7m x 15.3m Portal Doorway [-1..1]
+  float nx = vWorldPos.x / 5.35;
+  float ny = (vWorldPos.y - 8.0) / 7.65;
+  float edgeMetric = max(abs(nx), abs(ny));
+
+  // Smoothly relax refractive UV distortion as camera flies right through z = -115.0
+  // so crossing the portal plane has ZERO pixel seam!
+  float camDist = abs(uCamPos.z - (-115.0));
+  float rippleFade = smoothstep(0.8, 6.5, camDist);
+
+  float rimBand = smoothstep(0.68, 1.0, edgeMetric);
+  float angle = atan(ny, nx);
+  float wave = sin(angle * 8.0 - uTime * 3.6 + edgeMetric * 12.0)
+             + cos(angle * 5.0 + uTime * 2.4);
+
+  vec2 distort = vec2(cos(angle), sin(angle)) * wave * 0.0045 * rimBand * rippleFade;
+  vec2 sampleUV = clamp(screenUV + distort, vec2(0.001), vec2(0.999));
+
+  vec3 nextWorldCol = texture(uPortalTex, sampleUV).rgb;
+
+  // Swirling Solar-Brass (#f59e0b) & Horizon-Turquoise (#2dd4bf) Event-Horizon Inner Corona
+  float swirl = 0.5 + 0.5 * sin(angle * 6.0 - uTime * 4.2);
+  vec3 rimCol = mix(vec3(0.18, 0.83, 0.75), vec3(0.98, 0.68, 0.16), swirl);
+  float corona = smoothstep(0.84, 1.0, edgeMetric) * (0.45 + 0.55 * rippleFade);
+
+  vec3 finalCol = nextWorldCol + rimCol * corona * 0.85;
+  fragColor = vec4(finalCol, 1.0);
+}`,zt=`#version 300 es
+precision highp float;
+precision highp int;
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec2 aUV;
+layout(location = 4) in vec4 iPosScale; // xyz: world pos, w: scale
+layout(location = 5) in vec4 iColor;    // rgba
+
+uniform mat4 uProj;
+uniform mat4 uView;
+
+out vec2 vUV;
+out vec4 vCol;
+
+void main() {
+  vec3 right = vec3(uView[0][0], uView[1][0], uView[2][0]);
+  vec3 up    = vec3(uView[0][1], uView[1][1], uView[2][1]);
+  vec3 wp = iPosScale.xyz + (right * aPos.x + up * aPos.y) * iPosScale.w;
+  vUV = aUV;
+  vCol = iColor;
+  gl_Position = uProj * uView * vec4(wp, 1.0);
+}`,_t=`#version 300 es
+precision highp float;
+precision highp int;
+in vec2 vUV;
+in vec4 vCol;
+out vec4 fragColor;
+
+void main() {
+  vec2 d = vUV * 2.0 - 1.0;
+  float r2 = dot(d, d);
+  if (r2 > 1.0) discard;
+  float soft = pow(1.0 - r2, 1.8);
+  fragColor = vec4(vCol.rgb * (1.1 + soft * 0.5), vCol.a * soft);
+}`,Ut=`#version 300 es
+precision highp float;
+precision highp int;
+out vec2 vUV;
+void main() {
+  vec2 pos = vec2((gl_VertexID == 1) ? 3.0 : -1.0, (gl_VertexID == 2) ? 3.0 : -1.0);
+  vUV = pos * 0.5 + 0.5;
+  gl_Position = vec4(pos, 0.0, 1.0);
+}`,kt=`#version 300 es
+precision highp float;
+precision highp int;
+in vec2 vUV;
+uniform sampler2D uTex;
+uniform float uRushBlur;
+uniform float uPortalFlash;
+uniform float uTime;
+out vec4 fragColor;
+
+vec3 acesFilm(vec3 x) {
+  float a = 2.51;
+  float b = 0.03;
+  float c = 2.43;
+  float d = 0.59;
+  float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+void main() {
+  vec2 centered = vUV - 0.5;
+  float rad = length(centered);
+
+  vec3 col = texture(uTex, vUV).rgb;
+
+  // Subtle Warp-Boost Radial Slipstream Blur near screen periphery
+  float blurAmt = (uRushBlur * 0.014 + uPortalFlash * 0.018) * smoothstep(0.14, 0.68, rad);
+  if (blurAmt > 0.0004) {
+    vec3 acc = col;
+    acc += texture(uTex, clamp(vUV - centered * blurAmt * 0.45, 0.001, 0.999)).rgb;
+    acc += texture(uTex, clamp(vUV - centered * blurAmt * 0.90, 0.001, 0.999)).rgb;
+    col = acc / 3.0;
+  }
+
+  // Luminous Golden-Turquoise Dimensional Crossing Shimmer
+  if (uPortalFlash > 0.005) {
+    float wave = 0.5 + 0.5 * sin(rad * 18.0 - uTime * 9.0);
+    vec3 flashTint = mix(vec3(0.18, 0.85, 0.76), vec3(0.98, 0.76, 0.28), wave);
+    col += flashTint * uPortalFlash * (0.22 + 0.36 * smoothstep(0.15, 0.72, rad));
+  }
+
+  // Subtle architectural framing vignette
+  col *= 1.0 - rad * rad * 0.24;
+
+  // ACES Filmic Tone Mapping + sRGB Curve
+  col = acesFilm(col * 1.04);
+  col = pow(col, vec3(1.0 / 2.2));
+
+  fragColor = vec4(col, 1.0);
+}`;var So=[{baseZh:"\u60AC\u7A7A\u65E5\u6677\u5723\u6BBF",baseEn:"SUNDIAL SANCTUM",skyZenith:[.08,.25,.42],skyMid:[.2,.5,.6],skyHorizon:[.96,.78,.44],sunDir:[-.24,.34,-.91],sunCol:[1,.9,.6],fogCol:[.9,.75,.48],fogDensity:.0035,stoneA:[.95,.92,.85],stoneB:[.84,.78,.66],accentBrass:[.94,.66,.18],glowCol:[.18,.84,.75],terrainLow:[.96,.8,.48],terrainHigh:[.92,.88,.79],moteCol:[1,.86,.48],prefixes:[["\u6668\u66E6","DAWN"],["\u4E91\u6D77","CLOUDSEA"],["\u91D1\u5195","SOLAR"],["\u5929\u7A79","ZENITH"],["\u767D\u77F3","MARBLE"],["\u6D6E\u7A7A","FLOATING"],["\u8F89\u5149","RADIANT"],["\u663C\u6677","GNOMON"]],nouns:[["\u65E5\u6677\u5723\u6BBF","SUNDIAL SANCTUM"],["\u661F\u76D8\u67F1\u5ECA","ASTROLABE COLONNADE"],["\u4E91\u9876\u795E\u5E99","NIMBUS TEMPLE"],["\u9EC4\u94DC\u5929\u575B","BRASS ALTAR"],["\u5149\u9634\u56DE\u5ECA","CHRONO GALLERY"],["\u66DC\u65E5\u9AD8\u53F0","HELIOS TERRACE"],["\u6D6E\u5C9B\u5723\u5802","SKYWARD BASILICA"],["\u91D1\u8F89\u65B9\u5C16\u7891","SOLAR OBELISK"]]},{baseZh:"\u7194\u91D1\u9ED1\u66DC\u795E\u5854",baseEn:"OBSIDIAN ZIGGURAT",skyZenith:[.07,.06,.06],skyMid:[.34,.13,.05],skyHorizon:[.94,.44,.1],sunDir:[.18,.22,-.96],sunCol:[1,.62,.18],fogCol:[.68,.3,.09],fogDensity:.0041,stoneA:[.14,.16,.19],stoneB:[.23,.21,.19],accentBrass:[.96,.64,.14],glowCol:[1,.48,.08],terrainLow:[.95,.42,.08],terrainHigh:[.16,.15,.16],moteCol:[1,.52,.12],prefixes:[["\u7194\u91D1","MOLTEN"],["\u6D41\u706B","EMBER"],["\u9ED1\u66DC","OBSIDIAN"],["\u8D64\u7130","CALDERA"],["\u7384\u6B66","BASALT"],["\u953B\u65E5","FORGE"],["\u70EC\u5149","CINDER"],["\u5730\u8109","MAGMA"]],nouns:[["\u9ED1\u66DC\u795E\u5854","OBSIDIAN ZIGGURAT"],["\u9636\u68AF\u796D\u575B","STEPPED CITADEL"],["\u7194\u5CA9\u5723\u706B\u6BBF","PYRE SANCTUARY"],["\u5DE8\u77F3\u738B\u5EA7","MONOLITH THRONE"],["\u6D41\u91D1\u5CE1\u8C37","LAVA GORGE"],["\u70C8\u7130\u65B9\u5C16\u9635","FLAME PYLONS"],["\u953B\u706B\u795E\u5E99","VULCAN TEMPLE"],["\u7384\u5CA9\u957F\u6865","BASALT CAUSEWAY"]]},{baseZh:"\u6DF1\u6D77\u73CA\u745A\u5DE8\u77F3",baseEn:"ABYSSAL CORALHENGE",skyZenith:[.03,.17,.25],skyMid:[.07,.46,.54],skyHorizon:[.22,.78,.76],sunDir:[.08,.62,-.78],sunCol:[.62,.98,.92],fogCol:[.12,.58,.62],fogDensity:.0044,stoneA:[.92,.87,.77],stoneB:[.86,.48,.3],accentBrass:[.92,.72,.26],glowCol:[.16,.94,.76],terrainLow:[.76,.74,.62],terrainHigh:[.18,.52,.48],moteCol:[.35,.96,.86],prefixes:[["\u6DF1\u6D77","ABYSSAL"],["\u6F6E\u6C50","TIDAL"],["\u6CA7\u6F9C","PELAGIC"],["\u78A7\u6CE2","TURQUOISE"],["\u87BA\u5854","NAUTILUS"],["\u6F5C\u6D41","CAUSTIC"],["\u6D77\u6E0A","TRENCH"],["\u7075\u7901","REEF"]],nouns:[["\u73CA\u745A\u5DE8\u77F3","CORALHENGE"],["\u65CB\u87BA\u5723\u5854","SPIRAL SPIRE"],["\u6D77\u85FB\u62F1\u5ECA","KELP ARCHWAY"],["\u6C89\u6CA1\u795E\u6BBF","SUNKEN TEMPLE"],["\u6CA7\u6D77\u7891\u6797","OCEANIC STELE"],["\u6F6E\u97F3\u56DE\u5ECA","TIDAL CLOISTER"],["\u8367\u5149\u6D77\u575B","LUMEN ATOLL"],["\u53E4\u8D1D\u9057\u8FF9","SHELL MONOLITH"]]},{baseZh:"\u51E0\u4F55\u7EAA\u5FF5\u7891\u8C37",baseEn:"MONUMENT AQUEDUCTS",skyZenith:[.1,.32,.45],skyMid:[.4,.68,.7],skyHorizon:[.95,.76,.54],sunDir:[-.35,.44,-.82],sunCol:[1,.9,.7],fogCol:[.84,.72,.58],fogDensity:.0034,stoneA:[.83,.45,.29],stoneB:[.96,.91,.82],accentBrass:[.18,.76,.68],glowCol:[.98,.74,.24],terrainLow:[.9,.78,.64],terrainHigh:[.8,.44,.28],moteCol:[.98,.88,.66],prefixes:[["\u51E0\u4F55","GEOMETRIC"],["\u8FF7\u57CE","LABYRINTH"],["\u60AC\u62F1","ARCHED"],["\u9519\u89C9","IMPOSSIBLE"],["\u9676\u571F","TERRACOTTA"],["\u5929\u68AF","STAIRWAY"],["\u9759\u8C27","SERENE"],["\u5E7B\u6784","PARADOX"]],nouns:[["\u7EAA\u5FF5\u7891\u8C37","MONUMENT AQUEDUCTS"],["\u60AC\u7A7A\u6C34\u6E20","SKY VIADUCT"],["\u65E0\u5C3D\u9636\u68AF","ENDLESS STAIRS"],["\u56DE\u97F3\u7A79\u9876","ECHO PAVILION"],["\u65B9\u5C16\u5EAD\u9662","OBELISK COURT"],["\u5BF9\u79F0\u9AD8\u67B6","SYMMETRY BRIDGE"],["\u79D8\u5883\u62F1\u95E8","ARCADE CITADEL"],["\u6298\u89D2\u5723\u6BBF","ISOMETRIC SANCTUM"]]},{baseZh:"\u7FE1\u7FE0\u8367\u5149\u5DE8\u8548",baseEn:"EMERALD MYCELIA",skyZenith:[.03,.14,.13],skyMid:[.08,.36,.31],skyHorizon:[.28,.7,.55],sunDir:[.22,.42,-.88],sunCol:[.78,.98,.72],fogCol:[.15,.48,.4],fogDensity:.0043,stoneA:[.11,.66,.52],stoneB:[.88,.89,.8],accentBrass:[.95,.74,.22],glowCol:[.98,.8,.26],terrainLow:[.1,.36,.28],terrainHigh:[.16,.52,.4],moteCol:[1,.84,.32],prefixes:[["\u7FE1\u7FE0","EMERALD"],["\u8367\u5149","LUMINOUS"],["\u91D1\u5B62","SPORE"],["\u5E7D\u6797","VERDANT"],["\u78A7\u76D6","CANOPY"],["\u6D6E\u5149","BIOLUMEN"],["\u53E4\u6728","SYLVAN"],["\u6668\u9732","DEWDROP"]],nouns:[["\u8367\u5149\u5DE8\u8548","EMERALD MYCELIA"],["\u83CC\u76D6\u5723\u6797","CANOPY GROVE"],["\u91D1\u5B62\u5E7D\u8C37","SPORE HOLLOW"],["\u53E0\u7FE0\u4F1E\u5854","TERRACED FUNGI"],["\u7075\u6839\u62F1\u6865","MYCELIUM ARCH"],["\u5FAE\u5149\u6797\u82D1","GLOWING GLADE"],["\u7FE0\u5F71\u9AD8\u53F0","JADE PAVILION"],["\u751F\u606F\u795E\u6BBF","VERDANT SANCTUM"]]},{baseZh:"\u6298\u7EB8\u98CE\u8680\u91D1\u5CE1",baseEn:"ORIGAMI WIND-CANYON",skyZenith:[.18,.11,.05],skyMid:[.66,.34,.12],skyHorizon:[.98,.72,.32],sunDir:[-.26,.24,-.93],sunCol:[1,.84,.44],fogCol:[.88,.58,.24],fogDensity:.0038,stoneA:[.88,.56,.26],stoneB:[.95,.84,.64],accentBrass:[.96,.7,.18],glowCol:[.2,.86,.76],terrainLow:[.86,.58,.28],terrainHigh:[.72,.38,.16],moteCol:[1,.78,.38],prefixes:[["\u6298\u7EB8","ORIGAMI"],["\u53CC\u65E5","TWINSUN"],["\u98CE\u8680","WINDCARVED"],["\u91D1\u7802","SAFFRON"],["\u7425\u73C0","AMBER"],["\u98CE\u8F66","WINDVANE"],["\u8D64\u7802","SANDSTONE"],["\u70C8\u9633","SUNSCORCHED"]],nouns:[["\u98CE\u8680\u91D1\u5CE1","WIND-CANYON"],["\u5929\u7136\u7802\u62F1","SANDSTONE ARCH"],["\u98CE\u7FFC\u9AD8\u5854","WINDMILL SPIRE"],["\u53CC\u65E5\u5927\u6F20","BINARY DUNES"],["\u68F1\u9762\u5CA9\u5ECA","FACETED GORGE"],["\u6D41\u6C99\u5929\u6865","DUNE SPAN"],["\u9EC4\u94DC\u98CE\u6807\u9635","VANE MONOLITHS"],["\u91D1\u8F89\u5CE1\u95E8","OCHRE GATE"]]},{baseZh:"\u6781\u663C\u51B0\u6676\u68F1\u955C",baseEn:"ARCTIC PRISM SPIRE",skyZenith:[.06,.22,.38],skyMid:[.28,.64,.82],skyHorizon:[.84,.96,.99],sunDir:[0,.28,-.96],sunCol:[1,.95,.82],fogCol:[.72,.9,.96],fogDensity:.0035,stoneA:[.6,.89,.97],stoneB:[.94,.98,1],accentBrass:[.96,.74,.24],glowCol:[.38,.94,1],terrainLow:[.74,.91,.97],terrainHigh:[.95,.98,1],moteCol:[.82,.97,1],prefixes:[["\u6781\u663C","MIDNIGHT-SUN"],["\u5E7B\u65E5","SUNDOG"],["\u51B0\u6676","CRYSTAL"],["\u68F1\u955C","PRISM"],["\u971C\u5195","FROSTCROWN"],["\u51B0\u5DDD","GLACIER"],["\u51DB\u5149","HALO"],["\u96EA\u9B44","DIAMOND"]],nouns:[["\u51B0\u6676\u68F1\u955C","PRISM SPIRE"],["\u6781\u5149\u51B0\u5802","ICE CATHEDRAL"],["\u5E7B\u65E5\u51B0\u62F1","PARHELIA ARCH"],["\u971C\u6676\u5723\u5854","GLACIER CITADEL"],["\u955C\u9762\u5CE1\u6E7E","MIRROR FJORD"],["\u516D\u68F1\u51B0\u6797","HEXAGON COLUMNS"],["\u5BD2\u6676\u5929\u6865","FROZEN CAUSEWAY"],["\u767D\u663C\u5723\u6BBF","SOLSTICE SANCTUM"]]},{baseZh:"\u661F\u73AF\u5929\u4F53\u4E66\u9662",baseEn:"ASTRAL ARMILLARY",skyZenith:[.02,.05,.09],skyMid:[.05,.14,.22],skyHorizon:[.11,.36,.4],sunDir:[.14,.38,-.91],sunCol:[1,.84,.46],fogCol:[.07,.22,.28],fogDensity:.0031,stoneA:[.11,.15,.2],stoneB:[.93,.89,.8],accentBrass:[.96,.68,.18],glowCol:[.18,.88,.78],terrainLow:[.05,.11,.16],terrainHigh:[.14,.24,.3],moteCol:[1,.84,.42],prefixes:[["\u661F\u73AF","ASTRAL"],["\u5929\u7403","CELESTIAL"],["\u6D51\u4EEA","ARMILLARY"],["\u661F\u8F68","ORBITAL"],["\u89C2\u661F","OBSERVATORY"],["\u91D1\u6865","STARBRIDGE"],["\u592A\u865A","COSMIC"],["\u7F57\u76D8","COMPASS"]],nouns:[["\u5929\u4F53\u4E66\u9662","ASTRAL ARMILLARY"],["\u6D51\u5929\u661F\u73AF","ORRERY SANCTUM"],["\u661F\u5149\u957F\u6865","LIGHTBRIDGE"],["\u89C2\u661F\u7891\u5ECA","STARMAP GALLERY"],["\u9EC4\u9053\u795E\u6BBF","ECLIPTIC TEMPLE"],["\u5929\u67A2\u9AD8\u5854","POLARIS SPIRE"],["\u91D1\u8F68\u56DE\u5ECA","ORBITAL CLOISTER"],["\u4E07\u8C61\u661F\u575B","ZODIAC ALTAR"]]}];function Mo(e){let t=I(Math.round(e),1,999);if(t<=8)return t-1;let o=7;for(let a=9;a<=t;a++){let l=(a*2654435761>>>0)%7;o=(o+1+l)%8}return o}function bo(e){let t=I(Math.round(e),1,999),o=Mo(t),a=So[o],l=ot(t*7919+104729),n=String(t).padStart(3,"0"),u=a.baseZh,c=a.baseEn;if(t>8){let h=(t*3+Math.floor(t/8)*5)%a.prefixes.length,m=(t*7+Math.floor(t/8)*3)%a.nouns.length;u=`${a.prefixes[h][0]}${a.nouns[m][0]}`,c=`${a.prefixes[h][1]} ${a.nouns[m][1]}`}let i=t<=2?0:(l()-.5)*.42,d=t<=2?0:(l()-.5)*.12,r=[a.sunDir[0]+i,I(a.sunDir[1]+d,.14,.72),a.sunDir[2]];return{worldNumber:t,padNum:n,archIdx:o,zhName:u,enName:c,worldTitle:`WORLD #${n} \xB7 ${u} ${c}`,shortTitle:`#${n} \xB7 ${u}`,skyZenith:a.skyZenith,skyMid:a.skyMid,skyHorizon:a.skyHorizon,sunDir:r,sunCol:a.sunCol,fogCol:a.fogCol,fogDensity:a.fogDensity,stoneA:a.stoneA,stoneB:a.stoneB,accentBrass:a.accentBrass,glowCol:a.glowCol,terrainLow:a.terrainLow,terrainHigh:a.terrainHigh,moteCol:a.moteCol,seedFloat:t*1.37%100,curveAmp:t===1?5.2:4.2+l()*6.4,curveFreq:1+Math.floor(l()*2),curvePhase:l()*Math.PI*2,noiseOffX:(l()-.5)*200,noiseOffZ:(l()-.5)*200}}var fe=class{constructor(t=16384,o=36864){this.verts=new Float32Array(t*12),this.indices=new Uint32Array(o),this.vCount=0,this.iCount=0}ensureCapacity(t,o){if((this.vCount+t)*12>this.verts.length){let a=new Float32Array(Math.max(this.verts.length*2,(this.vCount+t)*24));a.set(this.verts),this.verts=a}if(this.iCount+o>this.indices.length){let a=new Uint32Array(Math.max(this.indices.length*2,(this.iCount+o)*2));a.set(this.indices),this.indices=a}}pushVert(t,o,a,l,n,u,c,i,d,r,h,m){let p=this.vCount*12;return this.verts[p]=t,this.verts[p+1]=o,this.verts[p+2]=a,this.verts[p+3]=l,this.verts[p+4]=n,this.verts[p+5]=u,this.verts[p+6]=c,this.verts[p+7]=i,this.verts[p+8]=d,this.verts[p+9]=r,this.verts[p+10]=h,this.verts[p+11]=m,this.vCount++}pushTri(t,o,a){this.indices[this.iCount++]=t,this.indices[this.iCount++]=o,this.indices[this.iCount++]=a}pushQuad(t,o,a,l){this.indices[this.iCount++]=t,this.indices[this.iCount++]=o,this.indices[this.iCount++]=a,this.indices[this.iCount++]=t,this.indices[this.iCount++]=a,this.indices[this.iCount++]=l}addBox(t,o,a,l,n,u,c,i=0,d=0){this.ensureCapacity(24,36);let r=l*.5,h=n*.5,m=u*.5,p=Math.cos(d),A=Math.sin(d),E=(x,R)=>t+x*p+R*A,M=(x,R)=>a-x*A+R*p,S=c[0],T=c[1],v=c[2],y=[{n:[A,0,p],p:[[-r,-h,m],[r,-h,m],[r,h,m],[-r,h,m]]},{n:[-A,0,-p],p:[[r,-h,-m],[-r,-h,-m],[-r,h,-m],[r,h,-m]]},{n:[p,0,-A],p:[[r,-h,m],[r,-h,-m],[r,h,-m],[r,h,m]]},{n:[-p,0,A],p:[[-r,-h,-m],[-r,-h,m],[-r,h,m],[-r,h,-m]]},{n:[0,1,0],p:[[-r,h,m],[r,h,m],[r,h,-m],[-r,h,-m]]},{n:[0,-1,0],p:[[-r,-h,-m],[r,-h,-m],[r,-h,m],[-r,-h,m]]}];for(let x of y){let R=this.pushVert(E(x.p[0][0],x.p[0][2]),o+x.p[0][1],M(x.p[0][0],x.p[0][2]),x.n[0],x.n[1],x.n[2],0,0,S,T,v,i),B=this.pushVert(E(x.p[1][0],x.p[1][2]),o+x.p[1][1],M(x.p[1][0],x.p[1][2]),x.n[0],x.n[1],x.n[2],1,0,S,T,v,i),Z=this.pushVert(E(x.p[2][0],x.p[2][2]),o+x.p[2][1],M(x.p[2][0],x.p[2][2]),x.n[0],x.n[1],x.n[2],1,1,S,T,v,i),w=this.pushVert(E(x.p[3][0],x.p[3][2]),o+x.p[3][1],M(x.p[3][0],x.p[3][2]),x.n[0],x.n[1],x.n[2],0,1,S,T,v,i);this.pushQuad(R,B,Z,w)}}addTaperedPillar(t,o,a,l,n,u,c,i,d=0,r=0,h=0){this.ensureCapacity((c+1)*2+c*2+4,c*12);let m=i[0],p=i[1],A=i[2],E=(l-n)/Math.max(u,.01),M=[],S=[];for(let T=0;T<=c;T++){let v=T/c,y=v*Math.PI*2,x=Math.cos(y),R=Math.sin(y),B=Math.hypot(x,E,R)||1,Z=x/B,w=E/B,K=R/B;M.push(this.pushVert(t+x*l,o,a+R*l,Z,w,K,v,0,m,p,A,d)),S.push(this.pushVert(t+r+x*n,o+u,a+h+R*n,Z,w,K,v,1,m,p,A,d))}for(let T=0;T<c;T++)this.pushQuad(M[T],M[T+1],S[T+1],S[T]);if(n>.02){let T=this.pushVert(t+r,o+u,a+h,0,1,0,.5,.5,m,p,A,d);for(let v=0;v<c;v++){let y=v/c*Math.PI*2,x=(v+1)/c*Math.PI*2,R=this.pushVert(t+r+Math.cos(y)*n,o+u,a+h+Math.sin(y)*n,0,1,0,0,0,m,p,A,d),B=this.pushVert(t+r+Math.cos(x)*n,o+u,a+h+Math.sin(x)*n,0,1,0,1,0,m,p,A,d);this.pushTri(T,B,R)}}if(l>.02){let T=this.pushVert(t,o,a,0,-1,0,.5,.5,m,p,A,d);for(let v=0;v<c;v++){let y=v/c*Math.PI*2,x=(v+1)/c*Math.PI*2,R=this.pushVert(t+Math.cos(y)*l,o,a+Math.sin(y)*l,0,-1,0,0,0,m,p,A,d),B=this.pushVert(t+Math.cos(x)*l,o,a+Math.sin(x)*l,0,-1,0,1,0,m,p,A,d);this.pushTri(T,R,B)}}}addArchSpan(t,o,a,l,n,u,c,i,d=0,r=0){let h=l+n,m=u*.5,p=Math.cos(r),A=Math.sin(r),E=(S,T)=>t+S*p+T*A,M=(S,T)=>a-S*A+T*p;for(let S=0;S<c;S++){let T=S/c*Math.PI,v=(S+1)/c*Math.PI,y=(T+v)*.5,x=(l+h)*.5,R=(v-T)*h*1.06,B=Math.cos(y)*x,Z=Math.sin(y)*x;this.ensureCapacity(24,36);let w=Math.cos(y),K=Math.sin(y),de=w,Se=K,Me=-K,be=w,ne=n*.52,se=R*.54,ze=i[0],_e=i[1],Ue=i[2],re=(pe,xe,ye)=>{let Ae=B+de*pe+Me*xe,ve=o+Z+Se*pe+be*xe;return[E(Ae,ye),ve,M(Ae,ye)]},St=re(-ne,-se,m),Mt=re(ne,-se,m),bt=re(ne,se,m),Ct=re(-ne,se,m),gt=re(-ne,-se,-m),Pt=re(ne,-se,-m),Bt=re(ne,se,-m),It=re(-ne,se,-m),ke=(pe,xe,ye,Ae,ve,We,Ge)=>{let xo=this.pushVert(pe[0],pe[1],pe[2],ve,We,Ge,0,0,ze,_e,Ue,d),yo=this.pushVert(xe[0],xe[1],xe[2],ve,We,Ge,1,0,ze,_e,Ue,d),Ao=this.pushVert(ye[0],ye[1],ye[2],ve,We,Ge,1,1,ze,_e,Ue,d),vo=this.pushVert(Ae[0],Ae[1],Ae[2],ve,We,Ge,0,1,ze,_e,Ue,d);this.pushQuad(xo,yo,Ao,vo)};ke(St,Mt,bt,Ct,A,0,p),ke(Pt,gt,It,Bt,-A,0,-p),ke(Mt,Pt,Bt,bt,w*p,K,-w*A),ke(gt,St,Ct,It,-w*p,-K,w*A)}}addPortalMonument(t,o,a=!0){let l=[.95,.91,.84],n=[.11,.15,.2],u=[.96,.68,.16],c=[.18,.86,.76],i=[1,.74,.2];this.addBox(0,-.15,t,21,1,7.6,n,1),this.addBox(0,.18,t,17.6,.34,5.4,l,1),this.addBox(0,.34,t,11.2,.12,2.2,c,3.6);for(let d of[-1,1]){let r=d*6.85;this.addBox(r,1.2,t,3.4,1.8,3.8,l,1),this.addBox(r,8.2,t,3,14.8,3.1,l,1),this.addBox(r,4.5,t,3.22,.55,3.32,u,2),this.addBox(r,9.5,t,3.22,.55,3.32,u,2),this.addBox(r,14.8,t,3.55,1.1,3.65,u,2),this.addBox(d*5.46,8,t,.28,15.4,2.4,d<0?i:c,3.9),this.addBox(r,8.2,t+1.58,.36,12.6,.18,c,3.6),this.addBox(r-d*.75,8.2,t+1.58,.22,11.4,.16,i,3.7)}if(this.addBox(0,16.45,t,18.4,1.6,4,l,1),this.addBox(0,17.65,t,16.2,.9,3.4,n,1),this.addBox(0,18.45,t,13,.75,2.8,u,2),this.addBox(0,15.68,t,11.1,.28,2.4,i,3.9),this.addBox(0,16.45,t+2.02,13.6,.34,.18,c,3.7),a){this.addTaperedPillar(0,18.8,t,1.6,.12,3.6,6,u,2),this.addArchSpan(0,18.6,t,2.6,.38,.55,10,i,3.8);for(let d of[-1,1]){let r=d*12.6,h=t+7.5,m=_(o,r,h);this.addBox(r,m+.6,h,2.6,1.4,2.6,o.stoneA,.5),this.addTaperedPillar(r,m+1.2,h,1.05,.25,11.5,4,o.stoneB,1),this.addTaperedPillar(r,m+12.7,h,.55,.04,1.8,4,i,3.8)}}}uploadToGL(t){let o=t.createVertexArray();t.bindVertexArray(o);let a=t.createBuffer();t.bindBuffer(t.ARRAY_BUFFER,a),t.bufferData(t.ARRAY_BUFFER,this.verts.subarray(0,this.vCount*12),t.STATIC_DRAW);let l=48;t.enableVertexAttribArray(0),t.vertexAttribPointer(0,3,t.FLOAT,!1,l,0),t.enableVertexAttribArray(1),t.vertexAttribPointer(1,3,t.FLOAT,!1,l,12),t.enableVertexAttribArray(2),t.vertexAttribPointer(2,2,t.FLOAT,!1,l,24),t.enableVertexAttribArray(3),t.vertexAttribPointer(3,4,t.FLOAT,!1,l,32);let n=t.createBuffer();return t.bindBuffer(t.ELEMENT_ARRAY_BUFFER,n),t.bufferData(t.ELEMENT_ARRAY_BUFFER,this.indices.subarray(0,this.iCount),t.STATIC_DRAW),t.bindVertexArray(null),{vao:o,vbo:a,ibo:n,count:this.iCount,indexType:t.UNSIGNED_INT}}};function Co(e,t){let i=new Float32Array(54516),d=new Uint32Array(4408*6),r=0;for(let S=0;S<=58;S++){let T=S/58,v=N(-168,82,T);for(let y=0;y<=76;y++){let x=y/76,R=N(-96,96,x),B=_(t,R,v),Z=Lt(t,R,v),w=I((B+3)/14,0,1),K=Math.min(Math.hypot(R,v-k),Math.hypot(R,v-Q)),de=1-I((K-9)/11,0,1),Se=N(t.terrainLow[0],t.terrainHigh[0],w),Me=N(t.terrainLow[1],t.terrainHigh[1],w),be=N(t.terrainLow[2],t.terrainHigh[2],w);Se=N(Se,.9,de*.65),Me=N(Me,.86,de*.65),be=N(be,.78,de*.65),i[r]=R,i[r+1]=B,i[r+2]=v,i[r+3]=Z[0],i[r+4]=Z[1],i[r+5]=Z[2],i[r+6]=x*16,i[r+7]=T*22,i[r+8]=Se,i[r+9]=Me,i[r+10]=be,i[r+11]=-1,r+=12}}let h=0,m=77;for(let S=0;S<58;S++)for(let T=0;T<76;T++){let v=S*m+T,y=v+1,x=v+m,R=x+1;d[h++]=v,d[h++]=x,d[h++]=y,d[h++]=y,d[h++]=x,d[h++]=R}let p=e.createVertexArray();e.bindVertexArray(p);let A=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,A),e.bufferData(e.ARRAY_BUFFER,i,e.STATIC_DRAW);let E=48;e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,E,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,E,12),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,2,e.FLOAT,!1,E,24),e.enableVertexAttribArray(3),e.vertexAttribPointer(3,4,e.FLOAT,!1,E,32);let M=e.createBuffer();return e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,M),e.bufferData(e.ELEMENT_ARRAY_BUFFER,d,e.STATIC_DRAW),e.bindVertexArray(null),{vao:p,vbo:A,ibo:M,count:d.length,indexType:e.UNSIGNED_INT}}function go(e,t,o,a){let l=t.archIdx;if(e.addPortalMonument(k,t,!0),e.addPortalMonument(Q,t,!1),l===0){for(let n=36;n>=-98;n-=22){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(14.5+o()*4.5),d=Math.max(-2.5,_(t,i,n));e.addBox(i,d-1.2,n,7.5,2.8,9.5,t.stoneB,.5),e.addTaperedPillar(i,d+.2,n-2.8,.85,.72,12.5,8,t.stoneA,1),e.addTaperedPillar(i,d+.2,n+2.8,.85,.72,12.5,8,t.stoneA,1),e.addBox(i,d+13.2,n,2.8,1.2,8.6,t.stoneA,1),e.addBox(i,d+14,n,1.8,.45,7.8,t.accentBrass,2),o()>.45&&e.addTaperedPillar(i+c*4.5,d+.5,n,1.2,.08,18,4,t.accentBrass,2,-c*3.5,-2)}}for(let n of[12,-38,-82]){let u=L(t,n);a.push({kind:"astrolabe",x:u,y:9.2,z:n,scale:11.5,speed:.48,phase:o()*6.28,col:t.accentBrass,mat:2}),a.push({kind:"astrolabeTilt",x:u,y:9.2,z:n,scale:9.4,speed:-.65,phase:o()*6.28,col:t.glowCol,mat:3.4})}}else if(l===1){for(let n=32;n>=-96;n-=28){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(22+o()*6),d=_(t,i,n)-1;for(let r=0;r<5;r++){let h=16-r*2.8,m=d+r*3.6;e.addBox(i,m+1.7,n,h,3.4,h,t.stoneA,.4),e.addBox(i,m+3.45,n,h*.96,.28,h*.96,t.glowCol,3.6)}e.addTaperedPillar(i,d+18.2,n,1.4,.2,4.2,4,t.glowCol,3.9)}for(let c of[-1,1]){let i=u+c*12.2;e.addTaperedPillar(i,-2.2,n+11,1.3,.35,11,4,t.stoneA,1),e.addTaperedPillar(i,8.8,n+11,.65,.05,2.2,4,t.glowCol,3.9)}}for(let n of[4,-52]){let u=L(t,n);a.push({kind:"astrolabe",x:u,y:8.5,z:n,scale:10.5,speed:.55,phase:o()*6.28,col:t.accentBrass,mat:2})}}else if(l===2){for(let n=36;n>=-98;n-=24){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(15+o()*7),d=_(t,i,n)-.5;for(let r=0;r<7;r++){let h=r*.75+n*.1,m=(7-r)*.46,p=i+Math.cos(h)*(r*.35),A=n+Math.sin(h)*(r*.35),E=r%2===0?t.stoneA:t.stoneB;e.addTaperedPillar(p,d+r*2.5,A,m+.4,m*.82,2.7,7,E,.8)}e.addTaperedPillar(i,d+17.5,n,.6,.05,3.2,6,t.glowCol,3.6)}(n%48===12||Math.abs(n+36)<6||Math.abs(n+84)<6)&&(e.addArchSpan(u,-1.5,n,13.5,1.1,1.8,12,t.stoneB,.6),e.addArchSpan(u,-1.5,n+.9,12.8,.42,.5,12,t.glowCol,3.6))}for(let n of[16,-28,-72]){let u=L(t,n);a.push({kind:"kelpHalo",x:u,y:8.2,z:n,scale:10.2,speed:.72,phase:o()*6.28,col:t.glowCol,mat:3.5})}}else if(l===3){let n=[18,-32,-80];for(let u of n){let c=L(t,u);for(let i of[-24,0,24]){let d=c+i;e.addBox(d-7.5,6.5,u,2.6,15,3.4,t.stoneA,.3),e.addBox(d+7.5,6.5,u,2.6,15,3.4,t.stoneA,.3),e.addArchSpan(d,11.5,u,6.2,1.6,3.4,10,t.stoneB,.6)}e.addBox(c,19.6,u,68,1.5,4.2,t.stoneB,.8),e.addBox(c,20.6,u,68,.5,4.5,t.stoneA,.4);for(let i of[-1,1]){let d=c+i*15;e.addBox(d,22.4,u,4.2,3.2,4.2,t.stoneB,.8),e.addTaperedPillar(d,24,u,2.5,.1,3.2,8,t.accentBrass,1)}}for(let u=38;u>=-96;u-=26){let c=L(t,u);for(let i of[-1,1]){let d=c+i*14.5;for(let r=0;r<8;r++)e.addBox(d-i*r*.55,2.5+r*1.15,u+r*.9,2.8,.6,1.2,r%2===0?t.stoneB:t.stoneA,.6);e.addTaperedPillar(d,13.5,u,.9,.15,5.2,4,t.stoneB,1),e.addTaperedPillar(d,13.5,u,.9,.15,-2,4,t.accentBrass,2)}}}else if(l===4){for(let n=40;n>=-102;n-=19){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(13+o()*9),d=_(t,i,n)-.6,r=11.5+o()*11,h=5.2+o()*3.8,m=-c*(1.2+o()*1.8);e.addTaperedPillar(i,d,n,1.35,.78,r,7,t.stoneB,.5,m,0),e.addTaperedPillar(i+m,d+r-.5,n,h*.92,.8,1.2,9,t.glowCol,3.5),e.addTaperedPillar(i+m,d+r+.2,n,h,h*.32,2.6,9,t.stoneA,.9),e.addTaperedPillar(i+m,d+r+2.5,n,h*.38,.15,1.4,9,[.18,.88,.72],3.3)}}for(let n of[8,-44,-86]){let u=L(t,n);a.push({kind:"kelpHalo",x:u,y:8.6,z:n,scale:9.6,speed:.52,phase:o()*6.28,col:t.glowCol,mat:3.6})}}else if(l===5){for(let n=24;n>=-88;n-=36){let u=L(t,n);e.addArchSpan(u,-1,n,15.2,2.8,4.4,7,t.stoneA,.3,(o()-.5)*.25)}for(let n=38;n>=-98;n-=22){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(14.5+o()*5),d=_(t,i,n)-.8,r=12+o()*6;e.addTaperedPillar(i,d,n,2.4,.95,r,4,t.stoneB,.4),e.addBox(i,d+r+.5,n,1.6,1,1.6,t.accentBrass,2),a.push({kind:"windVane",x:i-c*1.1,y:d+r+.5,z:n,scale:4.8,speed:c*(1.8+o()*.9),phase:o()*6.28,col:t.accentBrass,mat:2})}}}else if(l===6){for(let n=38;n>=-100;n-=20){let u=L(t,n);for(let c of[-1,1]){let i=u+c*(13.5+o()*6.5),d=_(t,i,n)-1;e.addTaperedPillar(i,d,n,2.2,.08,19.5+o()*6,6,t.stoneA,1,-c*2.2,0),e.addTaperedPillar(i+c*2.6,d,n+2.2,1.5,.06,13.5,6,t.stoneB,1,c*1.4,1),e.addTaperedPillar(i-c*1.4,d,n-2,1.2,.05,10.5,6,t.glowCol,3.3,-c*1.2,-.8)}(Math.abs(n-18)<5||Math.abs(n+42)<5||Math.abs(n+82)<5)&&e.addArchSpan(u,-1.2,n,14.2,1.3,1.8,8,t.stoneA,1)}for(let n of[-12,-62]){let u=L(t,n);a.push({kind:"astrolabe",x:u,y:9,z:n,scale:10.8,speed:.42,phase:o()*6.28,col:t.glowCol,mat:3.4})}}else{for(let n=44;n>=-104;n-=14){let u=L(t,n);if(e.addBox(u,-.35,n,8.8,.28,11.5,t.accentBrass,2),e.addBox(u-4.2,-.15,n,.35,.25,11.5,t.glowCol,3.7),e.addBox(u+4.2,-.15,n,.35,.25,11.5,t.glowCol,3.7),Math.abs(n%28)<8)for(let c of[-1,1]){let i=u+c*15.5;e.addBox(i,6,n,2.4,16.5,3.6,t.stoneA,1),e.addBox(i-c*1.22,6.5,n,.18,12.5,.45,t.glowCol,3.7),e.addTaperedPillar(i,14.3,n,1.3,.08,3.4,4,t.accentBrass,2)}}for(let n of[14,-36,-82]){let u=L(t,n);a.push({kind:"astrolabe",x:u,y:8.8,z:n,scale:12.8,speed:.54,phase:o()*6.28,col:t.accentBrass,mat:2}),a.push({kind:"astrolabeTilt",x:u,y:8.8,z:n,scale:10.6,speed:-.78,phase:o()*6.28,col:t.glowCol,mat:3.6})}}for(let n of[-1,1]){let u=n*(26+o()*14),c=-138-o()*18,i=_(t,u,c)-1;e.addTaperedPillar(u,i,c,5.5,.4,28+o()*10,6,t.stoneA,.6)}}function he(e,t){let o=bo(t),a=ot(o.worldNumber*15485863+32452843),l=Co(e,o),n=new fe(18e3,42e3),u=[];go(n,o,a,u);let c=n.uploadToGL(e),i=[],d=[20,-16,-52,-86];for(let h=0;h<d.length;h++){let m=d[h],p=L(o,m)+(a()-.5)*5,A=6.4+Math.sin(h*1.4+o.curvePhase)*2.4;i.push({x:p,y:A,z:m,radius:4,collected:!1,pulse:a()*6.28})}let r=[];for(let h=0;h<10;h++){let m=(h+.5)/10,p=N(38,-104,m),A=L(o,p),E=p<-92?0:Math.sin(h*1.15+o.curvePhase)*3.6,M=p<-92?7.6:6.2+Math.cos(h*.95+o.curvePhase)*2.2;r.push({x:A+E,y:M,z:p,collected:!1,rot:h*.7})}return{meta:o,terrainMesh:l,archMesh:c,rings:i,shards:r,spinners:u}}function Ce(e,t){if(t)for(let o of[t.terrainMesh,t.archMesh])o&&(o.vao&&e.deleteVertexArray(o.vao),o.vbo&&e.deleteBuffer(o.vbo),o.ibo&&e.deleteBuffer(o.ibo))}function Wt(e){let t=(()=>{let d=[],r=[];for(let A=0;A<=18;A++){let M=A/18*Math.PI;for(let S=0;S<=28;S++){let v=S/28*Math.PI*2;d.push(Math.sin(M)*Math.cos(v),Math.cos(M),Math.sin(M)*Math.sin(v))}}for(let A=0;A<18;A++)for(let E=0;E<28;E++){let M=A*29+E,S=M+28+1;r.push(M,S,M+1,S,S+1,M+1)}let h=e.createVertexArray();e.bindVertexArray(h);let m=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,m),e.bufferData(e.ARRAY_BUFFER,new Float32Array(d),e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,12,0);let p=e.createBuffer();return e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,p),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(r),e.STATIC_DRAW),e.bindVertexArray(null),{vao:h,count:r.length,indexType:e.UNSIGNED_SHORT}})(),o=(()=>{let p=[-5.38,.32,-1.85,5.38,.32,-1.85,5.38,15.68,-1.85,-5.38,15.68,-1.85,-5.38,.32,0,-5.38,.32,-1.85,-5.38,15.68,-1.85,-5.38,15.68,0,5.38,.32,-1.85,5.38,.32,0,5.38,15.68,0,5.38,15.68,-1.85,-5.38,.32,0,5.38,.32,0,5.38,.32,-1.85,-5.38,.32,-1.85,-5.38,15.68,-1.85,5.38,15.68,-1.85,5.38,15.68,0,-5.38,15.68,0],A=[];for(let T=0;T<5;T++){let v=T*4;A.push(v,v+1,v+2,v,v+2,v+3)}let E=e.createVertexArray();e.bindVertexArray(E);let M=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,M),e.bufferData(e.ARRAY_BUFFER,new Float32Array(p),e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,12,0);let S=e.createBuffer();return e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,S),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(A),e.STATIC_DRAW),e.bindVertexArray(null),{vao:E,count:A.length,indexType:e.UNSIGNED_SHORT}})(),a=(()=>{let h=new fe(512,2400),m=[];for(let p=0;p<=32;p++){let A=p/32*Math.PI*2,E=Math.cos(A),M=Math.sin(A),S=[];for(let T=0;T<=10;T++){let v=T/10*Math.PI*2,y=Math.cos(v),x=Math.sin(v),R=(1+.055*y)*E,B=(1+.055*y)*M,Z=.055*x,w=y*E,K=y*M,de=x;S.push(h.pushVert(R,B,Z,w,K,de,p/32,T/10,1,1,1,2))}m.push(S)}for(let p=0;p<32;p++)for(let A=0;A<10;A++)h.pushQuad(m[p][A],m[p+1][A],m[p+1][A+1],m[p][A+1]);return h.uploadToGL(e)})(),l=(()=>{let c=new fe(64,96);return c.addTaperedPillar(0,0,0,.72,.02,1.15,4,[1,1,1],3.8),c.addTaperedPillar(0,0,0,.72,.02,-1.15,4,[1,1,1],3.8),c.uploadToGL(e)})(),n=(()=>{let c=new fe(160,280);return c.addBox(0,0,0,.35,.35,.55,[1,1,1],2),c.addBox(0,0,0,2.2,.22,.08,[1,1,1],2),c.addBox(0,0,0,.22,2.2,.08,[1,1,1],2),c.addBox(.65,.16,.05,.85,.28,.04,[.98,.92,.78],1),c.addBox(-.65,-.16,.05,.85,.28,.04,[.98,.92,.78],1),c.addBox(-.16,.65,.05,.28,.85,.04,[.98,.92,.78],1),c.addBox(.16,-.65,.05,.28,.85,.04,[.98,.92,.78],1),c.uploadToGL(e)})(),u=(()=>{let c=new fe(512,1024),i=[.96,.93,.86],d=[.96,.68,.16],r=[.09,.16,.22],h=[.18,.92,.8],m=[1,.78,.24];c.addBox(0,.04,.22,.56,.26,1.85,i,1),c.addBox(0,.03,-.92,.36,.2,.72,i,1),c.addBox(0,.02,-1.42,.2,.13,.48,d,2),c.addBox(0,.02,-1.74,.08,.08,.34,h,3.8),c.addBox(0,.2,-.25,.38,.18,1.05,r,1.4),c.addBox(0,.16,.45,.1,.24,1.45,d,2),c.addBox(0,.42,.92,.07,.52,.68,d,2);for(let p of[-1,1])c.addBox(p*.82,.06,.22,1.25,.09,1.15,i,1,p*.26),c.addBox(p*.82,.08,-.26,1.28,.07,.18,d,2,p*.26),c.addBox(p*1.82,0,.58,1.15,.07,.72,d,2,p*.42),c.addBox(p*2.32,0,.82,.16,.12,.65,h,3.9,p*.42),c.addBox(p*.46,.26,1.15,.62,.06,.48,i,1,p*.35);return c.addBox(-.18,.04,1.24,.18,.16,.22,h,4.1),c.addBox(.18,.04,1.24,.18,.16,.22,h,4.1),c.addBox(0,.04,1.28,.22,.12,.18,m,4),c.uploadToGL(e)})();return{skySphere:t,portalPocket:o,torus:a,octa:l,windVane:n,glider:u}}function Gt(e,t=420){let o=new Float32Array([-.5,-.5,0,0,0,.5,-.5,0,1,0,.5,.5,0,1,1,-.5,.5,0,0,1]),a=new Uint16Array([0,1,2,0,2,3]),l=new Float32Array(t*8),n=e.createVertexArray();e.bindVertexArray(n);let u=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,u),e.bufferData(e.ARRAY_BUFFER,o,e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,20,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,2,e.FLOAT,!1,20,12);let c=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,c),e.bufferData(e.ELEMENT_ARRAY_BUFFER,a,e.STATIC_DRAW);let i=e.createBuffer();return e.bindBuffer(e.ARRAY_BUFFER,i),e.bufferData(e.ARRAY_BUFFER,l.byteLength,e.DYNAMIC_DRAW),e.enableVertexAttribArray(4),e.vertexAttribPointer(4,4,e.FLOAT,!1,32,0),e.vertexAttribDivisor(4,1),e.enableVertexAttribArray(5),e.vertexAttribPointer(5,4,e.FLOAT,!1,32,16),e.vertexAttribDivisor(5,1),e.bindVertexArray(null),{vao:n,instVBO:i,data:l,maxParticles:t}}var j={lydian:{label:"F-LYDIAN \xB7 \u60AC\u7A7A\u5723\u6BBF\u8C03\u5F0F",root:87.31,notes:[174.61,196,220,246.94,261.63,293.66,329.63,349.23,392,440,493.88,523.25]},hirajoshi:{label:"D-HIRAJOSHI \xB7 \u9ED1\u66DC\u7194\u91D1\u8C03\u5F0F",root:73.42,notes:[146.83,155.56,196,220,233.08,293.66,311.13,392,440,466.16,587.33,622.25]},pentatonic:{label:"C-PENTATONIC \xB7 \u6CA7\u6D77\u8367\u5149\u8C03\u5F0F",root:65.41,notes:[130.81,146.83,164.81,196,220,261.63,293.66,329.63,392,440,523.25,659.25]},dorian:{label:"E-DORIAN \xB7 \u51E0\u4F55\u79D8\u5883\u8C03\u5F0F",root:82.41,notes:[164.81,185,196,220,246.94,277.18,293.66,329.63,369.99,392,440,493.88]},mixolydian:{label:"G-MIXOLYDIAN \xB7 \u661F\u73AF\u53CC\u65E5\u8C03\u5F0F",root:98,notes:[196,220,246.94,261.63,293.66,329.63,349.23,392,440,493.88,523.25,587.33]}},Ht=["lydian","hirajoshi","pentatonic","dorian","pentatonic","mixolydian","lydian","mixolydian"],Ye=class{constructor(){this.ctx=null,this.master=null,this.analyser=null,this.reverbIn=null,this.noiseBuf=null,this.windFilter=null,this.windGain=null,this.padOscs=[],this.padFilter=null,this.padGain=null,this.vol=.8,this.currentScaleKey="lydian",this.arpTimer=0,this.arpStep=0}init(){if(this.ctx){this.ctx.state==="suspended"&&this.ctx.resume().catch(()=>{});return}let t=window.AudioContext||window.webkitAudioContext;if(!t)return;try{this.ctx=new t}catch{return}let o=this.ctx.createDynamicsCompressor();o.threshold.value=-10,o.knee.value=12,o.ratio.value=8,o.attack.value=.005,o.release.value=.22,this.master=this.ctx.createGain(),this.master.gain.value=this.vol,this.analyser=this.ctx.createAnalyser(),this.analyser.fftSize=512,this.master.connect(o),o.connect(this.analyser),this.analyser.connect(this.ctx.destination),this.reverbIn=this.ctx.createGain(),this.reverbIn.gain.value=.34;let a=this.ctx.createDelay(1.2);a.delayTime.value=.31;let l=this.ctx.createDelay(1.2);l.delayTime.value=.47;let n=this.ctx.createGain();n.gain.value=.38;let u=this.ctx.createBiquadFilter();u.type="lowpass",u.frequency.value=2400,this.reverbIn.connect(a),a.connect(l),l.connect(u),u.connect(n),n.connect(a),a.connect(this.master),u.connect(this.master);let c=this.ctx.sampleRate*2;this.noiseBuf=this.ctx.createBuffer(1,c,this.ctx.sampleRate);let i=this.noiseBuf.getChannelData(0),d=0,r=0,h=0;for(let T=0;T<c;T++){let v=Math.random()*2-1;d=.997*d+v*.028,r=.985*r+v*.032,h=.95*h+v*.048,i[T]=(d+r+h+v*.12)*.85}let m=this.ctx.createBufferSource();m.buffer=this.noiseBuf,m.loop=!0,this.windFilter=this.ctx.createBiquadFilter(),this.windFilter.type="bandpass",this.windFilter.frequency.value=460,this.windFilter.Q.value=.85,this.windGain=this.ctx.createGain(),this.windGain.gain.value=.015,m.connect(this.windFilter),this.windFilter.connect(this.windGain),this.windGain.connect(this.master),m.start();let p=j[this.currentScaleKey];this.padFilter=this.ctx.createBiquadFilter(),this.padFilter.type="lowpass",this.padFilter.frequency.value=520,this.padFilter.Q.value=1.4,this.padGain=this.ctx.createGain(),this.padGain.gain.value=.045;let A=[1,1.5,2,2.25],E=["sine","triangle","sawtooth","triangle"],M=[0,-6,7,-4],S=[.42,.28,.14,.18];for(let T=0;T<A.length;T++){let v=this.ctx.createOscillator();v.type=E[T],v.frequency.value=p.root*A[T],v.detune.value=M[T];let y=this.ctx.createGain();y.gain.value=S[T],v.connect(y),y.connect(this.padFilter),v.start(),this.padOscs.push({osc:v,ratio:A[T]})}this.padFilter.connect(this.padGain),this.padGain.connect(this.master),this.padGain.connect(this.reverbIn)}getScaleLabel(){return j[this.currentScaleKey]?.label||j.lydian.label}setVolume(t){this.vol=t,this.master&&this.ctx&&this.master.gain.setTargetAtTime(t,this.ctx.currentTime,.05)}setWorldArchetype(t){let o=Ht[t%Ht.length]||"lydian";if(this.currentScaleKey=o,!this.ctx||this.padOscs.length===0)return;let a=j[o],l=this.ctx.currentTime;for(let n of this.padOscs)n.osc.frequency.setTargetAtTime(a.root*n.ratio,l,.35)}playPluck(t,o=.75,a=.1,l=!1){if(!this.ctx)return;let n=this.ctx.currentTime,u=this.ctx.createOscillator();u.type=l?"sine":"triangle",u.frequency.setValueAtTime(t,n);let c=this.ctx.createOscillator();c.type="sine",c.frequency.setValueAtTime(t*(l?4:2),n);let i=this.ctx.createBiquadFilter();i.type="lowpass",i.frequency.setValueAtTime(l?2800:3400,n),i.frequency.exponentialRampToValueAtTime(520,n+o);let d=this.ctx.createGain();d.gain.setValueAtTime(5e-4,n),d.gain.linearRampToValueAtTime(a,n+.012),d.gain.exponentialRampToValueAtTime(8e-4,n+o);let r=this.ctx.createGain();r.gain.setValueAtTime(a*.32,n),r.gain.exponentialRampToValueAtTime(5e-4,n+o*.38),u.connect(i),c.connect(r),r.connect(i),i.connect(d),d.connect(this.master),d.connect(this.reverbIn),u.start(n),c.start(n),u.stop(n+o+.04),c.stop(n+o+.04)}playPortalSwell(t=0){if(this.setWorldArchetype(t),!this.ctx)return;let o=j[this.currentScaleKey],a=this.ctx.currentTime,l=this.ctx.createOscillator();l.type="sine",l.frequency.setValueAtTime(o.root,a),l.frequency.exponentialRampToValueAtTime(o.root*.5,a+1.4);let n=this.ctx.createGain();n.gain.setValueAtTime(.001,a),n.gain.linearRampToValueAtTime(.22,a+.08),n.gain.exponentialRampToValueAtTime(.001,a+1.55),l.connect(n),n.connect(this.master),l.start(a),l.stop(a+1.6),[0,2,4,6,9].forEach((c,i)=>{let d=o.notes[c%o.notes.length],r=this.ctx.createOscillator();r.type=i%2===0?"triangle":"sawtooth",r.frequency.setValueAtTime(d,a+i*.045),r.detune.value=(i-2)*5;let h=this.ctx.createBiquadFilter();h.type="lowpass",h.frequency.setValueAtTime(420,a+i*.045),h.frequency.exponentialRampToValueAtTime(2900,a+.35+i*.045),h.frequency.exponentialRampToValueAtTime(640,a+1.85);let m=this.ctx.createGain();m.gain.setValueAtTime(8e-4,a+i*.045),m.gain.linearRampToValueAtTime(.075,a+.24+i*.045),m.gain.exponentialRampToValueAtTime(8e-4,a+1.9),r.connect(h),h.connect(m),m.connect(this.master),m.connect(this.reverbIn),r.start(a+i*.045),r.stop(a+1.95)})}playResonanceRing(t=1){if(!this.ctx)return;let o=j[this.currentScaleKey],a=Math.min(4,t-1);[0,2,4,7].forEach((l,n)=>{let u=o.notes[(l+a)%o.notes.length];setTimeout(()=>{this.playPluck(u,.85,.11,!1)},n*48)})}playAstralShard(){if(!this.ctx)return;let o=j[this.currentScaleKey].notes[5+Math.floor(Math.random()*6)];this.playPluck(o,.55,.12,!0),setTimeout(()=>{this.playPluck(o*1.5,.45,.07,!0)},55)}playChoralPadPreview(){if(!this.ctx)return;let t=j[this.currentScaleKey],o=this.ctx.currentTime;[t.root*2,t.notes[2],t.notes[4],t.notes[7]].forEach((a,l)=>{let n=this.ctx.createOscillator();n.type=l%2===0?"sawtooth":"triangle",n.frequency.value=a,n.detune.value=(l-1.5)*7;let u=this.ctx.createBiquadFilter();u.type="lowpass",u.frequency.setValueAtTime(340,o),u.frequency.exponentialRampToValueAtTime(1450,o+.6),u.frequency.exponentialRampToValueAtTime(420,o+2.1);let c=this.ctx.createGain();c.gain.setValueAtTime(.001,o),c.gain.linearRampToValueAtTime(.07,o+.45),c.gain.exponentialRampToValueAtTime(.001,o+2.15),n.connect(u),u.connect(c),c.connect(this.master),c.connect(this.reverbIn),n.start(o),n.stop(o+2.2)})}playWarpBoost(){if(!this.ctx||!this.noiseBuf)return;let t=this.ctx.currentTime,o=this.ctx.createBufferSource();o.buffer=this.noiseBuf;let a=this.ctx.createBiquadFilter();a.type="bandpass",a.frequency.setValueAtTime(320,t),a.frequency.exponentialRampToValueAtTime(1680,t+.28),a.frequency.exponentialRampToValueAtTime(520,t+.78),a.Q.value=1.6;let l=this.ctx.createGain();l.gain.setValueAtTime(.001,t),l.gain.linearRampToValueAtTime(.18,t+.08),l.gain.exponentialRampToValueAtTime(.001,t+.82),o.connect(a),a.connect(l),l.connect(this.master),o.start(t),o.stop(t+.85);let n=j[this.currentScaleKey];this.playPluck(n.notes[4],.65,.09,!1)}playBarrelRoll(){if(!this.ctx)return;let t=j[this.currentScaleKey];[2,4,5,7,9,11].forEach((o,a)=>{setTimeout(()=>{this.playPluck(t.notes[o%t.notes.length],.52,.085,a%2===1)},a*38)})}update(t,o,a=.5,l=!1){if(!this.ctx)return;let n=this.ctx.currentTime,u=o?.022+a*.045+(l?.045:0):.012,c=o?420+a*680+(l?520:0):360;this.windGain.gain.setTargetAtTime(u,n,.08),this.windFilter.frequency.setTargetAtTime(c,n,.08);let i=.5+.5*Math.sin(n*.55),d=o?.055:.032,r=440+i*340+(l?260:0);if(this.padGain.gain.setTargetAtTime(d,n,.15),this.padFilter.frequency.setTargetAtTime(r,n,.15),o){let h=l?.24:.36;if(this.arpTimer+=t,this.arpTimer>=h){this.arpTimer-=h;let m=j[this.currentScaleKey],p=[0,4,7,9,6,4,2,5],A=p[this.arpStep%p.length],E=this.arpStep%3===1;this.playPluck(m.notes[A%m.notes.length],.68,.052,E),this.arpStep++}}}};function Yt(e,t,o){let a=e.createShader(t);if(e.shaderSource(a,o),e.compileShader(a),!e.getShaderParameter(a,e.COMPILE_STATUS)){let l=e.getShaderInfoLog(a);throw e.deleteShader(a),new Error(`Shader compile error: ${l}`)}return a}function Ve(e,t,o,a){let l=e.createProgram(),n=Yt(e,e.VERTEX_SHADER,t),u=Yt(e,e.FRAGMENT_SHADER,o);if(e.attachShader(l,n),e.attachShader(l,u),e.linkProgram(l),!e.getProgramParameter(l,e.LINK_STATUS))throw new Error(`Program link error: ${e.getProgramInfoLog(l)}`);e.deleteShader(n),e.deleteShader(u);let c={};for(let i of a)c[i]=e.getUniformLocation(l,i);return{prog:l,u:c}}var ue=document.getElementById("portals-app"),q=document.getElementById("ep-canvas"),Po=document.getElementById("ep-hud"),eo=document.getElementById("ep-overlay"),Bo=document.getElementById("ep-perf"),Io=document.getElementById("ep-world-tag"),Lo=document.getElementById("ep-world-name"),Fo=Array.from(document.querySelectorAll(".ep-pip")),No=document.getElementById("ep-portal-fill"),nt=document.getElementById("ep-toast-feed"),Do=document.getElementById("ep-waypoints"),to=document.getElementById("ep-banner"),Oo=document.getElementById("ep-banner-title"),Vo=document.getElementById("ep-banner-sub"),wo=document.getElementById("ep-speed-val"),zo=document.getElementById("ep-boost-fill"),_o=document.getElementById("ep-combo-val"),oo=document.getElementById("ep-score-val"),Uo=document.getElementById("ep-state-val"),xt=document.getElementById("ep-title"),ko=document.getElementById("ep-desc"),Wo=document.getElementById("ep-debrief"),no=document.getElementById("st-world"),so=document.getElementById("st-portals"),Go=document.getElementById("st-rings"),Ho=document.getElementById("st-score"),ro=document.getElementById("ep-btn-start"),Yo=document.getElementById("ep-btn-auto"),qo=document.getElementById("ep-btn-nextworld"),Zo=document.getElementById("ep-btn-studio"),ao=document.getElementById("ep-studio"),Ke=document.getElementById("ep-scale-readout"),je=document.getElementById("ep-scope"),te=je?je.getContext("2d"):null,ct=document.getElementById("btn-auto"),$o=document.getElementById("btn-next"),Xo=document.getElementById("btn-fs"),Ko=document.getElementById("btn-pause"),Le=document.getElementById("ep-seed-input"),io=document.getElementById("ep-btn-jump"),jo=document.getElementById("ep-touch"),s=q.getContext("webgl2",{antialias:!1,alpha:!1,powerPreference:"high-performance"});if(!s)throw xt.textContent="\u5F53\u524D\u6D4F\u89C8\u5668\u672A\u5F00\u542F WebGL2",new Error("WebGL2 unavailable");var qt=s.getExtension("WEBGL_debug_renderer_info"),Qo=qt?String(s.getParameter(qt.UNMASKED_RENDERER_WEBGL)):"",yt=/SwiftShader|llvmpipe|Software/i.test(Qo),$=Ve(s,Ft,Nt,["uProj","uView","uCamPos","uSkyZenith","uSkyMid","uSkyHorizon","uSunDir","uSunCol","uArchType","uSeed","uTime"]),C=Ve(s,Dt,Ot,["uProj","uView","uModel","uTintOverride","uCamPos","uSunDir","uSunCol","uFogCol","uFogDensity","uArchType","uTime","uClipMinZ","uClipMaxZ","uCutPortalBox"]),ae=Ve(s,Vt,wt,["uProj","uView","uModel","uPortalTex","uViewportSize","uCamPos","uTime"]),st=Ve(s,zt,_t,["uProj","uView"]),ge=Ve(s,Ut,kt,["uTex","uRushBlur","uPortalFlash","uTime"]),Jo=s.createVertexArray(),F=Wt(s),Ie=Gt(s,420),P=new Ye,$e=null,lt=null,Zt=null,Xe=null,ut=null,$t=null,ie=0,ce=0,At=yt?"med":"high",en=yt?{low:.42,med:.52,high:.68}:{low:.68,med:.86,high:1};document.querySelectorAll(".q-pill").forEach(e=>{e.classList.toggle("active",e.dataset.q===At)});function Xt(e,t){let o=s.createTexture();s.bindTexture(s.TEXTURE_2D,o),s.texImage2D(s.TEXTURE_2D,0,s.RGBA8,e,t,0,s.RGBA,s.UNSIGNED_BYTE,null),s.texParameteri(s.TEXTURE_2D,s.TEXTURE_MIN_FILTER,s.LINEAR),s.texParameteri(s.TEXTURE_2D,s.TEXTURE_MAG_FILTER,s.LINEAR),s.texParameteri(s.TEXTURE_2D,s.TEXTURE_WRAP_S,s.CLAMP_TO_EDGE),s.texParameteri(s.TEXTURE_2D,s.TEXTURE_WRAP_T,s.CLAMP_TO_EDGE);let a=s.createRenderbuffer();s.bindRenderbuffer(s.RENDERBUFFER,a),s.renderbufferStorage(s.RENDERBUFFER,s.DEPTH_COMPONENT24,e,t);let l=s.createFramebuffer();return s.bindFramebuffer(s.FRAMEBUFFER,l),s.framebufferTexture2D(s.FRAMEBUFFER,s.COLOR_ATTACHMENT0,s.TEXTURE_2D,o,0),s.framebufferRenderbuffer(s.FRAMEBUFFER,s.DEPTH_ATTACHMENT,s.RENDERBUFFER,a),s.bindTexture(s.TEXTURE_2D,null),s.bindRenderbuffer(s.RENDERBUFFER,null),s.bindFramebuffer(s.FRAMEBUFFER,null),{fb:l,tex:o,depth:a}}function Qe(){let e=Math.min(window.devicePixelRatio||1,yt?1:1.65),t=Math.max(320,ue.clientWidth||800),o=Math.max(240,ue.clientHeight||446),a=Math.round(t*e),l=Math.round(o*e);(q.width!==a||q.height!==l)&&(q.width=a,q.height=l);let n=en[At]||.84,u=Math.max(256,Math.round(a*n)),c=Math.max(160,Math.round(l*n));if($e&&Xe&&u===ie&&c===ce)return;ie=u,ce=c;for(let r of[{fb:$e,tex:lt,depth:Zt},{fb:Xe,tex:ut,depth:$t}])r.fb&&s.deleteFramebuffer(r.fb),r.tex&&s.deleteTexture(r.tex),r.depth&&s.deleteRenderbuffer(r.depth);let i=Xt(ie,ce);$e=i.fb,lt=i.tex,Zt=i.depth;let d=Xt(ie,ce);Xe=d.fb,ut=d.tex,$t=d.depth}new ResizeObserver(()=>Qe()).observe(ue);Qe();var co=!0;typeof IntersectionObserver<"u"&&new IntersectionObserver(t=>{t[0]&&(co=t[0].isIntersecting)},{threshold:.01}).observe(ue);var O="title",H=!1,De=1,Ee=0,lo=0,le=0,ee=1,b=he(s,1),G=he(s,2),f={x:0,y:7.4,z:46,vx:0,vy:0,speed:38.5,yaw:0,pitch:0,roll:0,rollSpin:0,rollCooldown:0,boostMeter:90,boostVisual:0},Fe=0,tn=["\u5929\u7FFC\u8FFD\u5C3E\u673A\u4F4D","\u8FD1\u8DDD\u63A0\u7FFC\u673A\u4F4D","\u7B2C\u4E00\u4EBA\u79F0\u661F\u95E8\u89C6\u89D2"],g=[0,9.5,55],D=[0,7.2,26],Oe=0,Ne=0,Y=[];function dt(e,t,o,a,l,n,u,c,i,d,r,h){Y.length>=Ie.maxParticles||Y.push({x:e,y:t,z:o,vx:a,vy:l,vz:n,size:u,life:c,maxLife:c,r:i,g:d,b:r,a:h})}function ft(e,t,o,a){for(let l=0;l<24;l++){let n=l/24*Math.PI*2,u=7+Math.random()*8;dt(e+Math.cos(n)*2.2,t+Math.sin(n)*2.2,o,Math.cos(n)*u,Math.sin(n)*u,-8-Math.random()*8,.65+Math.random()*.45,.65+Math.random()*.35,a[0],a[1],a[2],.92)}}function Je(e){let t=document.createElement("div");for(t.className="ep-toast",t.textContent=e,nt.prepend(t);nt.children.length>3;)nt.lastElementChild.remove();setTimeout(()=>t.remove(),2400)}function vt(e){Oo.textContent=`WORLD #${e.padNum} \xB7 ${e.zhName}`,Vo.textContent=`${e.enName} // ${P.getScaleLabel().split(" \xB7 ")[0]}`,to.classList.add("show"),Ne=2.5}function Re(){let e=b.meta;Io.textContent=`WORLD #${e.padNum}`,Lo.textContent=e.zhName,Le&&document.activeElement!==Le&&(Le.value=String(e.worldNumber)),Ke&&(Ke.textContent=P.getScaleLabel());let t=b.rings.filter(o=>o.collected).length;Fo.forEach((o,a)=>o.classList.toggle("done",a<t)),oo.textContent=le.toLocaleString(),Uo.textContent=`\u7A7F\u8D8A ${Ee} \u754C \xB7 ${H?"\u81EA\u52A8\u5DE1\u822A":"\u624B\u52A8\u6ED1\u7FD4"}`,_o.textContent=`\xD7${ee} \xB7 ${H?"\u5DE1\u822A\u9501\u5B9A":"\u8C10\u6CE2\u5171\u9E23"}`,ct.classList.toggle("active",H),ct.textContent=H?"\u5DE1\u822A\u4E2D [T]":"\u5DE1\u822A [T]"}var oe=document.createElement("div");oe.className="ep-wp";oe.innerHTML='<span id="ep-wp-lbl">NEXT #002</span><i class="ep-wp-diamond"></i>';Do.appendChild(oe);var on=oe.querySelector("#ep-wp-lbl"),X=new Set,Tt=0,Et=0,et=!1,ht=0,mt=0,Rt=!1;function tt(){f.rollCooldown>0||f.rollSpin>.01||(f.rollSpin=Math.PI*2,f.rollCooldown=.72,f.vy=Math.max(f.vy+4.5,3.2),P.playBarrelRoll(),ft(f.x,f.y,f.z-1.5,[.18,.9,.78]))}window.addEventListener("keydown",e=>{if(document.activeElement===Le){e.code==="Enter"&&io.click();return}X.add(e.code),e.code==="Space"&&O==="playing"?(e.preventDefault(),tt()):e.code==="KeyT"?fo():e.code==="KeyN"?we():e.code==="KeyC"&&O==="playing"?(Fe=(Fe+1)%3,Je(`\u673A\u4F4D\u5207\u6362\uFF1A${tn[Fe]}`)):(e.code==="KeyP"||e.code==="Escape")&&(O==="playing"||O==="paused")&&ho()});window.addEventListener("keyup",e=>{X.delete(e.code)});q.addEventListener("pointermove",e=>{if(O!=="playing")return;let t=q.getBoundingClientRect();if(t.width<10||t.height<10)return;let o=(e.clientX-t.left)/t.width*2-1,a=(e.clientY-t.top)/t.height*2-1;Tt=I(o,-1,1),Et=I(-a,-1,1)});q.addEventListener("pointerleave",()=>{Tt=0,Et=0,et=!1});q.addEventListener("pointerdown",e=>{O==="playing"&&(P.init(),e.button===2?tt():(et=!0,P.playWarpBoost()))});window.addEventListener("pointerup",()=>{et=!1});q.addEventListener("contextmenu",e=>e.preventDefault());var Pe=document.getElementById("ep-t-pad"),rt=document.getElementById("ep-t-knob");if(Pe&&rt){let e=t=>{let o=t.touches[0];if(!o)return;let a=Pe.getBoundingClientRect(),l=I((o.clientX-(a.left+a.width*.5))/40,-1,1),n=I((o.clientY-(a.top+a.height*.5))/40,-1,1);ht=l,mt=-n,rt.style.transform=`translate(${l*26}px, ${n*26}px)`};Pe.addEventListener("touchstart",t=>{t.preventDefault(),e(t)},{passive:!1}),Pe.addEventListener("touchmove",t=>{t.preventDefault(),e(t)},{passive:!1}),Pe.addEventListener("touchend",()=>{ht=0,mt=0,rt.style.transform="translate(0, 0)"})}document.getElementById("ep-tb-roll")?.addEventListener("touchstart",e=>{e.preventDefault(),tt()},{passive:!1});document.getElementById("ep-tb-boost")?.addEventListener("touchstart",e=>{e.preventDefault(),Rt=!0},{passive:!1});document.getElementById("ep-tb-boost")?.addEventListener("touchend",()=>{Rt=!1});function me(e){P.init(),P.setWorldArchetype(b.meta.archIdx),H=!!e;let t=O==="title";O="playing",t&&(f.x=0,f.y=7.4,f.z=46,f.vx=0,f.vy=0,f.yaw=0,f.pitch=0,f.roll=0,g[0]=0,g[1]=9.6,g[2]=54.6,D[0]=0,D[1]=7.4,D[2]=24,P.playPortalSwell(b.meta.archIdx),vt(b.meta)),eo.classList.add("hidden"),Po.classList.add("visible"),jo?.classList.add("active"),Re(),q.focus()}function nn(){me(!1)}function uo(){me(!0)}function fo(){if(O==="title"){uo();return}H=!H,Re(),Je(H?"\u5DF2\u5F00\u542F\u81EA\u52A8\u5DE1\u822A\u6F2B\u6E38 [T]":"\u5DF2\u5207\u6362\u4E3A\u624B\u52A8\u5929\u7FFC\u6ED1\u7FD4")}function ho(){O==="playing"?(O="paused",eo.classList.remove("hidden"),Wo.classList.add("show"),no.textContent=`#${b.meta.padNum}`,so.textContent=String(Ee),Go.textContent=String(lo),Ho.textContent=le.toLocaleString(),xt.textContent=`\u661F\u95E8\u9A7B\u7559 \xB7 ${b.meta.zhName}`,ko.textContent=`\u5F53\u524D\u4F4D\u4E8E ${b.meta.worldTitle}\uFF0C\u524D\u65B9\u4F20\u9001\u95E8\u6B63\u5B9E\u65F6\u6620\u51FA\u4E0B\u4E00\u754C\u300C${G.meta.zhName}\u300D\u7684\u98CE\u666F\u3002\u53EF\u968F\u65F6\u7EE7\u7EED\u6ED1\u7FD4\u3001\u5F00\u542F\u81EA\u52A8\u5DE1\u822A\u6216\u5B9A\u5411\u8DC3\u8FC1\u81F3\u4EFB\u610F\u661F\u754C\u3002`,ro.textContent="\u7EE7\u7EED\u624B\u52A8\u6ED1\u7FD4"):O==="paused"&&me(H)}function sn(){Ce(s,b),b=G,De=b.meta.worldNumber;let e=De%999+1;G=he(s,e),f.z+=J,g[2]+=J,D[2]+=J;for(let t of Y)t.z+=J;Ee++,le+=500*ee,f.boostMeter=Math.min(100,f.boostMeter+34),Oe=.88,P.playPortalSwell(b.meta.archIdx),vt(b.meta),Je(`\u7A7F\u8D8A\u661F\u95E8 +${500*ee} \xB7 \u62B5\u8FBE #${b.meta.padNum}`),Re()}function we(e){P.init();let o=typeof e=="number"&&Number.isFinite(e)?I(Math.round(e),1,999):De%999+1;return o===G.meta.worldNumber?(Ce(s,b),b=G,G=he(s,o%999+1)):(Ce(s,b),Ce(s,G),b=he(s,o),G=he(s,o%999+1)),De=b.meta.worldNumber,Ee++,O==="playing"&&(le+=500),f.x=0,f.y=7.4,f.z=46,f.vx=0,f.vy=0,f.roll=0,g[0]=0,g[1]=9.6,g[2]=54.6,D[0]=0,D[1]=7.4,D[2]=24,Y.length=0,Oe=.95,P.playPortalSwell(b.meta.archIdx),vt(b.meta),Re(),O==="paused"&&(no.textContent=`#${b.meta.padNum}`,so.textContent=String(Ee),xt.textContent=`\u661F\u95E8\u9A7B\u7559 \xB7 ${b.meta.zhName}`),b.meta.worldNumber}ro.addEventListener("click",()=>me(!1));Yo.addEventListener("click",()=>me(!0));qo.addEventListener("click",()=>{we(),O!=="playing"&&me(H)});ct.addEventListener("click",()=>fo());$o.addEventListener("click",()=>we());Ko.addEventListener("click",()=>ho());Xo.addEventListener("click",()=>{document.fullscreenElement?document.exitFullscreen?.().catch(()=>{}):ue.requestFullscreen?.().catch(()=>{})});function mo(){let e=ue.classList.toggle("tall"),t=document.getElementById("btn-tall"),o=document.getElementById("menu-btn-tall");t&&(t.textContent=e?"\u6536\u8D77":"\u5927\u5C4F"),o&&(o.textContent=e?"\u6062\u590D\u7D27\u51D1\u5185\u5D4C":"\u5C55\u5F00\u5927\u5C4F\u89C6\u91CE"),Qe()}document.getElementById("btn-tall")?.addEventListener("click",mo);document.getElementById("menu-btn-tall")?.addEventListener("click",mo);io?.addEventListener("click",()=>{let e=Number(Le?.value||1);we(e),O!=="playing"&&me(H)});Zo.addEventListener("click",()=>{P.init(),P.setWorldArchetype(b.meta.archIdx),Ke&&(Ke.textContent=P.getScaleLabel()),ao.classList.toggle("open")});document.querySelectorAll(".ep-sfx-trigger").forEach(e=>{e.addEventListener("click",()=>{P.init();let t=e.dataset.s;t==="portal"?P.playPortalSwell(b.meta.archIdx):t==="ring"?P.playResonanceRing(ee):t==="shard"?P.playAstralShard():t==="pad"?P.playChoralPadPreview():t==="boost"?P.playWarpBoost():t==="roll"&&P.playBarrelRoll()})});document.querySelectorAll(".q-pill").forEach(e=>{e.addEventListener("click",()=>{At=e.dataset.q,document.querySelectorAll(".q-pill").forEach(t=>t.classList.toggle("active",t===e)),Qe()})});document.getElementById("ep-vol")?.addEventListener("input",e=>{P.setVolume(Number(e.target.value)/100)});function rn(e,t){if(Oe=Math.max(0,Oe-e*1.9),Ne>0&&(Ne-=e,Ne<=0&&to.classList.remove("show")),Math.random()<.72){let y=b.meta.moteCol,x=b.meta.archIdx,R=x===1?6.5:x===2?2.4:-1.2;dt(g[0]+(Math.random()-.5)*44,Math.max(.5,g[1]+(Math.random()-.5)*18),g[2]-12-Math.random()*64,(Math.random()-.5)*1.8,R+(Math.random()-.5)*1.5,(Math.random()-.5)*1.8,.38+Math.random()*.42,1.6+Math.random()*1.2,y[0],y[1],y[2],.76)}if(O==="title"){let y=Math.sin(t*.52)*4.4,x=7.6+Math.cos(t*.38)*1.3;f.x=y*.65,f.y=x-.9,f.z=-96.5+Math.sin(t*.31)*3.5,f.roll=-Math.cos(t*.52)*.22,f.pitch=.03,f.yaw=0,g[0]=y,g[1]=x+1.2,g[2]=f.z+9.5,D[0]=y*.12,D[1]=8,D[2]=k-8,P.update(e,!1,.3,!1);return}if(O==="paused"){P.update(e,!1,.2,!1);return}f.rollCooldown=Math.max(0,f.rollCooldown-e),f.rollSpin>0&&(f.rollSpin=Math.max(0,f.rollSpin-e*11.4));let o=0,a=0,l=!1;if(H){let y=L(b.meta,f.z-18),x=7.6+Math.sin(t*.9)*1.1;for(let R of b.rings)if(!R.collected&&R.z<f.z-1.5&&R.z>f.z-46){y=R.x,x=R.y;break}if(f.z<-86){let R=U(-86,-106,f.z);y=N(y,0,R),x=N(x,7.8,R)}o=I((y-f.x)*.22,-1,1),a=I((x-f.y)*.26,-1,1),l=f.z>-92&&f.z<25&&f.boostMeter>45}else{let y=0,x=0;(X.has("KeyA")||X.has("ArrowLeft"))&&(y-=1),(X.has("KeyD")||X.has("ArrowRight"))&&(y+=1),(X.has("KeyW")||X.has("ArrowUp"))&&(x+=1),(X.has("KeyS")||X.has("ArrowDown"))&&(x-=1),o=I(y+Tt*.65+ht,-1,1),a=I(x+Et*.65+mt,-1,1),l=(X.has("ShiftLeft")||X.has("ShiftRight")||et||Rt)&&f.boostMeter>4}l?(f.boostMeter=Math.max(0,f.boostMeter-22*e),f.boostVisual=z(f.boostVisual,1,9,e)):(f.boostMeter=Math.min(100,f.boostMeter+9.5*e),f.boostVisual=z(f.boostVisual,0,6,e));let n=l?58:38.5;f.speed=z(f.speed,n,5.5,e),f.vx=z(f.vx,o*24,7.5,e),f.vy=z(f.vy,a*16.5,7.5,e),f.x+=f.vx*e,f.y+=f.vy*e,f.z-=f.speed*e;let u=L(b.meta,f.z),c=f.z<-95?10:22;f.x>u+c?(f.x=z(f.x,u+c,10,e),f.vx*=.8):f.x<u-c&&(f.x=z(f.x,u-c,10,e),f.vx*=.8);let i=Math.max(-1,_(b.meta,f.x,f.z)),d=f.z<-105?2.4:i+2.2;if(f.y<d?(f.y=z(f.y,d+.6,14,e),f.vy=Math.max(0,f.vy)):f.y>22&&(f.y=z(f.y,22,10,e)),f.z<-96){let y=U(-96,-112.5,f.z),x=I(f.x,-3.4,3.4),R=I(f.y,3.8,12.2);f.x=N(f.x,x*(1-y*.65),y*.42),f.y=N(f.y,N(R,7.8,y*.55),y*.42)}f.yaw=z(f.yaw,-f.vx*.016,8,e),f.pitch=z(f.pitch,f.vy*.022,8,e),f.roll=z(f.roll,-o*.58,9,e);let r=f.roll+f.rollSpin,h=Math.cos(r),m=Math.sin(r);for(let y of[-1,1]){let x=f.x+y*2.3*h,R=f.y+y*2.3*m,B=f.z+.85;dt(x,R,B,0,0,f.speed*.16,l?.34:.22,l?.42:.28,l?.98:.18,l?.74:.9,l?.22:.8,.78)}let p=f.rollSpin>.05?3.2:l?1.4:0;for(let y of b.rings){if(y.collected)continue;let x=Math.abs(f.z-y.z),R=Math.hypot(f.x-y.x,f.y-y.y);if(x<3.4&&R<y.radius+1.4+p){y.collected=!0,lo++,ee=Math.min(4,ee+1);let B=250*ee;le+=B,f.boostMeter=Math.min(100,f.boostMeter+28),P.playResonanceRing(ee),ft(y.x,y.y,y.z,[.98,.74,.2]),Je(`\u661F\u754C\u5171\u632F\u73AF \xD7${ee} +${B}`),H&&ee===4&&Math.random()<.5&&tt(),Re()}}for(let y of b.shards){if(y.collected)continue;Math.hypot(f.x-y.x,f.y-y.y,f.z-y.z)<3.2+p*1.4&&(y.collected=!0,le+=200,f.boostMeter=Math.min(100,f.boostMeter+12),P.playAstralShard(),ft(y.x,y.y,y.z,[.18,.92,.82]),oo.textContent=le.toLocaleString())}let A=[{dist:9.8,up:2.35,lookAhead:15},{dist:6.2,up:1.55,lookAhead:17},{dist:-.6,up:.35,lookAhead:22}][Fe],E=f.x*(f.z<-104?.65:.86),M=f.y+A.up,S=f.z+A.dist;g[0]=z(g[0],E,12,e),g[1]=z(g[1],M,12,e),g[2]=S,D[0]=z(D[0],f.x*.55,14,e),D[1]=z(D[1],f.y+.25,14,e),D[2]=f.z-A.lookAhead,g[2]<=k&&sn();let T=Math.round(f.speed*3.6);wo.textContent=String(T),zo.style.width=`${Math.round(f.boostMeter)}%`;let v=I((Q-f.z)/J*100,0,100);No.style.width=`${v.toFixed(1)}%`,P.update(e,!0,I((f.speed-35)/25,0,1),l)}function an(e){for(let t=Y.length-1;t>=0;t--){let o=Y[t];if(o.life-=e,o.life<=0){Y[t]=Y[Y.length-1],Y.pop();continue}o.x+=o.vx*e,o.y+=o.vy*e,o.z+=o.vz*e}}var Te=V.create(),Be=V.create(),Kt=V.create(),jt=V.create(),cn=V.create(),W=V.create();function Qt(e,t,o,a,l,n,u,c,i){let d=e.meta;s.disable(s.DEPTH_TEST),s.depthMask(!1),s.disable(s.CULL_FACE),s.disable(s.BLEND),s.useProgram($.prog),s.uniformMatrix4fv($.u.uProj,!1,Te),s.uniformMatrix4fv($.u.uView,!1,t),s.uniform3f($.u.uCamPos,o,a,l),s.uniform3fv($.u.uSkyZenith,d.skyZenith),s.uniform3fv($.u.uSkyMid,d.skyMid),s.uniform3fv($.u.uSkyHorizon,d.skyHorizon),s.uniform3fv($.u.uSunDir,d.sunDir),s.uniform3fv($.u.uSunCol,d.sunCol),s.uniform1i($.u.uArchType,d.archIdx),s.uniform1f($.u.uSeed,d.seedFloat),s.uniform1f($.u.uTime,n),s.bindVertexArray(F.skySphere.vao),s.drawElements(s.TRIANGLES,F.skySphere.count,F.skySphere.indexType,0),s.enable(s.DEPTH_TEST),s.depthFunc(s.LEQUAL),s.depthMask(!0),s.useProgram(C.prog),s.uniformMatrix4fv(C.u.uProj,!1,Te),s.uniformMatrix4fv(C.u.uView,!1,t),s.uniform3f(C.u.uCamPos,o,a,l),s.uniform3fv(C.u.uSunDir,d.sunDir),s.uniform3fv(C.u.uSunCol,d.sunCol),s.uniform3fv(C.u.uFogCol,d.fogCol),s.uniform1f(C.u.uFogDensity,d.fogDensity),s.uniform1i(C.u.uArchType,d.archIdx),s.uniform1f(C.u.uTime,n),s.uniform1f(C.u.uClipMinZ,u),s.uniform1f(C.u.uClipMaxZ,c),s.uniform1i(C.u.uCutPortalBox,i),s.uniform4f(C.u.uTintOverride,1,1,1,-1),s.uniformMatrix4fv(C.u.uModel,!1,cn),s.bindVertexArray(e.terrainMesh.vao),s.drawElements(s.TRIANGLES,e.terrainMesh.count,e.terrainMesh.indexType,0),s.bindVertexArray(e.archMesh.vao),s.drawElements(s.TRIANGLES,e.archMesh.count,e.archMesh.indexType,0);for(let r of e.spinners){let h=n*r.speed+r.phase;if(r.kind==="windVane")V.trs(W,r.x,r.y,r.z,0,Math.PI*.5,h,r.scale,r.scale,r.scale),s.uniformMatrix4fv(C.u.uModel,!1,W),s.uniform4f(C.u.uTintOverride,r.col[0],r.col[1],r.col[2],r.mat),s.bindVertexArray(F.windVane.vao),s.drawElements(s.TRIANGLES,F.windVane.count,F.windVane.indexType,0);else{let m=r.kind==="astrolabeTilt"?Math.sin(h*.7)*.55:r.kind==="kelpHalo"?Math.sin(h)*.18:.14,p=r.kind==="astrolabeTilt"?Math.cos(h*.5)*.45:0;V.trs(W,r.x,r.y,r.z,m,p,h,r.scale,r.scale,r.scale*1.4),s.uniformMatrix4fv(C.u.uModel,!1,W),s.uniform4f(C.u.uTintOverride,r.col[0],r.col[1],r.col[2],r.mat),s.bindVertexArray(F.torus.vao),s.drawElements(s.TRIANGLES,F.torus.count,F.torus.indexType,0)}}s.bindVertexArray(F.torus.vao);for(let r of e.rings){if(r.collected)continue;let h=1+Math.sin(n*3.8+r.pulse)*.05;V.trs(W,r.x,r.y,r.z,0,0,n*1.2+r.pulse,r.radius*h,r.radius*h,r.radius*1.6),s.uniformMatrix4fv(C.u.uModel,!1,W),s.uniform4f(C.u.uTintOverride,.98,.72,.18,3.8),s.drawElements(s.TRIANGLES,F.torus.count,F.torus.indexType,0),V.trs(W,r.x,r.y,r.z,0,0,-n*1.8,r.radius*.86,r.radius*.86,r.radius*1.1),s.uniformMatrix4fv(C.u.uModel,!1,W),s.uniform4f(C.u.uTintOverride,.18,.9,.8,3.7),s.drawElements(s.TRIANGLES,F.torus.count,F.torus.indexType,0)}s.bindVertexArray(F.octa.vao);for(let r of e.shards){if(r.collected)continue;let h=Math.sin(n*3.2+r.rot)*.35;V.trs(W,r.x,r.y+h,r.z,.25,n*2.4+r.rot,0,.95,1.15,.95),s.uniformMatrix4fv(C.u.uModel,!1,W),s.uniform4f(C.u.uTintOverride,.22,.94,.84,3.9),s.drawElements(s.TRIANGLES,F.octa.count,F.octa.indexType,0)}}function Jt(e,t,o){Fe===2&&O==="playing"||(s.useProgram(C.prog),s.uniform1f(C.u.uClipMinZ,t),s.uniform1f(C.u.uClipMaxZ,o),s.uniform1i(C.u.uCutPortalBox,0),s.uniform4f(C.u.uTintOverride,1,1,1,-1),V.trs(W,f.x,f.y,f.z+e,f.pitch,f.yaw,f.roll+f.rollSpin,1,1,1),s.uniformMatrix4fv(C.u.uModel,!1,W),s.bindVertexArray(F.glider.vao),s.drawElements(s.TRIANGLES,F.glider.count,F.glider.indexType,0))}function ln(e){let t=62+f.boostVisual*8.5;V.perspective(Te,t*Math.PI/180,ie/ce,.22,760),s.activeTexture(s.TEXTURE0),s.bindTexture(s.TEXTURE_2D,null);let o=g[0],a=g[1],l=g[2]+J;if(V.lookAt(Kt,o,a,l,D[0],D[1],D[2]+J,0,1,0),s.bindFramebuffer(s.FRAMEBUFFER,Xe),s.viewport(0,0,ie,ce),s.depthMask(!0),s.clearColor(G.meta.fogCol[0],G.meta.fogCol[1],G.meta.fogCol[2],1),s.clear(s.COLOR_BUFFER_BIT|s.DEPTH_BUFFER_BIT),Qt(G,Kt,o,a,l,e,-9999,Q-.22,0),f.z<k+3&&Jt(J,-9999,Q+.02),V.lookAt(Be,g[0],g[1],g[2],D[0],D[1],D[2],0,1,0),V.mul(jt,Te,Be),s.bindFramebuffer(s.FRAMEBUFFER,$e),s.viewport(0,0,ie,ce),s.depthMask(!0),s.clearColor(b.meta.fogCol[0],b.meta.fogCol[1],b.meta.fogCol[2],1),s.clear(s.COLOR_BUFFER_BIT|s.DEPTH_BUFFER_BIT),Qt(b,Be,g[0],g[1],g[2],e,-9999,9999,1),Jt(0,k-.02,9999),s.useProgram(ae.prog),s.uniformMatrix4fv(ae.u.uProj,!1,Te),s.uniformMatrix4fv(ae.u.uView,!1,Be),V.trs(W,0,0,k,0,0,0,1,1,1),s.uniformMatrix4fv(ae.u.uModel,!1,W),s.activeTexture(s.TEXTURE0),s.bindTexture(s.TEXTURE_2D,ut),s.uniform1i(ae.u.uPortalTex,0),s.uniform2f(ae.u.uViewportSize,ie,ce),s.uniform3f(ae.u.uCamPos,g[0],g[1],g[2]),s.uniform1f(ae.u.uTime,e),s.bindVertexArray(F.portalPocket.vao),s.drawElements(s.TRIANGLES,F.portalPocket.count,F.portalPocket.indexType,0),s.bindTexture(s.TEXTURE_2D,null),Y.length>0){let n=Ie.data,u=Math.min(Y.length,Ie.maxParticles);for(let c=0;c<u;c++){let i=Y[c],d=I(i.life/i.maxLife,0,1),r=c*8;n[r]=i.x,n[r+1]=i.y,n[r+2]=i.z,n[r+3]=i.size,n[r+4]=i.r,n[r+5]=i.g,n[r+6]=i.b,n[r+7]=i.a*d}s.enable(s.BLEND),s.blendFunc(s.SRC_ALPHA,s.ONE),s.depthMask(!1),s.useProgram(st.prog),s.uniformMatrix4fv(st.u.uProj,!1,Te),s.uniformMatrix4fv(st.u.uView,!1,Be),s.bindVertexArray(Ie.vao),s.bindBuffer(s.ARRAY_BUFFER,Ie.instVBO),s.bufferSubData(s.ARRAY_BUFFER,0,n.subarray(0,u*8)),s.drawElementsInstanced(s.TRIANGLES,6,s.UNSIGNED_SHORT,0,u),s.disable(s.BLEND)}if(s.bindFramebuffer(s.FRAMEBUFFER,null),s.viewport(0,0,q.width,q.height),s.disable(s.DEPTH_TEST),s.depthMask(!0),s.useProgram(ge.prog),s.activeTexture(s.TEXTURE0),s.bindTexture(s.TEXTURE_2D,lt),s.uniform1i(ge.u.uTex,0),s.uniform1f(ge.u.uRushBlur,f.boostVisual),s.uniform1f(ge.u.uPortalFlash,Oe),s.uniform1f(ge.u.uTime,e),s.bindVertexArray(Jo),s.drawArrays(s.TRIANGLES,0,3),s.bindVertexArray(null),s.bindTexture(s.TEXTURE_2D,null),O==="playing"&&Ne<=.05&&f.z>k+18){let n=ue.clientWidth||800,u=ue.clientHeight||446,c=V.projectToScreen(jt,0,21.8,k,n,u);if(c&&c.x>60&&c.x<n-60&&c.y>68&&c.y<u-72){let i=Math.max(0,Math.round(f.z-k));on.textContent=`\u4E0B\u754C #${G.meta.padNum} \xB7 ${G.meta.zhName} (${i}m)`,oe.style.display="flex",oe.style.left=`${c.x.toFixed(1)}px`,oe.style.top=`${c.y.toFixed(1)}px`}else oe.style.display="none"}else oe.style.display="none"}var qe=new Uint8Array(256);function un(){if(!te||!ao.classList.contains("open"))return;let e=je.width,t=je.height;if(te.fillStyle="#060a10",te.fillRect(0,0,e,t),!!P.analyser){P.analyser.getByteTimeDomainData(qe),te.strokeStyle="#2dd4bf",te.lineWidth=2,te.beginPath();for(let o=0;o<qe.length;o++){let a=o/(qe.length-1)*e,l=qe[o]/255*t;o===0?te.moveTo(a,l):te.lineTo(a,l)}te.stroke()}}var at=performance.now(),it=0,Ze=0,pt=60;Re();function po(e){if(requestAnimationFrame(po),!co){at=e;return}let t=Math.min(.05,Math.max(.001,(e-at)*.001));at=e;let o=e*.001;it++,Ze+=t,Ze>=.5&&(pt=Math.round(it/Ze),it=0,Ze=0,Bo.textContent=`${pt} FPS \xB7 \u5B9E\u666F\u661F\u95E8`),rn(t,o),an(t),ln(o),un()}requestAnimationFrame(po);window.__PORTALS__={getState(){return{mode:O,autopilot:H,fps:pt,glErr:s.getError(),worldNumber:De,worldTitle:b.meta.worldTitle,portalsCrossed:Ee,score:le,player:{x:Number(f.x.toFixed(2)),y:Number(f.y.toFixed(2)),z:Number(f.z.toFixed(2))}}},startFlight:nn,startAutopilot:uo,warpNextWorld:we};</script>
+</body>
+</html>

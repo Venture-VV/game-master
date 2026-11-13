@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>失控乒乓 TENNIS: GO WILD — 零外部素材 5 纪元维度暴走 3D 乒乓网页游戏</title>
+  <meta name="description" content="致敬 @photonstorm 爆款 Tennis 的零外部素材 WebGL2 维度暴走乒乓游戏：从 1972 黑白极简方块一路失控升级至 3D 赛博球场、弹珠引力奇点、机甲重炮球拍与太阳奇点终局 Boss！" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="tennis-app" class="__APP_CLASS__">
+    <canvas id="ht-canvas" tabindex="0"></canvas>
+
+    <section id="ht-hud" aria-label="失控乒乓实时战术界面">
+      <div id="ht-perf">60 FPS · ERA 01</div>
+
+      <div id="ht-era-pill">
+        <span id="ht-era-tag">ERA 01</span>
+        <span id="ht-match-score">玩家 0 : 0 架构师</span>
+      </div>
+
+      <div id="ht-narrator" role="status">
+        <span class="ht-nar-badge">AI 旁白</span>
+        <span id="ht-narrator-text">我已经全力以赴了。这就是乒乓球。绝对没有别的机关。</span>
+      </div>
+
+      <div id="ht-boss-wrap">
+        <div class="ht-boss-row">
+          <span>AI 架构师核心 · SOLAR CORE</span>
+          <span id="ht-boss-hp">HP 300 / 300</span>
+        </div>
+        <div class="ht-boss-bar-bg"><div id="ht-boss-fill"></div></div>
+      </div>
+
+      <div id="ht-quick-bar">
+        <button id="btn-era" class="ht-mini-btn" type="button">跃迁纪元 [E]</button>
+        <button id="btn-cam" class="ht-mini-btn" type="button">机位 [C]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="ht-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="ht-mini-btn" type="button">暂停 [P]</button>
+      </div>
+
+      <div id="ht-toast-feed"></div>
+
+      <div id="ht-banner">
+        <div id="ht-banner-title"></div>
+        <div id="ht-banner-sub"></div>
+      </div>
+
+      <div id="ht-paddle-card">
+        <div class="ht-card-top">
+          <span id="ht-speed-val">88</span>
+          <span class="ht-card-unit">KM/H · 球速</span>
+        </div>
+        <div class="ht-meter-row">
+          <span class="ht-meter-lbl">超载扣杀</span>
+          <div class="ht-meter-track"><div id="ht-overdrive-fill"></div></div>
+        </div>
+        <div class="ht-era-row">
+          <span id="ht-balls-lbl">场内 1 球</span>
+          <span id="ht-era-pips" class="ht-era-pips">
+            <i class="ht-pip active"></i>
+            <i class="ht-pip"></i>
+            <i class="ht-pip"></i>
+            <i class="ht-pip"></i>
+            <i class="ht-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="ht-controls-tip">鼠标 / A D 移拍 · 空格/左键 超载扣杀 · [E] 跃迁纪元</div>
+
+      <div id="ht-score-card">
+        <span id="ht-score-val">0</span>
+        <span id="ht-era-name">1972 极简原教旨</span>
+      </div>
+    </section>
+
+    <div id="ht-touch">
+      <div id="ht-t-pad"><div id="ht-t-knob"></div></div>
+      <div class="ht-t-actions">
+        <button id="ht-tb-smash" class="ht-t-btn gold" type="button">超载扣杀</button>
+        <button id="ht-tb-era" class="ht-t-btn" type="button">跃迁纪元</button>
+      </div>
+    </div>
+
+    <main id="ht-overlay">
+      <div class="ht-placard">
+        <header>
+          <div id="ht-kicker" class="ht-kicker">1972 PONG TO SOLAR SINGULARITY // 零外部素材 WebGL2 五纪元失控乒乓</div>
+          <h1 id="ht-title">失控乒乓 · TENNIS: GO WILD</h1>
+          <p id="ht-desc" class="ht-desc">
+            开局只是 1972 年最纯洁的黑白俯视方块乒乓——但每诞生 2 分，现实法则就会彻底失控：镜头俯冲进 3D 霓虹赛博球场、地板冲出弹珠台撞柱与黄金引力奇点、球拍展开机甲推进翼发射烈焰彗星重炮，直至掀翻穹顶迎战「太阳奇点 AI 核心」！
+          </p>
+        </header>
+
+        <section id="ht-debrief" aria-label="失控终局战报">
+          <div class="ht-db-cell"><span>对局用时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="ht-db-cell"><span>比分战果</span><strong id="st-match">0 : 0</strong></div>
+          <div class="ht-db-cell"><span>超载扣杀</span><strong id="st-smash">0</strong></div>
+          <div class="ht-db-cell"><span>失控总分</span><strong id="st-score">0</strong></div>
+          <div class="ht-db-cell gold"><span>奇点评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="ht-actions">
+          <button id="ht-btn-start" class="ht-btn-primary" type="button">投币开球 · 见证失控</button>
+          <button id="ht-btn-wild" class="ht-btn-secondary" type="button">直达 3D 觉醒纪元</button>
+          <button id="ht-btn-endless" class="ht-btn-secondary" type="button" style="display:none">继续无尽狂飙</button>
+          <button id="ht-btn-restart" class="ht-btn-secondary" type="button" style="display:none">重返 1972 重开</button>
+          <button id="ht-btn-studio" class="ht-btn-secondary" type="button">跨纪元声学合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="ht-studio" aria-label="纯代码跨纪元声学合成台">
+          <div class="ht-studio-head">
+            <span>ESCALATING WEB AUDIO BENCH · 1972 方波至太阳奇点交响实时合成</span>
+            <span>ZERO SAMPLES · LIVE SCOPE</span>
+          </div>
+          <canvas id="ht-scope" width="560" height="54"></canvas>
+          <div class="ht-studio-btns">
+            <button class="ht-sfx-trigger" data-s="pong" type="button">1972 方波乒乓</button>
+            <button class="ht-sfx-trigger" data-s="curve" type="button">3D 马格努斯弧旋</button>
+            <button class="ht-sfx-trigger" data-s="pinball" type="button">弹珠台铃音撞击</button>
+            <button class="ht-sfx-trigger" data-s="split" type="button">裂变多重球和弦</button>
+            <button class="ht-sfx-trigger" data-s="comet" type="button">烈焰彗星重炮</button>
+            <button class="ht-sfx-trigger" data-s="boss" type="button">奇点核心装甲崩裂</button>
+          </div>
+        </section>
+
+        <div class="ht-settings">
+          <div class="ht-set-group">
+            <span>跳选纪元预览</span>
+            <button class="ht-pill era-pill active" data-era="1" type="button">E1 极简</button>
+            <button class="ht-pill era-pill" data-era="2" type="button">E2 三维</button>
+            <button class="ht-pill era-pill" data-era="3" type="button">E3 弹珠</button>
+            <button class="ht-pill era-pill" data-era="4" type="button">E4 机甲</button>
+            <button class="ht-pill era-pill" data-era="5" type="button">E5 奇点</button>
+          </div>
+          <div class="ht-set-group">
+            <span>画质</span>
+            <button class="ht-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="ht-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="ht-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="ht-set-group">
+            <label for="ht-vol">合成音量</label>
+            <input id="ht-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="ht-keys-grid">
+          <div><span>横向移拍（E1 兼容 W/S）</span><span>鼠标 / <kbd>A D</kbd> / <kbd>← →</kbd></span></div>
+          <div><span>超载扣杀 / 烈焰彗星重炮</span><span><kbd>Space</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>3D 弧旋球（E2+ 解锁）</span><span>移动挥拍切击来球</span></div>
+          <div><span>随时跃迁五大失控纪元</span><span><kbd>E</kbd> / 顶部按钮</span></div>
+          <div><span>切换摄影机位</span><span><kbd>C</kbd></span></div>
+          <div><span>暂停与声学合成台</span><span><kbd>P</kbd> / <kbd>Esc</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>
