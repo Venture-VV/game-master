@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>断潮行动 SALTLINE: BLACK TIDE — 零外部素材单文件 3D 战术射击网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 Saltline 技术范式的零外部素材浏览器 3A 级第一人称战术射击游戏：全程序化雨夜港区 PBR 贴图、硬表面建模与 Web Audio 实时物理合成音效。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body>
+  <!-- Boot Progress Screen -->
+  <div id="boot-loader">
+    <div id="boot-status">正在启动渲染核心...</div>
+    <div class="boot-bar"><div id="boot-bar-fill"></div></div>
+  </div>
+
+  <!-- WebGL2 Viewport -->
+  <canvas id="game-canvas"></canvas>
+  <div id="visor-fx"></div>
+  <div id="emp-flash"></div>
+
+  <!-- Tactical In-Game HUD -->
+  <section id="hud" aria-label="战术抬头显示">
+    <div id="perf-readout">60 FPS · HIGH · PROCEDURAL PBR</div>
+
+    <div id="hud-top">
+      <div id="compass-strip">
+        <div id="compass-center-tick"></div>
+        <div id="compass-track">‹ 330° · 北 N 000° · 030° ›</div>
+      </div>
+
+      <div id="mission-box">
+        <span id="mission-phase">阶段 01</span>
+        <span id="mission-text">切断三处上行中继 [0 / 3]</span>
+        <span id="relay-pips">
+          <i class="relay-pip"></i>
+          <i class="relay-pip"></i>
+          <i class="relay-pip"></i>
+        </span>
+      </div>
+
+      <div id="boss-bar-wrap">
+        <div id="boss-bar-header">
+          <span>港务官重装机甲 · HARBORMASTER</span>
+          <span>[Q] EMP 可击碎护盾</span>
+        </div>
+        <div class="boss-track"><div id="boss-shield-fill"></div></div>
+        <div class="boss-track"><div id="boss-hp-fill"></div></div>
+      </div>
+    </div>
+
+    <div id="radio-feed"></div>
+    <div id="kill-feed"></div>
+    <div id="waypoints-layer"></div>
+
+    <div id="center-banner">
+      <div id="banner-title"></div>
+      <div id="banner-sub"></div>
+    </div>
+
+    <div id="damage-ring"></div>
+
+    <div id="crosshair">
+      <i class="ch-dot"></i>
+      <i class="ch-line ch-t"></i>
+      <i class="ch-line ch-b"></i>
+      <i class="ch-line ch-l"></i>
+      <i class="ch-line ch-r"></i>
+    </div>
+    <div id="hitmarker"></div>
+
+    <div id="interact-box">
+      <div id="interact-label">按住 <kbd>E</kbd> 切断中继</div>
+      <div id="interact-bar"><div id="interact-fill"></div></div>
+    </div>
+
+    <div id="aim-hint">点击画面锁定准星 · 支持拖拽转向 / 右键红点开镜</div>
+
+    <div id="hud-vitals">
+      <div class="vitals-row">
+        <span id="hp-num">100</span>
+        <span id="hp-label">生命体征 · VITALS</span>
+      </div>
+      <div class="hp-bar-outer"><div id="hp-bar-fill"></div></div>
+      <div id="gear-row">
+        <span class="gear-slot" id="gear-emp"><b>[Q]</b> EMP 就绪</span>
+        <span class="gear-slot" id="gear-stim"><b>[H]</b> 强心剂 ×2</span>
+        <span class="gear-slot" id="gear-flash"><b>[F]</b> 战术灯 ON</span>
+      </div>
+    </div>
+
+    <div id="hud-weapon">
+      <div id="ammo-row">
+        <span id="ammo-mag">30</span>
+        <span id="ammo-res">/ 180</span>
+      </div>
+      <div id="weapon-name">MK-18 断潮全息卡宾 · 5.56MM</div>
+    </div>
+  </section>
+
+  <!-- Touch Virtual Controls (Mobile / Tablet) -->
+  <div id="touch-controls">
+    <div id="touch-move-zone"><div id="touch-stick"></div></div>
+    <div id="touch-look-zone"></div>
+    <div class="touch-actions">
+      <button id="t-ads" class="touch-btn" type="button">开镜</button>
+      <button id="t-fire" class="touch-btn fire" type="button">开火</button>
+      <button id="t-reload" class="touch-btn" type="button">换弹</button>
+      <button id="t-emp" class="touch-btn" type="button">EMP</button>
+      <button id="t-use" class="touch-btn" type="button">切断 E</button>
+      <button id="t-jump" class="touch-btn" type="button">跳跃</button>
+    </div>
+  </div>
+
+  <!-- Title, Pause & Debriefing Overlay -->
+  <main id="overlay-screen">
+    <div class="menu-shell">
+      <header class="title-header">
+        <div class="title-kicker" id="menu-kicker">SALTLINE PROTOCOL // 零外部素材 WebGL2 战术行动</div>
+        <h1 id="menu-title">断潮行动 · SALTLINE</h1>
+        <p class="title-desc" id="menu-desc">
+          雨夜集装箱港区防御网络失控。潜入封锁码头，突破「猎鸥」无人机与「猎犬」四足机甲的火力封锁，切断三处上行中继并前往东栈桥登艇撤离。全部 3D 模型、湿地积水反射贴图与室内外声学枪声均由纯代码实时生成。
+        </p>
+      </header>
+
+      <section id="debrief-panel" aria-label="行动结算报告">
+        <div class="stat-cell"><span>行动耗时</span><strong id="stat-time">00:00.0</strong></div>
+        <div class="stat-cell"><span>歼灭敌机</span><strong id="stat-kills">0</strong></div>
+        <div class="stat-cell"><span>命中率</span><strong id="stat-acc">0%</strong></div>
+        <div class="stat-cell"><span>港务官首领</span><strong id="stat-boss">未交战</strong></div>
+        <div class="stat-cell rank"><span>战术评级</span><strong id="stat-rank">S</strong></div>
+      </section>
+
+      <div class="action-row">
+        <button id="btn-deploy" class="btn-primary" type="button">开始行动</button>
+        <button id="btn-restart" class="btn-secondary" type="button" style="display:none">重新部署</button>
+        <button id="btn-audio-lab" class="btn-secondary" type="button">声学合成台</button>
+      </div>
+
+      <!-- Procedural Web Audio Synthesizer Test Bench -->
+      <section id="audio-lab" aria-label="纯代码 Web Audio 声学合成台">
+        <div class="lab-top">
+          <span>PROCEDURAL WEB AUDIO SYNTHESIZER · 零音频文件实时波形</span>
+          <span>BRICKWALL LIMITER ACTIVE</span>
+        </div>
+        <canvas id="oscilloscope" width="640" height="76"></canvas>
+        <div class="sound-buttons">
+          <button class="sfx-btn" data-sfx="rifle-out" type="button">步枪（室外港区）</button>
+          <button class="sfx-btn" data-sfx="rifle-in" type="button">步枪（室内机库混响）</button>
+          <button class="sfx-btn" data-sfx="reload" type="button">三段机械换弹</button>
+          <button class="sfx-btn" data-sfx="shell" type="button">黄铜弹壳落地</button>
+          <button class="sfx-btn" data-sfx="step-puddle" type="button">积水脚步</button>
+          <button class="sfx-btn" data-sfx="step-metal" type="button">钢栈桥脚步</button>
+          <button class="sfx-btn" data-sfx="emp" type="button">EMP 脉冲波</button>
+          <button class="sfx-btn" data-sfx="relay" type="button">切断中继警报</button>
+          <button class="sfx-btn" data-sfx="thunder" type="button">远海惊雷闪电</button>
+        </div>
+      </section>
+
+      <div class="settings-strip">
+        <div class="setting-group">
+          <span>渲染画质</span>
+          <button class="quality-btn" data-q="low" type="button">流畅 LOW</button>
+          <button class="quality-btn" data-q="med" type="button">均衡 MED</button>
+          <button class="quality-btn active" data-q="high" type="button">极致 HIGH</button>
+        </div>
+        <div class="setting-group">
+          <label for="sens-slider">准星灵敏度</label>
+          <input id="sens-slider" type="range" min="8" max="45" value="21" />
+        </div>
+        <div class="setting-group">
+          <label for="vol-slider">主音量</label>
+          <input id="vol-slider" type="range" min="0" max="100" value="80" />
+        </div>
+      </div>
+
+      <div class="controls-grid">
+        <div><span>移动 / 冲刺</span><span><kbd>W A S D</kbd> <kbd>Shift</kbd></span></div>
+        <div><span>开火 / 全息红点开镜</span><span><kbd>左键</kbd> <kbd>右键</kbd></span></div>
+        <div><span>战术滑铲 / 蹲伏</span><span><kbd>Shift + C</kbd></span></div>
+        <div><span>换弹 / 切断中继</span><span><kbd>R</kbd> / 按住 <kbd>E</kbd></span></div>
+        <div><span>EMP 破盾手雷 / 强心剂</span><span><kbd>Q</kbd> / <kbd>H</kbd></span></div>
+        <div><span>战术手电 / 暂停菜单</span><span><kbd>F</kbd> / <kbd>ESC</kbd></span></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

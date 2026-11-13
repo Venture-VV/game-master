@@ -1,0 +1,17 @@
+{
+  "name": "saltline-black-tide",
+  "version": "1.0.0",
+  "description": "断潮行动 (SALTLINE: BLACK TIDE) — Zero-external-asset procedural 3D WebGL2 tactical FPS inspired by viral Fable 5.2 browser AAA games",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "npx -y http-server . -p 8080 -c-1"
+  },
+  "dependencies": {
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "license": "MIT"
+}
