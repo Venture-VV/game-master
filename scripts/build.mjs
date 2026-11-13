@@ -31,7 +31,7 @@ async function bundleGame({ srcDir, outPath, transforms = [] }) {
     .replace('/*__INLINE_JS__*/', () => jsCode.trim());
 
   for (const [token, val] of transforms) {
-    html = html.replace(token, () => val);
+    html = html.replaceAll(token, () => val);
   }
 
   fs.writeFileSync(outPath, html, 'utf8');
@@ -40,82 +40,120 @@ async function bundleGame({ srcDir, outPath, transforms = [] }) {
   return html;
 }
 
-async function buildAll() {
-  // 1. Build Standalone Shai-Rider: Spice Convoy -> worm-rider.html
-  await bundleGame({
+const TEMPLATE_GAMES = [
+  {
+    srcDir: 'src-crosstown',
+    standaloneOut: 'crosstown.html',
+    artifactOut: 'crosstown_nyc.html',
+    prefix: 'ct',
+    nextHref: './water-keeps.html',
+    nextLabel: '⇄ 水之所存',
+  },
+  {
+    srcDir: 'src-water',
+    standaloneOut: 'water-keeps.html',
+    artifactOut: 'what_the_water_keeps.html',
+    prefix: 'wk',
+    nextHref: './hyper-tennis.html',
+    nextLabel: '⇄ 失控乒乓',
+  },
+  {
+    srcDir: 'src-tennis',
+    standaloneOut: 'hyper-tennis.html',
+    artifactOut: 'hyper_tennis.html',
+    prefix: 'ht',
+    nextHref: './mirror-earth.html',
+    nextLabel: '⇄ 镜像地球',
+  },
+  {
+    srcDir: 'src-earth',
+    standaloneOut: 'mirror-earth.html',
+    artifactOut: 'mirror_earth.html',
+    prefix: 'me',
+    nextHref: './endless-portals.html',
+    nextLabel: '⇄ 无尽传送门',
+  },
+  {
+    srcDir: 'src-portals',
+    standaloneOut: 'endless-portals.html',
+    artifactOut: 'endless_portals.html',
+    prefix: 'ep',
+    nextHref: './worm-rider.html',
+    nextLabel: '⇄ 沙丘巨虫',
+  },
+  {
     srcDir: 'src-wormrider',
-    outPath: path.join(rootDir, 'worm-rider.html'),
-    transforms: [
-      ['__BODY_CLASS__', 'standalone-body'],
-      ['__APP_CLASS__', 'standalone'],
-      [
-        '<!--__HUD_MODE_BTNS__-->',
-        '<a href="./starry-nightrider.html" class="wr-mini-btn">⇄ 星月夜</a><a href="./saltline.html" class="wr-mini-btn">⇄ 断潮</a><a href="./index.html" class="wr-mini-btn">⌂ 大厅</a>',
-      ],
-      [
-        '<!--__MENU_MODE_BTNS__-->',
-        '<a href="./starry-nightrider.html" class="wr-btn-secondary">⇄ 《星月夜骑士》</a><a href="./saltline.html" class="wr-btn-secondary">⇄ 《断潮行动》</a><a href="./index.html" class="wr-btn-secondary">⌂ 三作大厅</a>',
-      ],
-    ],
-  });
-
-  // 2. Build Standalone Starry Nightrider -> starry-nightrider.html
-  await bundleGame({
+    standaloneOut: 'worm-rider.html',
+    artifactOut: null,
+    prefix: 'wr',
+    nextHref: './starry-nightrider.html',
+    nextLabel: '⇄ 星月夜骑士',
+  },
+  {
     srcDir: 'src-nightrider',
-    outPath: path.join(rootDir, 'starry-nightrider.html'),
-    transforms: [
-      ['__BODY_CLASS__', 'standalone-body'],
-      ['__APP_CLASS__', 'standalone'],
-      [
-        '<!--__HUD_MODE_BTNS__-->',
-        '<a href="./worm-rider.html" class="nr-mini-btn">⇄ 沙丘巨虫</a><a href="./saltline.html" class="nr-mini-btn">⇄ 断潮</a><a href="./index.html" class="nr-mini-btn">⌂ 大厅</a>',
-      ],
-      [
-        '<!--__MENU_MODE_BTNS__-->',
-        '<a href="./worm-rider.html" class="nr-btn-secondary">⇄ 《沙丘巨虫》</a><a href="./saltline.html" class="nr-btn-secondary">⇄ 《断潮行动》</a><a href="./index.html" class="nr-btn-secondary">⌂ 三作大厅</a>',
-      ],
-    ],
-  });
+    standaloneOut: 'starry-nightrider.html',
+    artifactOut: null,
+    prefix: 'nr',
+    nextHref: './saltline.html',
+    nextLabel: '⇄ 断潮行动',
+  },
+];
 
-  // 3. Build Standalone Saltline: Black Tide -> saltline.html
+async function buildAll() {
+  // 1. Build all 7 WebGL2 Dual-Mode Games (Standalone Root HTML)
+  for (const g of TEMPLATE_GAMES) {
+    await bundleGame({
+      srcDir: g.srcDir,
+      outPath: path.join(rootDir, g.standaloneOut),
+      transforms: [
+        ['__BODY_CLASS__', 'standalone-body'],
+        ['__APP_CLASS__', 'standalone'],
+        [
+          '<!--__HUD_MODE_BTNS__-->',
+          `<a href="${g.nextHref}" class="${g.prefix}-mini-btn">${g.nextLabel}</a><a href="./index.html" class="${g.prefix}-mini-btn">⌂ 八作大厅</a>`,
+        ],
+        [
+          '<!--__MENU_MODE_BTNS__-->',
+          `<a href="${g.nextHref}" class="${g.prefix}-btn-secondary">${g.nextLabel}</a><a href="./index.html" class="${g.prefix}-btn-secondary">⌂ 八作典藏大厅</a>`,
+        ],
+      ],
+    });
+  }
+
+  // 2. Build Standalone Saltline: Black Tide -> saltline.html
   await bundleGame({
     srcDir: 'src',
     outPath: path.join(rootDir, 'saltline.html'),
   });
 
-  // 4. Copy Three-Game Trilogy Anthology Hub -> index.html
+  // 3. Copy 8-Game Anthology Hub -> index.html
   const hubSrc = path.join(rootDir, 'src-hub', 'index.html');
   const hubOut = path.join(rootDir, 'index.html');
   fs.copyFileSync(hubSrc, hubOut);
   const hubKB = (fs.statSync(hubOut).size / 1024).toFixed(1);
-  console.log(`Built index.html Three-Game Trilogy Hub (${hubKB} KB)`);
+  console.log(`Built index.html 8-Game Anthology Hub (${hubKB} KB)`);
 
-  // 5. Optional inline chat embed target for Shai-Rider when WORM_EMBED_OUT env is set
-  if (process.env.WORM_EMBED_OUT) {
-    await bundleGame({
-      srcDir: 'src-wormrider',
-      outPath: process.env.WORM_EMBED_OUT,
-      transforms: [
-        ['__BODY_CLASS__', ''],
-        ['__APP_CLASS__', ''],
-        ['<!--__HUD_MODE_BTNS__-->', '<button id="btn-tall" class="wr-mini-btn" type="button">大屏</button>'],
-        ['<!--__MENU_MODE_BTNS__-->', '<button id="menu-btn-tall" class="wr-btn-secondary" type="button">展开大屏视野</button>'],
-      ],
-    });
-  }
-
-  // 6. Optional inline chat embed target for Starry Nightrider when ARTIFACT_SCRATCH_OUT env is set
-  if (process.env.ARTIFACT_SCRATCH_OUT) {
-    await bundleGame({
-      srcDir: 'src-nightrider',
-      outPath: process.env.ARTIFACT_SCRATCH_OUT,
-      transforms: [
-        ['__BODY_CLASS__', ''],
-        ['__APP_CLASS__', ''],
-        ['<!--__HUD_MODE_BTNS__-->', '<button id="btn-tall" class="nr-mini-btn" type="button">大屏</button>'],
-        ['<!--__MENU_MODE_BTNS__-->', '<button id="menu-btn-tall" class="nr-btn-secondary" type="button">展开大屏视野</button>'],
-      ],
-    });
+  // 4. Optional inline chat embed bundles for Top 5 games when BUILD_ARTIFACTS_DIR env is set
+  if (process.env.BUILD_ARTIFACTS_DIR) {
+    for (const g of TEMPLATE_GAMES) {
+      if (!g.artifactOut) continue;
+      await bundleGame({
+        srcDir: g.srcDir,
+        outPath: path.join(process.env.BUILD_ARTIFACTS_DIR, g.artifactOut),
+        transforms: [
+          ['__BODY_CLASS__', ''],
+          ['__APP_CLASS__', ''],
+          [
+            '<!--__HUD_MODE_BTNS__-->',
+            `<button id="btn-tall" class="${g.prefix}-mini-btn" type="button">大屏</button>`,
+          ],
+          [
+            '<!--__MENU_MODE_BTNS__-->',
+            `<button id="menu-btn-tall" class="${g.prefix}-btn-secondary" type="button">展开大屏视野</button>`,
+          ],
+        ],
+      });
+    }
   }
 }
 

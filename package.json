@@ -1,7 +1,7 @@
 {
-  "name": "saltline-black-tide",
-  "version": "1.0.0",
-  "description": "Fable 5.2 纯代码 3D 网页游戏三作典藏集 — 沙丘巨虫 (Shai-Rider) · 星月夜骑士 (Starry Nightrider) · 断潮行动 (Saltline: Black Tide)",
+  "name": "fable52-webgl2-anthology",
+  "version": "2.0.0",
+  "description": "Fable 5.2 浏览器 3D 游戏八作典藏集 — 曼哈顿街区狂飙 · 水之所存 · 失控乒乓 · 镜像地球 · 无尽传送门 · 沙丘巨虫 · 星月夜骑士 · 断潮行动",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",

@@ -1,0 +1,882 @@
+/* Orbital Telemetry Azure, Biosphere Emerald & Magma Core Amber — Scoped Vanilla CSS (>=12px Typography) */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #030812;
+  overflow: hidden;
+}
+
+#earth-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #030812;
+  color: #e2f1ff;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+#earth-app.tall {
+  height: 720px;
+}
+
+#earth-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#me-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: crosshair;
+}
+
+/* In-Game Orbital Telemetry HUD */
+#me-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+#me-hud.visible {
+  opacity: 1;
+}
+
+/* Top-Left Stack (FPS + GPS + Mission Pill) */
+#me-top-left {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 315px;
+}
+
+#me-perf {
+  padding: 3px 9px;
+  background: rgba(6, 14, 26, 0.86);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #7dd3fc;
+  white-space: nowrap;
+}
+
+#me-gps {
+  padding: 3px 9px;
+  background: rgba(6, 14, 26, 0.86);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #34d399;
+  white-space: nowrap;
+}
+
+#me-quest-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  background: rgba(6, 14, 26, 0.90);
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#me-mode-tag {
+  padding: 1px 6px;
+  background: #38bdf8;
+  color: #030812;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+#me-mode-tag.defense {
+  background: #f97316;
+  color: #030812;
+}
+
+#me-mode-desc {
+  color: #e2f1ff;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.me-pips {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.me-pip {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  transform: rotate(45deg);
+  border: 1px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.14);
+}
+
+.me-pip.done {
+  background: #34d399;
+  border-color: #6ee7b7;
+}
+
+.me-pip.hit {
+  background: #f97316;
+  border-color: #fbbf24;
+}
+
+/* Top-Right Stack (Quick Bar + 6-Landmark Warp Bar + Toast Feed) */
+#me-top-right {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+#me-quick-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.me-mini-btn {
+  padding: 4px 8px;
+  background: rgba(6, 14, 26, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.30);
+  color: #e2f1ff;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.me-mini-btn:hover {
+  background: rgba(14, 34, 58, 0.95);
+  border-color: #38bdf8;
+}
+
+#me-warp-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.me-warp-btn {
+  padding: 3px 7px;
+  background: rgba(6, 14, 26, 0.86);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  color: #b8ece0;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.me-warp-btn:hover,
+.me-warp-btn.active {
+  background: rgba(16, 62, 54, 0.92);
+  border-color: #34d399;
+  color: #ffffff;
+}
+
+#me-toast-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 224px;
+}
+
+.me-toast {
+  padding: 4px 9px;
+  background: rgba(6, 14, 26, 0.88);
+  border-right: 3px solid #38bdf8;
+  font-size: 12px;
+  text-align: right;
+  color: #e2f1ff;
+  animation: meToastIn 0.2s ease-out;
+}
+
+.me-toast.amber {
+  border-right-color: #f97316;
+}
+
+.me-toast.emerald {
+  border-right-color: #34d399;
+}
+
+@keyframes meToastIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* 3D Projected Landmark & Doomsday Asteroid Waypoints */
+#me-waypoints {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.me-wp {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #7dd3fc;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95);
+  white-space: nowrap;
+}
+
+.me-wp-diamond {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border: 1.5px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.30);
+}
+
+.me-wp.threat {
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.me-wp.threat .me-wp-diamond {
+  width: 11px;
+  height: 11px;
+  border-color: #f97316;
+  background: rgba(249, 115, 22, 0.72);
+}
+
+.me-wp.damaged {
+  color: #fb923c;
+}
+
+.me-wp.damaged .me-wp-diamond {
+  border-color: #f97316;
+  background: rgba(249, 115, 22, 0.50);
+}
+
+/* Center Orbital Reticle & Milestone Banner */
+#me-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ret-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  border-radius: 50%;
+}
+
+.ret-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #38bdf8;
+}
+
+#me-banner {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  max-width: 350px;
+  padding: 7px 16px;
+  background: rgba(6, 14, 26, 0.90);
+  border-top: 1px solid rgba(56, 189, 248, 0.60);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.60);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#me-banner.show {
+  opacity: 1;
+}
+
+#me-banner-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #7dd3fc;
+}
+
+#me-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.85);
+}
+
+/* Bottom-Left Orbital Craft Card */
+#me-craft-card {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  width: 176px;
+  padding: 6px 9px;
+  background: rgba(6, 14, 26, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.craft-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#me-speed-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.craft-unit {
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.72);
+}
+
+.meter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.78);
+}
+
+.meter-lbl {
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.meter-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#me-alt-fill {
+  width: 35%;
+  height: 100%;
+  background: #38bdf8;
+  transition: width 0.1s linear;
+}
+
+#me-boost-fill {
+  width: 100%;
+  height: 100%;
+  background: #34d399;
+  transition: width 0.1s linear;
+}
+
+.bio-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.76);
+}
+
+#me-bio-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #34d399;
+}
+
+/* Bottom-Center Tool Bar & Flight Tip */
+#me-bottom-center {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+#me-tool-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.me-tool-btn {
+  padding: 4px 7px;
+  background: rgba(6, 14, 26, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #e2f1ff;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.me-tool-btn:hover {
+  border-color: #38bdf8;
+}
+
+.me-tool-btn.active-amber {
+  background: #f97316;
+  border-color: #fbbf24;
+  color: #030812;
+  font-weight: 700;
+}
+
+.me-tool-btn.active-emerald {
+  background: #34d399;
+  border-color: #6ee7b7;
+  color: #030812;
+  font-weight: 700;
+}
+
+.me-tool-btn.active-azure {
+  background: #38bdf8;
+  border-color: #7dd3fc;
+  color: #030812;
+  font-weight: 700;
+}
+
+#me-controls-tip {
+  padding: 3px 9px;
+  background: rgba(6, 14, 26, 0.82);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.82);
+  white-space: nowrap;
+}
+
+/* Bottom-Right Score & Tectonic Telemetry Card */
+#me-score-card {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  width: 164px;
+  padding: 6px 9px;
+  background: rgba(6, 14, 26, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#me-score-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  color: #34d399;
+}
+
+#me-state-val {
+  font-size: 12px;
+  color: #38bdf8;
+  white-space: nowrap;
+}
+
+#me-geo-stats {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.72);
+  white-space: nowrap;
+}
+
+/* Touch Controls */
+#me-touch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@media (pointer: coarse) {
+  #me-touch.active {
+    display: block;
+  }
+  #me-bottom-center {
+    display: none;
+  }
+}
+
+#me-t-pad {
+  position: absolute;
+  left: 16px;
+  bottom: 94px;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: rgba(6, 14, 26, 0.58);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  pointer-events: auto;
+}
+
+#me-t-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.85);
+}
+
+.me-t-actions {
+  position: absolute;
+  right: 16px;
+  bottom: 94px;
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.me-t-btn {
+  padding: 10px 12px;
+  background: rgba(6, 14, 26, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  color: #e2f1ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.me-t-btn.amber {
+  background: #f97316;
+  border-color: #fbbf24;
+  color: #030812;
+}
+
+.me-t-btn.emerald {
+  background: #34d399;
+  border-color: #6ee7b7;
+  color: #030812;
+}
+
+/* Title / Pause / Defense Debrief Overlay */
+#me-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(3, 8, 18, 0.62) 0%, rgba(3, 8, 18, 0.86) 100%);
+  overflow-y: auto;
+}
+
+#me-overlay.hidden {
+  display: none;
+}
+
+.me-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 15px 20px;
+  background: rgba(6, 14, 26, 0.90);
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.me-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.8px;
+  color: #38bdf8;
+}
+
+.me-placard h1 {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #f0f8ff;
+  margin-top: 2px;
+}
+
+.me-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(226, 241, 255, 0.84);
+  margin-top: 3px;
+}
+
+/* Planetary Defense Debrief Grid */
+#me-debrief {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+#me-debrief.show {
+  display: grid;
+}
+
+.me-db-cell {
+  padding: 7px 9px;
+  background: rgba(10, 24, 42, 0.86);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.72);
+}
+
+.me-db-cell strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  color: #f0f8ff;
+}
+
+.me-db-cell.emerald strong {
+  color: #34d399;
+}
+
+/* Action Buttons Row */
+.me-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.me-btn-primary {
+  padding: 8px 16px;
+  background: #38bdf8;
+  border: 1px solid #7dd3fc;
+  color: #030812;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.me-btn-primary:hover {
+  background: #67d0fb;
+  transform: translateY(-1px);
+}
+
+.me-btn-emerald {
+  padding: 8px 14px;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid #34d399;
+  color: #6ee7b7;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.me-btn-emerald:hover {
+  background: rgba(16, 185, 129, 0.34);
+  color: #ffffff;
+}
+
+.me-btn-secondary {
+  padding: 7px 12px;
+  background: rgba(12, 26, 46, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.30);
+  color: #e2f1ff;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.me-btn-secondary:hover {
+  background: rgba(20, 44, 74, 0.95);
+  border-color: #38bdf8;
+}
+
+/* Orbital & Tectonic Acoustic Studio */
+#me-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 12px;
+  background: rgba(4, 10, 20, 0.90);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+#me-studio.open {
+  display: flex;
+}
+
+.me-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #38bdf8;
+}
+
+#me-scope {
+  width: 100%;
+  height: 52px;
+  background: #030710;
+  border: 1px solid rgba(56, 189, 248, 0.20);
+}
+
+.me-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.me-sfx-trigger {
+  padding: 5px 10px;
+  background: rgba(12, 26, 46, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.26);
+  color: #e2f1ff;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.me-sfx-trigger:hover {
+  border-color: #38bdf8;
+  background: rgba(20, 46, 78, 0.96);
+}
+
+/* Settings & Compact Keybinds */
+.me-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding-top: 7px;
+  border-top: 1px solid rgba(56, 189, 248, 0.16);
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.78);
+}
+
+.me-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.me-pill {
+  padding: 3px 8px;
+  background: rgba(12, 26, 46, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  color: rgba(226, 241, 255, 0.82);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.me-pill.active {
+  background: #38bdf8;
+  border-color: #7dd3fc;
+  color: #030812;
+  font-weight: 700;
+}
+
+#me-solar-range,
+#me-vol {
+  width: 78px;
+  accent-color: #38bdf8;
+}
+
+#me-solar-lbl {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #34d399;
+  min-width: 58px;
+}
+
+.me-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 12px;
+  padding-top: 7px;
+  border-top: 1px solid rgba(56, 189, 248, 0.16);
+  font-size: 12px;
+  color: rgba(226, 241, 255, 0.78);
+}
+
+.me-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(56, 189, 248, 0.14);
+  border: 1px solid rgba(56, 189, 248, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #7dd3fc;
+}
+
+@media (max-width: 720px) {
+  #me-bottom-center {
+    display: none;
+  }
+  .me-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #me-debrief {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

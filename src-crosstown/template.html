@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>曼哈顿街区狂飙 CROSSTOWN NYC — 零外部素材 3D 开放街区漂移网页游戏</title>
+  <meta name="description" content="致敬 Fable 5.2 CROSSTOWN 的零外部素材 WebGL2 纽约曼哈顿开放街区狂飙游戏：时代广场霓虹巨幕、中央公园镜湖、东河悬索大桥飞跃、消防栓高压水柱与 V8 声学合成台。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="crosstown-app" class="__APP_CLASS__">
+    <canvas id="ct-canvas" tabindex="0"></canvas>
+
+    <section id="ct-hud" aria-label="曼哈顿街头狂飙仪表盘">
+      <div id="ct-perf">60 FPS · 暮色</div>
+
+      <div id="ct-top-center">
+        <div id="ct-compass">北 000° · 时代广场 · 00:00.0</div>
+        <div id="ct-quest-pill">
+          <span id="ct-stage-tag">计时</span>
+          <span id="ct-stage-desc">时代广场南口 [0/8]</span>
+          <span id="ct-pips" class="ct-pips">
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+            <i class="ct-pip"></i>
+          </span>
+        </div>
+      </div>
+
+      <div id="ct-quick-bar">
+        <button id="btn-horn" class="ct-mini-btn" type="button">鸣笛 [H]</button>
+        <button id="btn-cam" class="ct-mini-btn" type="button">机位 [C]</button>
+        <!--__HUD_MODE_BTNS__-->
+        <button id="btn-fs" class="ct-mini-btn" type="button">全屏</button>
+        <button id="btn-pause" class="ct-mini-btn" type="button">暂停</button>
+      </div>
+
+      <div id="ct-toast-feed"></div>
+      <div id="ct-waypoints"></div>
+
+      <div id="ct-banner">
+        <div id="ct-banner-title"></div>
+        <div id="ct-banner-sub"></div>
+      </div>
+
+      <div id="ct-car-card">
+        <div class="car-card-top">
+          <span id="ct-speed-val">0</span>
+          <span id="ct-gear-val" class="car-unit">KM/H · D1</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">氮气推进</span>
+          <div class="meter-track"><div id="ct-nitro-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">手刹漂移</span>
+          <div class="meter-track"><div id="ct-drift-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="ct-controls-tip">WASD 驾驶 · 空格手刹漂移 · Shift/左键氮气 · H 鸣笛</div>
+
+      <div id="ct-score-card">
+        <span id="ct-score-val">0</span>
+        <span id="ct-state-val">中城待命</span>
+      </div>
+    </section>
+
+    <div id="ct-touch">
+      <div id="ct-t-pad"><div id="ct-t-knob"></div></div>
+      <div class="ct-t-actions">
+        <button id="ct-tb-drift" class="ct-t-btn saffron" type="button">手刹漂移</button>
+        <button id="ct-tb-boost" class="ct-t-btn cyan" type="button">氮气冲刺</button>
+      </div>
+    </div>
+
+    <main id="ct-overlay">
+      <div class="ct-placard">
+        <header>
+          <div id="ct-kicker" class="ct-kicker">MIDTOWN MANHATTAN GRID // 零外部素材 WebGL2 开放街区漂移狂飙</div>
+          <h1 id="ct-title">曼哈顿街区狂飙 · CROSSTOWN NYC</h1>
+          <p id="ct-desc" class="ct-desc">
+            落日余晖映照湿润反光的第五大道与百老汇十字路口！驾驶改装 V8 肌肉超跑计程车穿梭 36 座摩天楼峡谷，甩尾漂移掠过时代广场巨幕与中央公园镜湖，撞飞路边消防栓喷涌 12 米银白水柱，直冲东河悬索大桥腾空飞跃！
+          </p>
+        </header>
+
+        <section id="ct-debrief" aria-label="横穿曼哈顿战绩结算">
+          <div class="ct-db-cell"><span>横穿耗时</span><strong id="st-time">00:00.0</strong></div>
+          <div class="ct-db-cell"><span>金色信标</span><strong id="st-beacons">0 / 8</strong></div>
+          <div class="ct-db-cell"><span>撞爆消防栓</span><strong id="st-hydrants">0</strong></div>
+          <div class="ct-db-cell"><span>街头总分</span><strong id="st-score">0</strong></div>
+          <div class="ct-db-cell saffron"><span>传奇评级</span><strong id="st-rank">S+</strong></div>
+        </section>
+
+        <div class="ct-actions">
+          <button id="ct-btn-rush" class="ct-btn-primary" type="button">横穿曼哈顿计时赛</button>
+          <button id="ct-btn-freeroam" class="ct-btn-secondary" type="button">自由漫游街区</button>
+          <button id="ct-btn-continue-roam" class="ct-btn-secondary" type="button" style="display:none">继续自由漫游曼哈顿</button>
+          <button id="ct-btn-restart" class="ct-btn-secondary" type="button" style="display:none">重跑横穿计时赛</button>
+          <button id="ct-btn-studio" class="ct-btn-secondary" type="button">纽约街区声学台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="ct-studio" aria-label="纯代码纽约街头声学合成台">
+          <div class="ct-studio-head">
+            <span>NYC STREET SYNTH BENCH · 零采样 V8 引擎换挡与放克碎拍实时合成</span>
+            <span>F-FUNK BREAKBEAT</span>
+          </div>
+          <canvas id="ct-scope" width="560" height="54"></canvas>
+          <div class="ct-studio-btns">
+            <button class="ct-sfx-trigger" data-s="rev" type="button">V8 肌肉引擎换挡轰鸣</button>
+            <button class="ct-sfx-trigger" data-s="horn" type="button">纽约双音计程车喇叭</button>
+            <button class="ct-sfx-trigger" data-s="drift" type="button">手刹漂移烧胎尖啸</button>
+            <button class="ct-sfx-trigger" data-s="hydrant" type="button">消防栓高压水柱喷发</button>
+            <button class="ct-sfx-trigger" data-s="nitro" type="button">氮气涡轮全开推进</button>
+            <button class="ct-sfx-trigger" data-s="beacon" type="button">曼哈顿信标凯旋铜管</button>
+          </div>
+        </section>
+
+        <div class="ct-settings">
+          <div class="ct-set-group">
+            <span>霓虹辉光</span>
+            <button class="ct-pill bloom-pill" data-b="0" type="button">清透</button>
+            <button class="ct-pill bloom-pill active" data-b="1" type="button">暮色</button>
+            <button class="ct-pill bloom-pill" data-b="2" type="button">流光</button>
+          </div>
+          <div class="ct-set-group">
+            <span>画质</span>
+            <button class="ct-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="ct-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="ct-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="ct-set-group">
+            <label for="ct-vol">引擎声浪</label>
+            <input id="ct-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="ct-keys-grid">
+          <div><span>油门加速 / 刹车倒车</span><span><kbd>W S</kbd> / <kbd>↑ ↓</kbd></span></div>
+          <div><span>精准转向与车身侧倾</span><span><kbd>A D</kbd> / <kbd>← →</kbd></span></div>
+          <div><span>手刹甩尾（叠 ×2..×5 倍率）</span><span>按住 <kbd>Space</kbd></span></div>
+          <div><span>氮气极速推进（195 KM/H）</span><span><kbd>Shift</kbd> / <kbd>左键</kbd></span></div>
+          <div><span>双音计程车鸣笛互动</span><span><kbd>H</kbd></span></div>
+          <div><span>切换机位 / 暂停菜单</span><span><kbd>C</kbd> / <kbd>P</kbd></span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

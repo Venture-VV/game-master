@@ -3,94 +3,116 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fable 5.2 纯代码 3D 网页游戏三作典藏集 — 沙丘巨虫 · 星月夜骑士 · 断潮行动</title>
-  <meta name="description" content="零外部贴图、零外部模型、零外部音频的浏览器直玩 3D 游戏三部曲典藏：包含落日大漠巨物驾驭《沙丘巨虫》、梵高厚涂油画骑行冒险《星月夜骑士》与雨夜港区第一人称战术射击《断潮行动》。" />
+  <title>Fable 5.2 浏览器 3D 游戏八作典藏集 — 零外部素材纯代码 WebGL2 殿堂</title>
+  <meta name="description" content="零外部贴图、零外部模型、零外部音频文件的八款浏览器直玩 3D 游戏典藏集：涵盖《曼哈顿街区狂飙》《水之所存》《失控乒乓》《镜像地球》《无尽传送门》《沙丘巨虫》《星月夜骑士》与《断潮行动》。" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       min-height: 100%;
-      background: #0a0c14;
+      background: #0a0c12;
       color: #f4ecdc;
       font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    #triptych-canvas {
+    #anthology-canvas {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       display: block;
       z-index: 0;
-      opacity: 0.56;
+      opacity: 0.52;
     }
     .page-wrap {
       position: relative;
       z-index: 2;
       min-height: 100vh;
-      max-width: 1260px;
+      max-width: 1420px;
       margin: 0 auto;
-      padding: 38px 24px 34px;
+      padding: 32px 24px 30px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 26px;
+      gap: 22px;
     }
     .top-header {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
       border-bottom: 1px solid rgba(244, 236, 220, 0.18);
-      padding-bottom: 18px;
+      padding-bottom: 16px;
+    }
+    .header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 900px;
     }
     .eyebrow {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
-      letter-spacing: 2.4px;
+      letter-spacing: 2.2px;
       color: #f09a24;
     }
     h1 {
       font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
-      font-size: clamp(28px, 3.8vw, 42px);
+      font-size: clamp(26px, 3.3vw, 40px);
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.8px;
       line-height: 1.15;
-      color: #f8f1e2;
+      color: #f9f2e4;
     }
     .lead {
-      font-size: 15px;
-      line-height: 1.65;
+      font-size: 14px;
+      line-height: 1.62;
       color: rgba(244, 236, 220, 0.80);
-      max-width: 82ch;
     }
-    .triptych-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .header-stats {
+      display: flex;
       gap: 20px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: rgba(244, 236, 220, 0.72);
+    }
+    .stat-block strong {
+      display: block;
+      font-size: 20px;
+      color: #faf2e3;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .anthology-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
     }
     .work-panel {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 18px;
-      padding: 24px 24px;
-      background: rgba(13, 16, 26, 0.86);
-      border: 1px solid rgba(244, 236, 220, 0.22);
-      backdrop-filter: blur(12px);
+      gap: 14px;
+      padding: 18px 18px 16px;
+      background: rgba(13, 17, 26, 0.88);
+      border: 1px solid rgba(244, 236, 220, 0.20);
+      backdrop-filter: blur(10px);
       text-decoration: none;
       color: inherit;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-    .work-panel.dune-panel {
-      background: rgba(22, 13, 8, 0.88);
-      border-color: rgba(240, 154, 36, 0.32);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
     }
     .work-panel:hover {
-      transform: translateY(-4px);
-      border-color: rgba(244, 236, 220, 0.54);
+      transform: translateY(-3px);
+      background: rgba(19, 24, 36, 0.95);
+      border-color: rgba(244, 236, 220, 0.52);
     }
-    .work-panel.dune-panel:hover {
-      background: rgba(30, 17, 10, 0.94);
-      border-color: rgba(240, 154, 36, 0.68);
+    .work-panel.warm-tint {
+      background: rgba(21, 15, 11, 0.88);
+      border-color: rgba(240, 154, 36, 0.28);
+    }
+    .work-panel.warm-tint:hover {
+      background: rgba(28, 19, 13, 0.95);
+      border-color: rgba(240, 154, 36, 0.64);
     }
     .work-meta {
       display: flex;
@@ -99,73 +121,67 @@
       gap: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
-      letter-spacing: 1.2px;
-      color: rgba(244, 236, 220, 0.64);
+      letter-spacing: 0.8px;
+      color: rgba(244, 236, 220, 0.62);
     }
-    .work-tag-amber { color: #f09a24; font-weight: 700; }
-    .work-tag-warm  { color: #f2c335; font-weight: 700; }
-    .work-tag-cool  { color: #4ec9e8; font-weight: 700; }
+    .tag-amber { color: #f4a32c; font-weight: 700; }
+    .tag-aqua  { color: #4cc9d8; font-weight: 700; }
+    .tag-lime  { color: #c8dc46; font-weight: 700; }
+    .tag-sky   { color: #5eb8f2; font-weight: 700; }
+    .tag-coral { color: #f07b42; font-weight: 700; }
+    .tag-gold  { color: #f2c335; font-weight: 700; }
     .work-title {
       font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
-      font-size: 23px;
-      letter-spacing: 1.2px;
-      margin-top: 8px;
+      font-size: 19px;
+      letter-spacing: 0.8px;
+      margin-top: 7px;
       color: #faf2e3;
+      line-height: 1.25;
     }
     .work-sub {
       font-size: 12px;
-      letter-spacing: 0.8px;
-      color: rgba(244, 236, 220, 0.64);
-      margin-top: 4px;
+      color: rgba(244, 236, 220, 0.60);
+      margin-top: 3px;
     }
     .work-summary {
-      font-size: 14px;
-      line-height: 1.62;
+      font-size: 13px;
+      line-height: 1.58;
       color: rgba(244, 236, 220, 0.84);
-      margin-top: 11px;
+      margin-top: 9px;
     }
-    .spec-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding-top: 13px;
-      border-top: 1px solid rgba(244, 236, 220, 0.14);
+    .spec-line {
+      padding-top: 10px;
+      border-top: 1px solid rgba(244, 236, 220, 0.13);
       font-size: 12px;
-      line-height: 1.5;
-      color: rgba(244, 236, 220, 0.76);
+      line-height: 1.48;
+      color: rgba(244, 236, 220, 0.72);
     }
     .cta-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 4px;
+      padding-top: 2px;
     }
     .cta-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 18px;
-      font-size: 13px;
+      gap: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1.2px;
+      letter-spacing: 1px;
     }
-    .cta-amber {
-      background: #f09a24;
-      color: #160c06;
-    }
-    .cta-warm {
-      background: #f2c335;
-      color: #081328;
-    }
-    .cta-cool {
-      background: #e6eef5;
-      color: #09131d;
-    }
+    .btn-amber { background: #f4a32c; color: #160d06; }
+    .btn-aqua  { background: #4cc9d8; color: #06161b; }
+    .btn-lime  { background: #d4e652; color: #111806; }
+    .btn-sky   { background: #64bef5; color: #061320; }
+    .btn-coral { background: #f28249; color: #180a05; }
+    .btn-gold  { background: #f2c335; color: #0a1324; }
+    .btn-ivory { background: #e8eff6; color: #09131d; }
     .shortcut-hint {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
-      color: rgba(244, 236, 220, 0.56);
+      color: rgba(244, 236, 220, 0.54);
     }
     .foot-note {
       display: flex;
@@ -173,112 +189,221 @@
       flex-wrap: wrap;
       gap: 10px;
       font-size: 12px;
-      color: rgba(244, 236, 220, 0.58);
+      color: rgba(244, 236, 220, 0.56);
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     }
-    @media (max-width: 1024px) {
-      .triptych-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1220px) {
+      .anthology-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .anthology-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <canvas id="triptych-canvas"></canvas>
+  <canvas id="anthology-canvas"></canvas>
 
   <main class="page-wrap">
     <header class="top-header">
-      <div class="eyebrow">ZERO-ASSET WEBGL2 TRILOGY // 纯代码生成三维几何 · 物理/油画/热浪着色器 · 实时声学合成</div>
-      <h1>Fable 5.2 浏览器 3D 游戏三作典藏集</h1>
-      <p class="lead">
-        三款题材、视觉管线与音乐引擎截然不同的单文件网页游戏——从双日深漠驾驭百米沙虫破沙鲸跃，到普罗旺斯流动厚涂油画中的星夜策马写生，再到暴雨封锁港区的第一人称战术突击，零外部素材，点击即玩。
-      </p>
+      <div class="header-main">
+        <div class="eyebrow">ZERO-ASSET WEBGL2 OCTET // 纯代码三维几何 · 物理/焦散/油画/大气/递归传送着色器 · 实时声学合成</div>
+        <h1>Fable 5.2 浏览器 3D 游戏八作典藏集</h1>
+        <p class="lead">
+          完整复刻热门榜单 Top 5 与三部曲代表作——从黄昏曼哈顿摩天楼车流狂飙、淹没古典遗迹孤舟共鸣、物理暴走街机乒乓、大气散射昼夜地球仪、非欧几里得递归传送门，到双日大漠百米沙虫、梵高厚涂星夜骑乘与雨夜港区战术射击，零外部素材，点击即玩。
+        </p>
+      </div>
+      <div class="header-stats" aria-label="典藏技术指标">
+        <div class="stat-block"><strong>8 GAMES</strong><span>单文件直玩</span></div>
+        <div class="stat-block"><strong>0 ASSETS</strong><span>纯代码着色与声学</span></div>
+        <div class="stat-block"><strong>KEYS 1–8</strong><span>键盘一键启动</span></div>
+      </div>
     </header>
 
-    <section class="triptych-grid" aria-label="三部曲游戏选择入口">
-      <a id="launch-wormrider" class="work-panel dune-panel" href="./worm-rider.html">
+    <section class="anthology-grid" aria-label="八作典藏游戏入口">
+      <!-- 1. Crosstown NYC -->
+      <a id="launch-crosstown" class="work-panel warm-tint" href="./crosstown.html">
         <div>
           <div class="work-meta">
-            <span class="work-tag-amber">WORK 01 · COLOSSAL RIDING</span>
-            <span>沙丘巨物驾驭动作</span>
+            <span class="tag-amber">TOP 01 · ♥ 7.5K</span>
+            <span>城市开放街区竞速</span>
           </div>
-          <h2 class="work-title">沙丘巨虫 · SHAI-RIDER</h2>
-          <div class="work-sub">致敬 Worm Rider · 厄拉科斯双日深漠</div>
+          <h2 class="work-title">曼哈顿街区狂飙 · CROSSTOWN</h2>
+          <div class="work-sub">致敬 Crosstown · 48 栋摩天楼与东河大桥</div>
           <p class="work-summary">
-            在双日西沉的金色沙脊敲响弗雷曼沙槌，甩出造物主双钩驾驭 26 节百米沙虫「夏胡鲁」！潜入流沙蓄力规避轨道光矛，在哈肯尼香料母车底部破沙鲸跃一口秒吞，并腾空扑碎帝国扑翼机与指挥护卫舰。
+            驾驶改装 V8 肌肉跑车穿梭帝国大厦、时代广场霓虹幕墙、中央公园湖畔与东河悬索桥，手刹漂移撞碎街角消防栓喷涌水柱，氮气冲过 8 座地标信标！
           </p>
         </div>
-        <ul class="spec-list">
-          <li>· 26 节百米多体脊柱物理 + 潜沙实时地形鼓包与热浪海市蜃楼滤镜</li>
-          <li>· 双日大气散射、闪耀香料结晶沙纹与实例化沙暴/金属碎片喷泉</li>
-          <li>· 纯代码巨物低音铜管 Braaam、机械沙槌、希贾兹达布卡战鼓与杜杜克管</li>
-        </ul>
+        <div class="spec-line">湿地柏油车灯反射 · 5 处飞跃跳台 · V8 换挡轰鸣与 Funk 铜管</div>
         <div class="cta-row">
-          <span class="cta-btn cta-amber">召唤巨虫狂飙 →</span>
-          <span class="shortcut-hint">快捷键 [1]</span>
+          <span class="cta-btn btn-amber">踩下油门狂飙 →</span>
+          <span class="shortcut-hint">按键 [1]</span>
         </div>
       </a>
 
+      <!-- 2. What the Water Keeps -->
+      <a id="launch-water" class="work-panel" href="./water-keeps.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-aqua">TOP 02 · ♥ 4.2K</span>
+            <span>印象派水彩泛舟解谜</span>
+          </div>
+          <h2 class="work-title">水之所存 · WATER KEEPS</h2>
+          <div class="work-sub">致敬 What the Water Keeps · 八重梦境水城</div>
+          <p class="work-summary">
+            摇动木舟双桨，提灯穿行于晨雾睡莲、沉水钟楼、发光水母海与极光彼岸灯塔八重梦境水域，敲响船首铜铃荡开水纹，拾取 16 颗水之记忆明珠。
+          </p>
+        </div>
+        <div class="spec-line">Gerstner 波浪船尾 V 形航迹 · Kuwahara 水彩纸纹 · 德彪西毡音钢琴</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-aqua">执桨驶入水境 →</span>
+          <span class="shortcut-hint">按键 [2]</span>
+        </div>
+      </a>
+
+      <!-- 3. Tennis: Go Wild -->
+      <a id="launch-tennis" class="work-panel" href="./hyper-tennis.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-lime">TOP 03 · ♥ 3.0K</span>
+            <span>五纪元进化街机对决</span>
+          </div>
+          <h2 class="work-title">失控乒乓 · TENNIS: GO WILD</h2>
+          <div class="work-sub">致敬 Tennis: Go Wild · 从 1972 像素到日冕核心</div>
+          <p class="work-summary">
+            从 1972 黑白俯视 Pong 起步，每得两分跨越一个物理纪元：3D 体育场旋球、弹珠柱与引力黑洞多球分裂、机甲烈焰彗星重扣，直至轰碎日冕奇点首领！
+          </p>
+        </div>
+        <div class="spec-line">五纪元镜头与着色器蜕变 · 彗星慢镜头重扣 · 跨时代电音摇滚</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-lime">挥拍引爆球场 →</span>
+          <span class="shortcut-hint">按键 [3]</span>
+        </div>
+      </a>
+
+      <!-- 4. Mirror Earth -->
+      <a id="launch-earth" class="work-panel" href="./mirror-earth.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-sky">TOP 04 · ♥ 2.4K</span>
+            <span>行星改造与轨道防御</span>
+          </div>
+          <h2 class="work-title">镜像地球 · MIRROR EARTH</h2>
+          <div class="work-sub">致敬 Mirror Earth · 实时地壳重塑与极光台风</div>
+          <p class="work-summary">
+            驾驶轨道飞行器掠过珠峰、金字塔与夜间黄金城市灯群，投射动能陨石实时砸出熔岩环形山或以创世光束隆起火山群岛，亦可开启行星防御拦截末日小行星！
+          </p>
+        </div>
+        <div class="spec-line">瑞利大气与极光帷幕 · 动态球面网格形变 · 航天遥测深空合成</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-sky">进入轨道观测 →</span>
+          <span class="shortcut-hint">按键 [4]</span>
+        </div>
+      </a>
+
+      <!-- 5. Endless Portals -->
+      <a id="launch-portals" class="work-panel" href="./endless-portals.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-coral">TOP 05 · ♥ 1.9K</span>
+            <span>无缝跨界滑翔奇旅</span>
+          </div>
+          <h2 class="work-title">无尽传送门 · PORTALS</h2>
+          <div class="work-sub">致敬 Endless Portals · 999 种子异星长廊</div>
+          <p class="work-summary">
+            驾驶金翼天穹滑翔机冲向巨型石拱传送门，透过门框实时窥见下一座异星苍穹（云海圣殿、海底焦散、双日荒漠、幻日冰原等），零加载无缝穿门飞越 999 重世界！
+          </p>
+        </div>
+        <div class="spec-line">双 FBO 屏空间实时传送视窗 · 自动巡航模式 · 五调式竖琴合唱合成</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-coral">开启跨界滑翔 →</span>
+          <span class="shortcut-hint">按键 [5]</span>
+        </div>
+      </a>
+
+      <!-- 6. Shai-Rider -->
+      <a id="launch-wormrider" class="work-panel warm-tint" href="./worm-rider.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-amber">WORK 06 · 巨物驾驭</span>
+            <span>双日深漠沙虫狂飙</span>
+          </div>
+          <h2 class="work-title">沙丘巨虫 · SHAI-RIDER</h2>
+          <div class="work-sub">致敬 Worm Rider · 厄拉科斯香料护航劫掠</div>
+          <p class="work-summary">
+            立于金色沙脊敲响弗雷曼沙槌，甩出双钩驾驭 26 节百米沙虫潜沙蓄力规避轨道激光，在香料母车底部破沙鲸跃一口秒吞并跃碎帝国指挥舰。
+          </p>
+        </div>
+        <div class="spec-line">26 节多体潜沙地形鼓包 · 热浪蜃景滤镜 · 巨物铜管与达布卡鼓</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-amber">召唤巨虫狂飙 →</span>
+          <span class="shortcut-hint">按键 [6]</span>
+        </div>
+      </a>
+
+      <!-- 7. Starry Nightrider -->
       <a id="launch-nightrider" class="work-panel" href="./starry-nightrider.html">
         <div>
           <div class="work-meta">
-            <span class="work-tag-warm">WORK 02 · IMPASTO ODYSSEY</span>
-            <span>第三人称油画骑乘冒险</span>
+            <span class="tag-gold">WORK 07 · 油画骑乘</span>
+            <span>厚涂名画开放探索</span>
           </div>
-          <h2 class="work-title">星月夜骑士 · STARRY NIGHTRIDER</h2>
-          <div class="work-sub">致敬 Starry Nightrider &amp; Oil Paint · 1889 圣雷米星穹</div>
+          <h2 class="work-title">星月夜骑士 · NIGHTRIDER</h2>
+          <div class="work-sub">致敬 Starry Nightrider · 1889 圣雷米星穹</div>
           <p class="work-summary">
-            化身草帽画家文森特，骑乘骏马驰骋于流动的《星月夜》漩涡星穹之下。实时各向异性厚涂笔触滤镜将整座 3D 山谷化作湿润油彩画布，穿越随马蹄分开的金色麦浪、石桥与风车山脊，点亮五座沉睡星宫。
+            化身草帽画家策马驰骋于流动的《星月夜》漩涡天穹之下，穿越 1,450 株随马蹄分开的金色麦浪、石桥与风车山脊，收集星芒点亮五座沉睡星宫。
           </p>
         </div>
-        <ul class="spec-list">
-          <li>· 实时各向异性 Kuwahara 厚涂油画滤镜（支持 B 键三档实时对比）</li>
-          <li>· 1,450 株风浪交互麦穗 + 四足双关节奔马逆运动学与星流冲刺</li>
-          <li>· 纯代码原声弦乐合成：木吉他分解和弦、揉弦大提琴、竖琴刮奏与马蹄拟音</li>
-        </ul>
+        <div class="spec-line">各向异性 Kuwahara 厚涂滤镜 · 四足奔马 IK · 木吉他大提琴合成</div>
         <div class="cta-row">
-          <span class="cta-btn cta-warm">策马入画游玩 →</span>
-          <span class="shortcut-hint">快捷键 [2]</span>
+          <span class="cta-btn btn-gold">策马入画游玩 →</span>
+          <span class="shortcut-hint">按键 [7]</span>
         </div>
       </a>
 
+      <!-- 8. Saltline -->
       <a id="launch-saltline" class="work-panel" href="./saltline.html">
         <div>
           <div class="work-meta">
-            <span class="work-tag-cool">WORK 03 · TACTICAL FPS</span>
-            <span>第一人称雨夜战术射击</span>
+            <span class="tag-sky">WORK 08 · 战术 FPS</span>
+            <span>雨夜港区突击行动</span>
           </div>
-          <h2 class="work-title">断潮行动 · SALTLINE: BLACK TIDE</h2>
-          <div class="work-sub">致敬 Saltline · 雨夜封锁集装箱港区</div>
+          <h2 class="work-title">断潮行动 · SALTLINE</h2>
+          <div class="work-sub">致敬 Saltline · 暴雨集装箱码头封锁线</div>
           <p class="work-summary">
-            潜入暴雨倾盆的工业集装箱码头，手持全息红点对准的 MK-18 卡宾枪突破「猎鸥」无人机与「猎犬」四足机甲封锁，利用 EMP 电磁脉冲手雷击碎首领护盾，切断三处上行中继并登艇撤离。
+            手持全息红点 MK-18 卡宾枪潜入暴雨港区，突破无人机与四足机甲火力网，投掷 EMP 脉冲手雷击碎首领护盾，切断三处中继并登艇撤离。
           </p>
         </div>
-        <ul class="spec-list">
-          <li>· 半浮点 HDR 风暴夜空环境反射 + 湿地积水涟漪 PBR 材质与泛光后处理</li>
-          <li>· 44m 岸桥起重机、205m 远洋货轮、三段换弹动画与黄铜抛壳物理</li>
-          <li>· 室内外声学感知：进入维修机库自动遮蔽雨水并切换机库卷积混响枪声</li>
-        </ul>
+        <div class="spec-line">半浮点 HDR 湿地积水涟漪 · 三段机械换弹 · 室内外机库混响枪声</div>
         <div class="cta-row">
-          <span class="cta-btn cta-cool">开始战术行动 →</span>
-          <span class="shortcut-hint">快捷键 [3]</span>
+          <span class="cta-btn btn-ivory">开始战术行动 →</span>
+          <span class="shortcut-hint">按键 [8]</span>
         </div>
       </a>
     </section>
 
     <footer class="foot-note">
-      <span>ALL GEOMETRY, PBR / IMPASTO / MIRAGE SHADERS &amp; WEB AUDIO SYNTHESIZED AT RUNTIME</span>
-      <span>按数字键 [1] · [2] · [3] 可直接启动对应作品</span>
+      <span>ALL 3D GEOMETRY, PROCEDURAL SHADERS &amp; WEB AUDIO SYNTHESIZED AT RUNTIME · ZERO EXTERNAL ASSETS</span>
+      <span>按键盘数字键 [1] – [8] 可直接启动对应作品</span>
     </footer>
   </main>
 
   <script>
+    const routes = {
+      '1': './crosstown.html',
+      '2': './water-keeps.html',
+      '3': './hyper-tennis.html',
+      '4': './mirror-earth.html',
+      '5': './endless-portals.html',
+      '6': './worm-rider.html',
+      '7': './starry-nightrider.html',
+      '8': './saltline.html',
+    };
     window.addEventListener('keydown', (e) => {
-      if (e.key === '1') window.location.href = './worm-rider.html';
-      else if (e.key === '2') window.location.href = './starry-nightrider.html';
-      else if (e.key === '3') window.location.href = './saltline.html';
+      if (routes[e.key]) window.location.href = routes[e.key];
     });
 
-    // Triptych 3-Zone Ambient Canvas: Blowing Spice Sand | Swirling Impasto Stars | Harbor Rain
-    const cvs = document.getElementById('triptych-canvas');
+    // Multi-Biome Procedural Ambient Backdrop (Warm Dusk Traffic | Water Ripples | Impasto Stars | Harbor Rain)
+    const cvs = document.getElementById('anthology-canvas');
     const ctx = cvs.getContext('2d');
     let W = 0, H = 0;
     function resize() {
@@ -288,29 +413,35 @@
     window.addEventListener('resize', resize);
     resize();
 
-    const sands = Array.from({ length: 85 }, (_, i) => ({
-      x: Math.random() * 0.35,
+    const streaks = Array.from({ length: 55 }, (_, i) => ({
+      x: Math.random() * 0.28,
       y: Math.random(),
-      len: 10 + Math.random() * 24,
-      spd: 0.08 + Math.random() * 0.14,
-      spice: i % 4 === 0,
+      len: 14 + Math.random() * 28,
+      spd: 0.09 + Math.random() * 0.16,
+      tail: i % 3 === 0,
+    }));
+
+    const ripples = Array.from({ length: 24 }, () => ({
+      x: 0.25 + Math.random() * 0.26,
+      y: Math.random(),
+      r: Math.random() * 42,
+      spd: 12 + Math.random() * 16,
+    }));
+
+    const strokes = Array.from({ length: 65 }, (_, i) => ({
+      x: 0.50 + Math.random() * 0.26,
+      y: Math.random(),
+      len: 14 + Math.random() * 26,
+      spd: 0.014 + Math.random() * 0.022,
+      gold: i % 4 === 0,
       ph: Math.random() * 6.28,
     }));
 
-    const strokes = Array.from({ length: 85 }, (_, i) => ({
-      x: 0.33 + Math.random() * 0.34,
+    const rain = Array.from({ length: 65 }, () => ({
+      x: 0.75 + Math.random() * 0.26,
       y: Math.random(),
-      len: 16 + Math.random() * 30,
-      spd: 0.012 + Math.random() * 0.024,
-      gold: i % 5 === 0,
-      ph: Math.random() * 6.28,
-    }));
-
-    const drops = Array.from({ length: 80 }, () => ({
-      x: 0.66 + Math.random() * 0.35,
-      y: Math.random(),
-      len: 14 + Math.random() * 20,
-      spd: 0.35 + Math.random() * 0.35,
+      len: 14 + Math.random() * 18,
+      spd: 0.34 + Math.random() * 0.32,
     }));
 
     let last = performance.now();
@@ -320,52 +451,66 @@
       last = now;
       const t = now * 0.001;
 
-      ctx.fillStyle = 'rgba(10, 12, 20, 0.24)';
+      ctx.fillStyle = 'rgba(10, 12, 18, 0.24)';
       ctx.fillRect(0, 0, W, H);
 
-      // Zone 1 (Left): Arrakis Windblown Sand & Glowing Spice Embers
-      for (const d of sands) {
-        d.x += d.spd * dt;
-        d.y -= 0.03 * Math.sin(t + d.ph) * dt;
-        if (d.x > 0.35) { d.x = -0.02; d.y = Math.random(); }
-        const px = d.x * W;
-        const py = d.y * H;
-        ctx.strokeStyle = d.spice ? 'rgba(235, 90, 28, 0.52)' : 'rgba(240, 174, 78, 0.32)';
-        ctx.lineWidth = d.spice ? 3.0 : 1.8;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(px, py);
-        ctx.lineTo(px + d.len, py - 3);
-        ctx.stroke();
-      }
-
-      // Zone 2 (Center): Swirling Starry Night Impasto Strokes
-      for (const s of strokes) {
+      // Zone 1: Manhattan Golden Dusk Headlight/Taillight Streaks
+      for (const s of streaks) {
         s.x += s.spd * dt;
-        if (s.x > 0.67) s.x = 0.33;
-        const px = s.x * W;
-        const py = (s.y + Math.sin(s.x * 14 + t * 0.8 + s.ph) * 0.05) * H;
-        const ang = Math.cos(s.x * 14 + t * 0.8 + s.ph) * 0.55;
-        ctx.strokeStyle = s.gold ? 'rgba(244, 197, 52, 0.42)' : 'rgba(62, 134, 212, 0.34)';
-        ctx.lineWidth = s.gold ? 4.2 : 3.2;
+        if (s.x > 0.28) { s.x = -0.03; s.y = Math.random(); }
+        const px = s.x * W, py = s.y * H;
+        ctx.strokeStyle = s.tail ? 'rgba(240, 92, 48, 0.42)' : 'rgba(248, 184, 68, 0.36)';
+        ctx.lineWidth = 2.4;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(px, py);
-        ctx.lineTo(px + Math.cos(ang) * s.len, py + Math.sin(ang) * s.len);
+        ctx.lineTo(px + s.len, py);
         ctx.stroke();
       }
 
-      // Zone 3 (Right): Cold Harbor Rain Streaks
-      for (const r of drops) {
+      // Zone 2: Flooded Ruin Caustic Ripples
+      for (const rp of ripples) {
+        rp.r += rp.spd * dt;
+        if (rp.r > 56) {
+          rp.r = 2;
+          rp.x = 0.26 + Math.random() * 0.24;
+          rp.y = Math.random();
+        }
+        const alpha = Math.max(0, (1 - rp.r / 56) * 0.28);
+        ctx.strokeStyle = `rgba(76, 201, 216, ${alpha.toFixed(3)})`;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.ellipse(rp.x * W, rp.y * H, rp.r, rp.r * 0.48, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Zone 3: Swirling Impasto & Orbital Arcs
+      for (const st of strokes) {
+        st.x += st.spd * dt;
+        if (st.x > 0.76) st.x = 0.50;
+        const px = st.x * W;
+        const py = (st.y + Math.sin(st.x * 16 + t * 0.85 + st.ph) * 0.045) * H;
+        const ang = Math.cos(st.x * 16 + t * 0.85 + st.ph) * 0.55;
+        ctx.strokeStyle = st.gold ? 'rgba(242, 195, 53, 0.40)' : 'rgba(72, 152, 226, 0.32)';
+        ctx.lineWidth = st.gold ? 3.8 : 2.8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(px + Math.cos(ang) * st.len, py + Math.sin(ang) * st.len);
+        ctx.stroke();
+      }
+
+      // Zone 4: Cold Harbor Storm Rain
+      for (const r of rain) {
         r.y += r.spd * dt;
-        r.x -= 0.03 * dt;
-        if (r.y > 1.04) { r.y = -0.04; r.x = 0.67 + Math.random() * 0.34; }
+        r.x -= 0.025 * dt;
+        if (r.y > 1.04) { r.y = -0.04; r.x = 0.76 + Math.random() * 0.25; }
         const rx = r.x * W, ry = r.y * H;
-        ctx.strokeStyle = 'rgba(135, 196, 235, 0.26)';
-        ctx.lineWidth = 1.3;
+        ctx.strokeStyle = 'rgba(138, 198, 238, 0.25)';
+        ctx.lineWidth = 1.25;
         ctx.beginPath();
         ctx.moveTo(rx, ry);
-        ctx.lineTo(rx - 4, ry + r.len);
+        ctx.lineTo(rx - 3.5, ry + r.len);
         ctx.stroke();
       }
     }
