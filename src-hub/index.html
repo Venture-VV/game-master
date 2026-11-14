@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fable 5.2 浏览器 3D 游戏八作典藏集 — 零外部素材纯代码 WebGL2 殿堂</title>
-  <meta name="description" content="零外部贴图、零外部模型、零外部音频文件的八款浏览器直玩 3D 游戏典藏集：涵盖《曼哈顿街区狂飙》《水之所存》《失控乒乓》《镜像地球》《无尽传送门》《沙丘巨虫》《星月夜骑士》与《断潮行动》。" />
+  <title>Fable 5.2 浏览器 3D 游戏与黑科技十二作典藏集 — 零外部素材纯代码 WebGL2 殿堂</title>
+  <meta name="description" content="零外部贴图、零外部模型、零外部音频文件的十二款浏览器直玩 3D 交互黑科技与网页游戏典藏集：涵盖《3D 硬件焊接实验室》《密码筑城》《X 光解剖魔镜》《立体手帐与揭贴纸》及八大热门 3D 游戏。" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       min-height: 100%;
-      background: #0a0c12;
+      background: #090c11;
       color: #f4ecdc;
       font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
       -webkit-font-smoothing: antialiased;
@@ -21,19 +21,18 @@
       height: 100%;
       display: block;
       z-index: 0;
-      opacity: 0.52;
+      opacity: 0.50;
     }
     .page-wrap {
       position: relative;
       z-index: 2;
       min-height: 100vh;
-      max-width: 1420px;
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 32px 24px 30px;
+      padding: 28px 24px 28px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 22px;
+      gap: 20px;
     }
     .top-header {
       display: flex;
@@ -42,13 +41,13 @@
       flex-wrap: wrap;
       gap: 16px;
       border-bottom: 1px solid rgba(244, 236, 220, 0.18);
-      padding-bottom: 16px;
+      padding-bottom: 15px;
     }
     .header-main {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-width: 900px;
+      gap: 7px;
+      max-width: 920px;
     }
     .eyebrow {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -58,42 +57,89 @@
     }
     h1 {
       font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
-      font-size: clamp(26px, 3.3vw, 40px);
+      font-size: clamp(25px, 3.1vw, 38px);
       font-weight: 700;
-      letter-spacing: 1.8px;
+      letter-spacing: 1.6px;
       line-height: 1.15;
       color: #f9f2e4;
     }
     .lead {
       font-size: 14px;
-      line-height: 1.62;
+      line-height: 1.6;
       color: rgba(244, 236, 220, 0.80);
+    }
+    .header-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
     }
     .header-stats {
       display: flex;
-      gap: 20px;
+      gap: 18px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
       color: rgba(244, 236, 220, 0.72);
     }
     .stat-block strong {
       display: block;
-      font-size: 20px;
+      font-size: 18px;
       color: #faf2e3;
       letter-spacing: 0.5px;
-      margin-bottom: 2px;
+    }
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(15, 20, 30, 0.86);
+      border: 1px solid rgba(244, 236, 220, 0.24);
+      color: rgba(244, 236, 220, 0.80);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      cursor: pointer;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+    }
+    .filter-btn:hover {
+      border-color: rgba(244, 236, 220, 0.52);
+      color: #faf2e3;
+    }
+    .filter-btn.active {
+      background: #f09a24;
+      border-color: #f09a24;
+      color: #160d05;
+      font-weight: 700;
+    }
+    .section-divider {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 2px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      color: #4cc9d8;
+    }
+    .section-divider.warm {
+      color: #f4a32c;
+    }
+    .section-divider span:last-child {
+      color: rgba(244, 236, 220, 0.54);
+      letter-spacing: 0.6px;
     }
     .anthology-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      gap: 14px;
     }
     .work-panel {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 14px;
-      padding: 18px 18px 16px;
+      gap: 12px;
+      padding: 16px 16px 14px;
       background: rgba(13, 17, 26, 0.88);
       border: 1px solid rgba(244, 236, 220, 0.20);
       backdrop-filter: blur(10px);
@@ -103,8 +149,16 @@
     }
     .work-panel:hover {
       transform: translateY(-3px);
-      background: rgba(19, 24, 36, 0.95);
-      border-color: rgba(244, 236, 220, 0.52);
+      background: rgba(19, 25, 38, 0.95);
+      border-color: rgba(244, 236, 220, 0.54);
+    }
+    .work-panel.tech-tint {
+      background: rgba(10, 20, 24, 0.90);
+      border-color: rgba(76, 201, 216, 0.30);
+    }
+    .work-panel.tech-tint:hover {
+      background: rgba(14, 27, 32, 0.96);
+      border-color: rgba(76, 201, 216, 0.68);
     }
     .work-panel.warm-tint {
       background: rgba(21, 15, 11, 0.88);
@@ -114,6 +168,9 @@
       background: rgba(28, 19, 13, 0.95);
       border-color: rgba(240, 154, 36, 0.64);
     }
+    .work-panel.hidden {
+      display: none;
+    }
     .work-meta {
       display: flex;
       justify-content: space-between;
@@ -121,39 +178,40 @@
       gap: 8px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
       color: rgba(244, 236, 220, 0.62);
     }
-    .tag-amber { color: #f4a32c; font-weight: 700; }
-    .tag-aqua  { color: #4cc9d8; font-weight: 700; }
-    .tag-lime  { color: #c8dc46; font-weight: 700; }
-    .tag-sky   { color: #5eb8f2; font-weight: 700; }
-    .tag-coral { color: #f07b42; font-weight: 700; }
-    .tag-gold  { color: #f2c335; font-weight: 700; }
+    .tag-emerald { color: #2dd4bf; font-weight: 700; }
+    .tag-amber   { color: #f4a32c; font-weight: 700; }
+    .tag-aqua    { color: #4cc9d8; font-weight: 700; }
+    .tag-lime    { color: #c8dc46; font-weight: 700; }
+    .tag-sky     { color: #5eb8f2; font-weight: 700; }
+    .tag-coral   { color: #f07b42; font-weight: 700; }
+    .tag-gold    { color: #f2c335; font-weight: 700; }
     .work-title {
       font-family: "Optima", "Georgia", "Noto Serif SC", "Songti SC", serif;
-      font-size: 19px;
-      letter-spacing: 0.8px;
-      margin-top: 7px;
+      font-size: 18px;
+      letter-spacing: 0.7px;
+      margin-top: 6px;
       color: #faf2e3;
       line-height: 1.25;
     }
     .work-sub {
       font-size: 12px;
       color: rgba(244, 236, 220, 0.60);
-      margin-top: 3px;
+      margin-top: 2px;
     }
     .work-summary {
       font-size: 13px;
-      line-height: 1.58;
+      line-height: 1.54;
       color: rgba(244, 236, 220, 0.84);
-      margin-top: 9px;
+      margin-top: 8px;
     }
     .spec-line {
-      padding-top: 10px;
+      padding-top: 9px;
       border-top: 1px solid rgba(244, 236, 220, 0.13);
       font-size: 12px;
-      line-height: 1.48;
+      line-height: 1.45;
       color: rgba(244, 236, 220, 0.72);
     }
     .cta-row {
@@ -166,18 +224,19 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 7px 14px;
+      padding: 6px 13px;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
     }
-    .btn-amber { background: #f4a32c; color: #160d06; }
-    .btn-aqua  { background: #4cc9d8; color: #06161b; }
-    .btn-lime  { background: #d4e652; color: #111806; }
-    .btn-sky   { background: #64bef5; color: #061320; }
-    .btn-coral { background: #f28249; color: #180a05; }
-    .btn-gold  { background: #f2c335; color: #0a1324; }
-    .btn-ivory { background: #e8eff6; color: #09131d; }
+    .btn-emerald { background: #2dd4bf; color: #051916; }
+    .btn-amber   { background: #f4a32c; color: #160d06; }
+    .btn-aqua    { background: #4cc9d8; color: #06161b; }
+    .btn-lime    { background: #d4e652; color: #111806; }
+    .btn-sky     { background: #64bef5; color: #061320; }
+    .btn-coral   { background: #f28249; color: #180a05; }
+    .btn-gold    { background: #f2c335; color: #0a1324; }
+    .btn-ivory   { background: #e8eff6; color: #09131d; }
     .shortcut-hint {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 12px;
@@ -206,25 +265,123 @@
   <main class="page-wrap">
     <header class="top-header">
       <div class="header-main">
-        <div class="eyebrow">ZERO-ASSET WEBGL2 OCTET // 纯代码三维几何 · 物理/焦散/油画/大气/递归传送着色器 · 实时声学合成</div>
-        <h1>Fable 5.2 浏览器 3D 游戏八作典藏集</h1>
+        <div class="eyebrow">ZERO-ASSET WEBGL2 DODECALOGY // 纯代码三维几何 · 物理/解剖/焊接/卷页/油画/大气着色器 · 实时声学合成</div>
+        <h1>Fable 5.2 浏览器 3D 游戏与黑科技十二作典藏集</h1>
         <p class="lead">
-          完整复刻热门榜单 Top 5 与三部曲代表作——从黄昏曼哈顿摩天楼车流狂飙、淹没古典遗迹孤舟共鸣、物理暴走街机乒乓、大气散射昼夜地球仪、非欧几里得递归传送门，到双日大漠百米沙虫、梵高厚涂星夜骑乘与雨夜港区战术射击，零外部素材，点击即玩。
+          完整收录社区破千赞「四大脑洞 3D 交互黑科技」（芯片熔锡焊接台、密码熵值筑城王国、X 光人体解剖透视魔镜、三维卷边揭贴纸手帐）与「八大零素材 3D 网页游戏」，每一帧光影与每一道音效均由纯代码实时生成。
         </p>
       </div>
-      <div class="header-stats" aria-label="典藏技术指标">
-        <div class="stat-block"><strong>8 GAMES</strong><span>单文件直玩</span></div>
-        <div class="stat-block"><strong>0 ASSETS</strong><span>纯代码着色与声学</span></div>
-        <div class="stat-block"><strong>KEYS 1–8</strong><span>键盘一键启动</span></div>
+      <div class="header-controls">
+        <div class="header-stats" aria-label="典藏技术指标">
+          <div class="stat-block"><strong>12 WORKS</strong><span>4 黑科技 + 8 游戏</span></div>
+          <div class="stat-block"><strong>0 ASSETS</strong><span>纯代码着色与声学</span></div>
+        </div>
+        <div class="filter-bar" role="tablist" aria-label="分类筛选">
+          <button class="filter-btn active" data-filter="all" type="button">全部典藏 (12)</button>
+          <button class="filter-btn" data-filter="tech" type="button">3D 交互黑科技 (4)</button>
+          <button class="filter-btn" data-filter="game" type="button">3D 网页游戏 (8)</button>
+        </div>
       </div>
     </header>
 
-    <section class="anthology-grid" aria-label="八作典藏游戏入口">
-      <!-- 1. Crosstown NYC -->
-      <a id="launch-crosstown" class="work-panel warm-tint" href="./crosstown.html">
+    <div id="sec-tech-head" class="section-divider">
+      <span>SECTION I · 脑洞大开的 3D 交互黑科技（MIND-BLOWING INTERACTIVE 3D LABS）</span>
+      <span>支持微距拖拽 · 实时物理形变 · 程序化 ASMR 声学</span>
+    </div>
+
+    <section id="sec-tech-grid" class="anthology-grid" aria-label="四大 3D 交互黑科技入口">
+      <!-- T1. Robotics Lab -->
+      <a class="work-panel tech-tint" data-cat="tech" href="./robotics-lab.html">
         <div>
           <div class="work-meta">
-            <span class="tag-amber">TOP 01 · ♥ 7.5K</span>
+            <span class="tag-emerald">TECH 01 · ♥ 4.6K</span>
+            <span>3D 电路焊接工作台</span>
+          </div>
+          <h2 class="work-title">3D 硬件焊接台 · ROBOTICS LAB</h2>
+          <div class="work-sub">致敬 Robotics Lab · 四款真实开发板组装</div>
+          <p class="work-summary">
+            在 UNO-R3、ESP32 雷达、555 八音盒与机械臂驱动盾上亲手贴装芯片，握持 380°C 电烙铁熔化银亮焊点升腾松香青烟，插接飞线通电驱动舵机与机械爪！
+          </p>
+        </div>
+        <div class="spec-line">熔融焊锡热发光冷却 · 松香烟雾粒子 · 烙铁滋啦声与芯片音乐</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-emerald">拿起烙铁焊接 →</span>
+          <span class="shortcut-hint">按键 [Q]</span>
+        </div>
+      </a>
+
+      <!-- T2. Keep Password Fortress -->
+      <a class="work-panel tech-tint" data-cat="tech" href="./password-keep.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-amber">TECH 02 · ♥ 1.6K</span>
+            <span>密码熵值实时筑城</span>
+          </div>
+          <h2 class="work-title">密码筑城 · PASSWORD KEEP</h2>
+          <div class="work-sub">致敬 Keep · 把密码强度变成鲜活 3D 王国</div>
+          <p class="work-summary">
+            每敲击一个字符都在海面生长真实建筑：弱密码只是风雨飘摇的木筏，强口令则层层拔起石垣、灯塔、火炮直至金龙盘旋的浮空圣城，还能发起算力陨石攻城实测！
+          </p>
+        </div>
+        <div class="spec-line">实时信息熵与破解耗时解算 · 六阶海岛演化 · 算力攻城火炮护盾</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-amber">输入密码筑城 →</span>
+          <span class="shortcut-hint">按键 [W]</span>
+        </div>
+      </a>
+
+      <!-- T3. X-Ray Anatomy Mirror -->
+      <a class="work-panel tech-tint" data-cat="tech" href="./xray-mirror.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-aqua">TECH 03 · ♥ 1.4K</span>
+            <span>实时多层级透视魔镜</span>
+          </div>
+          <h2 class="work-title">X 光解剖魔镜 · X-RAY MIRROR</h2>
+          <div class="work-sub">致敬 X-Ray Mirror · 骨骼脑神经与心脉透视</div>
+          <p class="work-summary">
+            移动三维荧光透视环扫过呼吸眨眼的雕塑胸像，镜圈内实时剥离皮肤：显露紧绷收缩的肌纤维、可张口发声的铰接下颌颅骨、放电大脑皮层与搏动心脏！
+          </p>
+        </div>
+        <div class="spec-line">3D 视窗剖切着色器 · 张口共振元音合成 · 心电搏动与神经元风暴</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-aqua">开启透视扫描 →</span>
+          <span class="shortcut-hint">按键 [E]</span>
+        </div>
+      </a>
+
+      <!-- T4. 3D Tactile Planner -->
+      <a class="work-panel tech-tint" data-cat="tech" href="./tactile-planner.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-coral">TECH 04 · ♥ 1.2K</span>
+            <span>物理卷页与揭贴纸手帐</span>
+          </div>
+          <h2 class="work-title">立体手帐贴纸 · 3D PLANNER</h2>
+          <div class="work-sub">致敬 Animals 3D Planner · 暖阳木桌微距文具</div>
+          <p class="work-summary">
+            在洒满百叶窗暖阳的胡桃木书桌上拖拽柱面卷曲翻页，揭起卷边的柴犬、水豚、千纸鹤等 10 款 3D 贴纸拍上书页（随翻页同步三维弯曲），挥动黄铜钢笔手写！
+          </p>
+        </div>
+        <div class="spec-line">柱面书页卷曲顶点形变 · 贴纸剥离与钢笔摩擦微距 ASMR 声学</div>
+        <div class="cta-row">
+          <span class="cta-btn btn-coral">翻开立体手帐 →</span>
+          <span class="shortcut-hint">按键 [R]</span>
+        </div>
+      </a>
+    </section>
+
+    <div id="sec-game-head" class="section-divider warm">
+      <span>SECTION II · 热度榜 Top 5 与三部曲 3D 网页游戏（ZERO-ASSET 3D BROWSER GAMES）</span>
+      <span>按数字键 [1] – [8] 可直接启动对应游戏</span>
+    </div>
+
+    <section id="sec-game-grid" class="anthology-grid" aria-label="八作典藏游戏入口">
+      <!-- 1. Crosstown NYC -->
+      <a class="work-panel warm-tint" data-cat="game" href="./crosstown.html">
+        <div>
+          <div class="work-meta">
+            <span class="tag-amber">GAME 01 · ♥ 7.5K</span>
             <span>城市开放街区竞速</span>
           </div>
           <h2 class="work-title">曼哈顿街区狂飙 · CROSSTOWN</h2>
@@ -241,10 +398,10 @@
       </a>
 
       <!-- 2. What the Water Keeps -->
-      <a id="launch-water" class="work-panel" href="./water-keeps.html">
+      <a class="work-panel" data-cat="game" href="./water-keeps.html">
         <div>
           <div class="work-meta">
-            <span class="tag-aqua">TOP 02 · ♥ 4.2K</span>
+            <span class="tag-aqua">GAME 02 · ♥ 4.2K</span>
             <span>印象派水彩泛舟解谜</span>
           </div>
           <h2 class="work-title">水之所存 · WATER KEEPS</h2>
@@ -261,10 +418,10 @@
       </a>
 
       <!-- 3. Tennis: Go Wild -->
-      <a id="launch-tennis" class="work-panel" href="./hyper-tennis.html">
+      <a class="work-panel" data-cat="game" href="./hyper-tennis.html">
         <div>
           <div class="work-meta">
-            <span class="tag-lime">TOP 03 · ♥ 3.0K</span>
+            <span class="tag-lime">GAME 03 · ♥ 3.0K</span>
             <span>五纪元进化街机对决</span>
           </div>
           <h2 class="work-title">失控乒乓 · TENNIS: GO WILD</h2>
@@ -281,10 +438,10 @@
       </a>
 
       <!-- 4. Mirror Earth -->
-      <a id="launch-earth" class="work-panel" href="./mirror-earth.html">
+      <a class="work-panel" data-cat="game" href="./mirror-earth.html">
         <div>
           <div class="work-meta">
-            <span class="tag-sky">TOP 04 · ♥ 2.4K</span>
+            <span class="tag-sky">GAME 04 · ♥ 2.4K</span>
             <span>行星改造与轨道防御</span>
           </div>
           <h2 class="work-title">镜像地球 · MIRROR EARTH</h2>
@@ -301,10 +458,10 @@
       </a>
 
       <!-- 5. Endless Portals -->
-      <a id="launch-portals" class="work-panel" href="./endless-portals.html">
+      <a class="work-panel" data-cat="game" href="./endless-portals.html">
         <div>
           <div class="work-meta">
-            <span class="tag-coral">TOP 05 · ♥ 1.9K</span>
+            <span class="tag-coral">GAME 05 · ♥ 1.9K</span>
             <span>无缝跨界滑翔奇旅</span>
           </div>
           <h2 class="work-title">无尽传送门 · PORTALS</h2>
@@ -321,10 +478,10 @@
       </a>
 
       <!-- 6. Shai-Rider -->
-      <a id="launch-wormrider" class="work-panel warm-tint" href="./worm-rider.html">
+      <a class="work-panel warm-tint" data-cat="game" href="./worm-rider.html">
         <div>
           <div class="work-meta">
-            <span class="tag-amber">WORK 06 · 巨物驾驭</span>
+            <span class="tag-amber">GAME 06 · 巨物驾驭</span>
             <span>双日深漠沙虫狂飙</span>
           </div>
           <h2 class="work-title">沙丘巨虫 · SHAI-RIDER</h2>
@@ -341,10 +498,10 @@
       </a>
 
       <!-- 7. Starry Nightrider -->
-      <a id="launch-nightrider" class="work-panel" href="./starry-nightrider.html">
+      <a class="work-panel" data-cat="game" href="./starry-nightrider.html">
         <div>
           <div class="work-meta">
-            <span class="tag-gold">WORK 07 · 油画骑乘</span>
+            <span class="tag-gold">GAME 07 · 油画骑乘</span>
             <span>厚涂名画开放探索</span>
           </div>
           <h2 class="work-title">星月夜骑士 · NIGHTRIDER</h2>
@@ -361,10 +518,10 @@
       </a>
 
       <!-- 8. Saltline -->
-      <a id="launch-saltline" class="work-panel" href="./saltline.html">
+      <a class="work-panel" data-cat="game" href="./saltline.html">
         <div>
           <div class="work-meta">
-            <span class="tag-sky">WORK 08 · 战术 FPS</span>
+            <span class="tag-sky">GAME 08 · 战术 FPS</span>
             <span>雨夜港区突击行动</span>
           </div>
           <h2 class="work-title">断潮行动 · SALTLINE</h2>
@@ -383,12 +540,20 @@
 
     <footer class="foot-note">
       <span>ALL 3D GEOMETRY, PROCEDURAL SHADERS &amp; WEB AUDIO SYNTHESIZED AT RUNTIME · ZERO EXTERNAL ASSETS</span>
-      <span>按键盘数字键 [1] – [8] 可直接启动对应作品</span>
+      <span>快捷键 [Q W E R] 启动四大 3D 交互黑科技 · [1 – 8] 启动八大 3D 网页游戏</span>
     </footer>
   </main>
 
   <script>
     const routes = {
+      'q': './robotics-lab.html',
+      'Q': './robotics-lab.html',
+      'w': './password-keep.html',
+      'W': './password-keep.html',
+      'e': './xray-mirror.html',
+      'E': './xray-mirror.html',
+      'r': './tactile-planner.html',
+      'R': './tactile-planner.html',
       '1': './crosstown.html',
       '2': './water-keeps.html',
       '3': './hyper-tennis.html',
@@ -399,10 +564,29 @@
       '8': './saltline.html',
     };
     window.addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (routes[e.key]) window.location.href = routes[e.key];
     });
 
-    // Multi-Biome Procedural Ambient Backdrop (Warm Dusk Traffic | Water Ripples | Impasto Stars | Harbor Rain)
+    // Category filter tabs
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const techHead = document.getElementById('sec-tech-head');
+    const techGrid = document.getElementById('sec-tech-grid');
+    const gameHead = document.getElementById('sec-game-head');
+    const gameGrid = document.getElementById('sec-game-grid');
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach((b) => b.classList.toggle('active', b === btn));
+        const mode = btn.dataset.filter;
+        techHead.style.display = mode === 'game' ? 'none' : 'flex';
+        techGrid.style.display = mode === 'game' ? 'none' : 'grid';
+        gameHead.style.display = mode === 'tech' ? 'none' : 'flex';
+        gameGrid.style.display = mode === 'tech' ? 'none' : 'grid';
+      });
+    });
+
+    // Multi-Biome Procedural Ambient Backdrop
     const cvs = document.getElementById('anthology-canvas');
     const ctx = cvs.getContext('2d');
     let W = 0, H = 0;
@@ -413,12 +597,12 @@
     window.addEventListener('resize', resize);
     resize();
 
-    const streaks = Array.from({ length: 55 }, (_, i) => ({
+    const traces = Array.from({ length: 48 }, (_, i) => ({
       x: Math.random() * 0.28,
       y: Math.random(),
       len: 14 + Math.random() * 28,
-      spd: 0.09 + Math.random() * 0.16,
-      tail: i % 3 === 0,
+      spd: 0.08 + Math.random() * 0.14,
+      emerald: i % 2 === 0,
     }));
 
     const ripples = Array.from({ length: 24 }, () => ({
@@ -428,7 +612,7 @@
       spd: 12 + Math.random() * 16,
     }));
 
-    const strokes = Array.from({ length: 65 }, (_, i) => ({
+    const strokes = Array.from({ length: 60 }, (_, i) => ({
       x: 0.50 + Math.random() * 0.26,
       y: Math.random(),
       len: 14 + Math.random() * 26,
@@ -437,7 +621,7 @@
       ph: Math.random() * 6.28,
     }));
 
-    const rain = Array.from({ length: 65 }, () => ({
+    const rain = Array.from({ length: 60 }, () => ({
       x: 0.75 + Math.random() * 0.26,
       y: Math.random(),
       len: 14 + Math.random() * 18,
@@ -451,16 +635,15 @@
       last = now;
       const t = now * 0.001;
 
-      ctx.fillStyle = 'rgba(10, 12, 18, 0.24)';
+      ctx.fillStyle = 'rgba(9, 12, 17, 0.24)';
       ctx.fillRect(0, 0, W, H);
 
-      // Zone 1: Manhattan Golden Dusk Headlight/Taillight Streaks
-      for (const s of streaks) {
+      for (const s of traces) {
         s.x += s.spd * dt;
         if (s.x > 0.28) { s.x = -0.03; s.y = Math.random(); }
         const px = s.x * W, py = s.y * H;
-        ctx.strokeStyle = s.tail ? 'rgba(240, 92, 48, 0.42)' : 'rgba(248, 184, 68, 0.36)';
-        ctx.lineWidth = 2.4;
+        ctx.strokeStyle = s.emerald ? 'rgba(45, 212, 191, 0.36)' : 'rgba(248, 184, 68, 0.36)';
+        ctx.lineWidth = 2.2;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(px, py);
@@ -468,7 +651,6 @@
         ctx.stroke();
       }
 
-      // Zone 2: Flooded Ruin Caustic Ripples
       for (const rp of ripples) {
         rp.r += rp.spd * dt;
         if (rp.r > 56) {
@@ -484,7 +666,6 @@
         ctx.stroke();
       }
 
-      // Zone 3: Swirling Impasto & Orbital Arcs
       for (const st of strokes) {
         st.x += st.spd * dt;
         if (st.x > 0.76) st.x = 0.50;
@@ -496,11 +677,10 @@
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(px, py);
-        ctx.lineTo(px + Math.cos(ang) * st.len, py + Math.sin(ang) * st.len);
+        ctx.lineTo(px + Math.cos(ang) * st.len, py + Math.sin(ang) * s_len_safe(st.len));
         ctx.stroke();
       }
 
-      // Zone 4: Cold Harbor Storm Rain
       for (const r of rain) {
         r.y += r.spd * dt;
         r.x -= 0.025 * dt;
@@ -514,6 +694,7 @@
         ctx.stroke();
       }
     }
+    function s_len_safe(v) { return v; }
     requestAnimationFrame(anim);
   </script>
 </body>

@@ -1,7 +1,7 @@
 {
-  "name": "fable52-webgl2-anthology",
-  "version": "2.0.0",
-  "description": "Fable 5.2 浏览器 3D 游戏八作典藏集 — 曼哈顿街区狂飙 · 水之所存 · 失控乒乓 · 镜像地球 · 无尽传送门 · 沙丘巨虫 · 星月夜骑士 · 断潮行动",
+  "name": "fable52-webgl2-dodecalogy",
+  "version": "3.0.0",
+  "description": "Fable 5.2 浏览器 3D 游戏与黑科技十二作典藏集 — 四大 3D 交互黑科技（硬件焊接实验室 · 密码筑城 · X光解剖魔镜 · 立体手帐贴纸）+ 八大零外部素材 3D 网页游戏",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",

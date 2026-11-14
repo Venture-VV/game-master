@@ -1,0 +1,621 @@
+/* Sunlit Walnut Desk, 120gsm Cream Cotton Paper & 18k Brass Nib Palette — Scoped Vanilla CSS (>=12px Typography) */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #140f0b;
+  overflow: hidden;
+}
+
+#planner-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #140f0b;
+  color: #fbf6ec;
+  border: 1px solid rgba(232, 168, 41, 0.34);
+}
+
+#planner-app.tall {
+  height: 720px;
+}
+
+#planner-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#pl-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: pointer;
+}
+
+#pl-canvas.pen-cursor {
+  cursor: crosshair;
+}
+
+#pl-canvas.grab-cursor {
+  cursor: grab;
+}
+
+#pl-canvas.grabbing-cursor {
+  cursor: grabbing;
+}
+
+/* Tactile Stationery HUD */
+#pl-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#pl-hud.visible {
+  opacity: 1;
+}
+
+/* Top-Left Telemetry & Spread Pill */
+#pl-top-left {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 315px;
+}
+
+#pl-perf {
+  padding: 3px 9px;
+  background: rgba(23, 19, 16, 0.88);
+  border: 1px solid rgba(232, 168, 41, 0.32);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #e8a829;
+  white-space: nowrap;
+}
+
+#pl-spread-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: rgba(23, 19, 16, 0.90);
+  border: 1px solid rgba(229, 146, 56, 0.36);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#pl-spread-badge {
+  padding: 1px 5px;
+  background: #e8a829;
+  color: #171310;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+#pl-spread-name {
+  color: #fbf6ec;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+#pl-counts {
+  color: rgba(251, 246, 236, 0.76);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+/* Top-Right Quick Actions & 6-Spread Bookmark Tabs */
+#pl-top-right {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#pl-quick-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+.pl-mini-btn {
+  padding: 3px 8px;
+  background: rgba(23, 19, 16, 0.88);
+  border: 1px solid rgba(232, 168, 41, 0.34);
+  color: #fbf6ec;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.pl-mini-btn:hover {
+  background: rgba(74, 46, 27, 0.94);
+  border-color: #e8a829;
+}
+
+#pl-spread-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.pl-tab-btn {
+  padding: 3px 7px;
+  background: rgba(23, 19, 16, 0.86);
+  border: 1px solid rgba(251, 246, 236, 0.22);
+  color: rgba(251, 246, 236, 0.84);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.pl-tab-btn:hover,
+.pl-tab-btn.active {
+  background: #4a2e1b;
+  border-color: #e8a829;
+  color: #fbf6ec;
+  font-weight: 700;
+}
+
+#pl-toast-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 240px;
+}
+
+.pl-toast {
+  padding: 4px 9px;
+  background: rgba(23, 19, 16, 0.90);
+  border-right: 3px solid #e8a829;
+  font-size: 12px;
+  color: #fbf6ec;
+  white-space: nowrap;
+  animation: plToastIn 0.2s ease-out;
+}
+
+.pl-toast.wax {
+  border-right-color: #d95338;
+}
+
+.pl-toast.matcha {
+  border-right-color: #2e9e6b;
+}
+
+@keyframes plToastIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Center Spread Title Banner */
+#pl-banner {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 6px 16px;
+  background: rgba(23, 19, 16, 0.90);
+  border-top: 1px solid rgba(232, 168, 41, 0.65);
+  border-bottom: 1px solid rgba(232, 168, 41, 0.65);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+#pl-banner.show {
+  opacity: 1;
+}
+
+#pl-banner-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #e8a829;
+  white-space: nowrap;
+}
+
+#pl-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(251, 246, 236, 0.86);
+  white-space: nowrap;
+}
+
+/* Unified Bottom Stationery Dock (Zero-Overlap 2-Row Centered Tray) */
+#pl-bottom-dock {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 20px);
+}
+
+.pl-sub-tray {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background: rgba(23, 19, 16, 0.90);
+  border: 1px solid rgba(232, 168, 41, 0.30);
+  pointer-events: auto;
+  flex-wrap: nowrap;
+}
+
+.pl-sub-tray.active {
+  display: flex;
+}
+
+.pl-stk-chip,
+.pl-ink-chip,
+.pl-nib-chip,
+.pl-cam-chip,
+.pl-sub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background: rgba(45, 31, 21, 0.86);
+  border: 1px solid rgba(251, 246, 236, 0.20);
+  color: #fbf6ec;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.pl-stk-chip i,
+.pl-ink-chip i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(251, 246, 236, 0.55);
+  flex-shrink: 0;
+}
+
+.pl-stk-chip:hover,
+.pl-ink-chip:hover,
+.pl-nib-chip:hover,
+.pl-cam-chip:hover,
+.pl-sub-btn:hover {
+  border-color: #e8a829;
+  background: rgba(74, 46, 27, 0.95);
+}
+
+.pl-stk-chip.active,
+.pl-ink-chip.active,
+.pl-nib-chip.active,
+.pl-cam-chip.active {
+  background: #e8a829;
+  border-color: #fbf6ec;
+  color: #171310;
+  font-weight: 700;
+}
+
+.pl-sep {
+  width: 1px;
+  height: 16px;
+  background: rgba(251, 246, 236, 0.22);
+  margin: 0 2px;
+}
+
+#pl-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  background: rgba(23, 19, 16, 0.92);
+  border: 1px solid rgba(232, 168, 41, 0.36);
+  pointer-events: auto;
+  flex-wrap: nowrap;
+}
+
+.pl-mode-btn {
+  padding: 3px 9px;
+  background: rgba(45, 31, 21, 0.88);
+  border: 1px solid rgba(232, 168, 41, 0.28);
+  color: #fbf6ec;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.pl-mode-btn:hover {
+  border-color: #e8a829;
+}
+
+.pl-mode-btn.active {
+  background: #e59238;
+  border-color: #fbf6ec;
+  color: #171310;
+  font-weight: 700;
+}
+
+#pl-live-tip {
+  padding-left: 4px;
+  font-size: 12px;
+  color: rgba(251, 246, 236, 0.82);
+  white-space: nowrap;
+}
+
+/* Title / Workshop / ASMR Studio Overlay */
+#pl-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(20, 15, 11, 0.62) 0%, rgba(20, 15, 11, 0.86) 100%);
+  overflow-y: auto;
+}
+
+#pl-overlay.hidden {
+  display: none;
+}
+
+.pl-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 14px 18px;
+  background: rgba(26, 18, 13, 0.92);
+  border: 1px solid rgba(232, 168, 41, 0.42);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.pl-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  color: #e8a829;
+}
+
+.pl-placard h1 {
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #fbf6ec;
+  margin-top: 2px;
+}
+
+.pl-desc {
+  font-size: 13px;
+  line-height: 1.48;
+  color: rgba(251, 246, 236, 0.86);
+  margin-top: 3px;
+}
+
+.pl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pl-btn-primary {
+  padding: 8px 15px;
+  background: #e8a829;
+  border: 1px solid #fbf6ec;
+  color: #171310;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.14s ease, transform 0.12s ease;
+}
+
+.pl-btn-primary:hover {
+  background: #f2bc46;
+  transform: translateY(-1px);
+}
+
+.pl-btn-gold {
+  padding: 8px 13px;
+  background: rgba(217, 83, 56, 0.22);
+  border: 1px solid #d95338;
+  color: #fbf6ec;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.14s ease;
+}
+
+.pl-btn-gold:hover {
+  background: rgba(217, 83, 56, 0.42);
+}
+
+.pl-btn-secondary {
+  padding: 7px 12px;
+  background: rgba(48, 33, 22, 0.90);
+  border: 1px solid rgba(232, 168, 41, 0.36);
+  color: #fbf6ec;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.pl-btn-secondary:hover {
+  background: rgba(74, 46, 27, 0.96);
+  border-color: #e8a829;
+}
+
+/* Macro Paper & Stationery ASMR Acoustic Studio */
+#pl-studio {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 11px;
+  background: rgba(18, 13, 9, 0.92);
+  border: 1px solid rgba(232, 168, 41, 0.30);
+}
+
+#pl-studio.open {
+  display: flex;
+}
+
+.pl-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #e8a829;
+}
+
+#pl-scope {
+  width: 100%;
+  height: 52px;
+  background: #120d09;
+  border: 1px solid rgba(232, 168, 41, 0.24);
+}
+
+.pl-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pl-sfx-trigger {
+  padding: 4px 9px;
+  background: rgba(48, 33, 22, 0.92);
+  border: 1px solid rgba(232, 168, 41, 0.28);
+  color: #fbf6ec;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.pl-sfx-trigger:hover {
+  border-color: #e8a829;
+  background: rgba(74, 46, 27, 0.96);
+}
+
+/* Settings & Compact Keybinds */
+.pl-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding-top: 6px;
+  border-top: 1px solid rgba(232, 168, 41, 0.18);
+  font-size: 12px;
+  color: rgba(251, 246, 236, 0.82);
+}
+
+.pl-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pl-pill {
+  padding: 3px 8px;
+  background: rgba(48, 33, 22, 0.86);
+  border: 1px solid rgba(232, 168, 41, 0.26);
+  color: rgba(251, 246, 236, 0.86);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.pl-pill.active {
+  background: #e8a829;
+  border-color: #fbf6ec;
+  color: #171310;
+  font-weight: 700;
+}
+
+#pl-vol {
+  width: 78px;
+  accent-color: #e8a829;
+}
+
+.pl-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 12px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(232, 168, 41, 0.18);
+  font-size: 12px;
+  color: rgba(251, 246, 236, 0.82);
+}
+
+.pl-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(232, 168, 41, 0.16);
+  border: 1px solid rgba(232, 168, 41, 0.38);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #e8a829;
+}
+
+@media (max-width: 740px) {
+  #pl-live-tip {
+    display: none;
+  }
+  .pl-sub-tray {
+    flex-wrap: wrap;
+  }
+  .pl-keys-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

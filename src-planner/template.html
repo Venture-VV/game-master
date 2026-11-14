@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>立体手帐与揭贴纸 · 3D TACTILE PLANNER — 零外部素材 WebGL2 微距文具与卷页沙盒</title>
+  <meta name="description" content="致敬 Fable 5.2 Animals at Work 3D Planner 与 Ballpoint Macro ASMR 的零外部素材 WebGL2 立体纸本手帐：等距圆柱/圆锥三维卷页变形、十款微雕 3D 揭贴动物与火漆贴纸、湿墨渐干黄铜钢笔书写与微距纸张文具 ASMR。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="planner-app" class="__APP_CLASS__">
+    <canvas id="pl-canvas" tabindex="0"></canvas>
+
+    <section id="pl-hud" aria-label="立体手帐创作工作台界面">
+      <div id="pl-top-left">
+        <div id="pl-perf">60 FPS · 暖阳胡桃木桌 · 120g 棉浆纸</div>
+        <div id="pl-spread-pill">
+          <span id="pl-spread-badge">01/06</span>
+          <span id="pl-spread-name">01 · 柴犬咖啡周记</span>
+          <span id="pl-counts">贴纸 3 · 墨迹 4</span>
+        </div>
+      </div>
+
+      <div id="pl-top-right">
+        <div id="pl-quick-bar">
+          <button id="btn-prev" class="pl-mini-btn" type="button">◀ 上页</button>
+          <button id="btn-next" class="pl-mini-btn" type="button">下页 ▶</button>
+          <button id="btn-cam" class="pl-mini-btn" type="button">机位 [C]</button>
+          <!--__HUD_MODE_BTNS__-->
+          <button id="btn-fs" class="pl-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="pl-mini-btn" type="button">工坊 [Esc]</button>
+        </div>
+
+        <div id="pl-spread-bar" aria-label="六大主题跨页书签栏">
+          <button class="pl-tab-btn active" data-sp="0" type="button">01 柴犬</button>
+          <button class="pl-tab-btn" data-sp="1" type="button">02 水獭</button>
+          <button class="pl-tab-btn" data-sp="2" type="button">03 观星</button>
+          <button class="pl-tab-btn" data-sp="3" type="button">04 烘焙</button>
+          <button class="pl-tab-btn" data-sp="4" type="button">05 水豚</button>
+          <button class="pl-tab-btn" data-sp="5" type="button">06 折鹤</button>
+        </div>
+
+        <div id="pl-toast-feed"></div>
+      </div>
+
+      <div id="pl-banner" aria-live="polite">
+        <div id="pl-banner-title"></div>
+        <div id="pl-banner-sub"></div>
+      </div>
+
+      <div id="pl-bottom-dock">
+        <!-- Contextual Palette 1: 10 Sculpted 3D Peel-and-Stick Stickers -->
+        <div id="pl-tray-sticker" class="pl-sub-tray active" role="toolbar" aria-label="十款 3D 揭贴纸托盘">
+          <button class="pl-stk-chip active" data-stk="0" title="柴犬店长 (Shiba Barista)" type="button"><i style="background:#e59238"></i>柴犬</button>
+          <button class="pl-stk-chip" data-stk="1" title="水豚泡汤 (Onsen Capybara)" type="button"><i style="background:#b87442"></i>水豚</button>
+          <button class="pl-stk-chip" data-stk="2" title="宇航橘猫 (Astro Ginger Cat)" type="button"><i style="background:#2589bd"></i>橘猫</button>
+          <button class="pl-stk-chip" data-stk="3" title="小水獭帐篷 (Otter Tent)" type="button"><i style="background:#2e9e6b"></i>水獭</button>
+          <button class="pl-stk-chip" data-stk="4" title="猫头鹰博士 (Scholar Owl)" type="button"><i style="background:#8c5832"></i>猫头鹰</button>
+          <button class="pl-stk-chip" data-stk="5" title="火漆印章 (Crimson Wax Seal)" type="button"><i style="background:#d95338"></i>火漆</button>
+          <button class="pl-stk-chip" data-stk="6" title="黄金五星章 (Gold Star)" type="button"><i style="background:#e8a829"></i>金星</button>
+          <button class="pl-stk-chip" data-stk="7" title="手冲咖啡杯 (Latte Cup)" type="button"><i style="background:#c97a40"></i>拿铁</button>
+          <button class="pl-stk-chip" data-stk="8" title="多肉小盆栽 (Succulent)" type="button"><i style="background:#2e9e6b"></i>多肉</button>
+          <button class="pl-stk-chip" data-stk="9" title="折纸千纸鹤 (Origami Crane)" type="button"><i style="background:#e8a829"></i>纸鹤</button>
+          <button id="btn-rot-stk" class="pl-sub-btn" title="微调贴纸角度 [R]" type="button">旋转 [R]</button>
+        </div>
+
+        <!-- Contextual Palette 2: Fountain Pen Ink & Nib Widths -->
+        <div id="pl-tray-pen" class="pl-sub-tray" role="toolbar" aria-label="黄铜钢笔墨水与笔尖栏">
+          <button class="pl-ink-chip active" data-ink="0" type="button"><i style="background:#171310;border-color:#fbf6ec"></i>浓咖</button>
+          <button class="pl-ink-chip" data-ink="1" type="button"><i style="background:#e8a829"></i>鎏金</button>
+          <button class="pl-ink-chip" data-ink="2" type="button"><i style="background:#d95338"></i>赤陶</button>
+          <button class="pl-ink-chip" data-ink="3" type="button"><i style="background:#2e9e6b"></i>抹茶</button>
+          <button class="pl-ink-chip" data-ink="4" type="button"><i style="background:#2589bd"></i>钴蓝</button>
+          <span class="pl-sep"></span>
+          <button class="pl-nib-chip" data-nib="0" type="button">EF 细</button>
+          <button class="pl-nib-chip active" data-nib="1" type="button">M 中</button>
+          <button class="pl-nib-chip" data-nib="2" type="button">B 粗</button>
+          <button id="btn-undo-ink" class="pl-sub-btn" type="button">撤销 [Z]</button>
+          <button id="btn-sample-ink" class="pl-sub-btn" type="button">范例速写</button>
+        </div>
+
+        <!-- Contextual Palette 3: 3D Page Curl & Camera Angles -->
+        <div id="pl-tray-turn" class="pl-sub-tray" role="toolbar" aria-label="三维卷页与视角机位栏">
+          <button id="tray-prev-btn" class="pl-sub-btn" type="button">◀ 向前翻页 [A]</button>
+          <button id="tray-next-btn" class="pl-sub-btn" type="button">向后翻页 [D] ▶</button>
+          <span class="pl-sep"></span>
+          <button class="pl-cam-chip active" data-cam="0" type="button">俯视书桌</button>
+          <button class="pl-cam-chip" data-cam="1" type="button">微距特写</button>
+          <button class="pl-cam-chip" data-cam="2" type="button">斜向暖阳</button>
+          <button id="btn-rand-stk" class="pl-sub-btn" type="button">随机贴章</button>
+        </div>
+
+        <!-- Main 3-Mode Bar + Contextual Tactile Prompt -->
+        <div id="pl-mode-bar">
+          <button id="mode-btn-sticker" class="pl-mode-btn active" type="button">[1] 揭贴 3D 贴纸</button>
+          <button id="mode-btn-pen" class="pl-mode-btn" type="button">[2] 钢笔手写涂鸦</button>
+          <button id="mode-btn-turn" class="pl-mode-btn" type="button">[3] 拖拽翻页 / 视角</button>
+          <span id="pl-live-tip">左键按压贴合 · Alt/右键揭起 · 拖拽页角翻页</span>
+        </div>
+      </div>
+    </section>
+
+    <main id="pl-overlay">
+      <div class="pl-placard">
+        <header>
+          <div id="pl-kicker" class="pl-kicker">ARTISANAL PAPER &amp; MACRO STATIONERY // 零外部素材 WebGL2 立体手帐工坊</div>
+          <h1 id="pl-title">立体手帐与揭贴纸 · 3D TACTILE PLANNER</h1>
+          <p id="pl-desc" class="pl-desc">
+            午后百叶窗暖阳洒在胡桃木手作书桌与咖啡杯热雾间：亲手拖拽纸角触发等距圆柱三维卷页，从十款微雕动物与熔融火漆贴纸中揭起并贴入任意书页，执起 18K 黄铜钢笔在棉浆纸上书写湿墨渐干的立体笔迹，贴纸与字迹皆随翻页真实弯曲！
+          </p>
+        </header>
+
+        <div class="pl-actions">
+          <button id="pl-btn-open" class="pl-btn-primary" type="button">翻开 2027 立体手帐 · 开始创作</button>
+          <button id="pl-btn-sample-flip" class="pl-btn-gold" type="button">一键贴章并体验三维卷页</button>
+          <button id="pl-btn-studio" class="pl-btn-secondary" type="button">微距纸张与文具 ASMR 声学台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="pl-studio" aria-label="纯代码微距纸张与文具 ASMR 声学台">
+          <div class="pl-studio-head">
+            <span>MACRO PAPER &amp; NIB WEB AUDIO · 零采样棉浆摩擦与不干胶揭贴合成</span>
+            <span>FOLEY ASMR</span>
+          </div>
+          <canvas id="pl-scope" width="560" height="52"></canvas>
+          <div class="pl-studio-btns">
+            <button class="pl-sfx-trigger" data-s="kalimba" type="button">午后卡林巴木琴</button>
+            <button class="pl-sfx-trigger" data-s="page" type="button">棉浆纸卷页落定</button>
+            <button class="pl-sfx-trigger" data-s="peel" type="button">不干胶贴纸揭起</button>
+            <button class="pl-sfx-trigger" data-s="stick" type="button">拇指按压贴合声</button>
+            <button class="pl-sfx-trigger" data-s="nib" type="button">铱金笔尖沙沙声</button>
+            <button class="pl-sfx-trigger" data-s="wax" type="button">熔融火漆黄铜章</button>
+          </div>
+        </section>
+
+        <div class="pl-settings">
+          <div class="pl-set-group">
+            <span>镜头机位</span>
+            <button class="pl-pill cam-pill active" data-cam="0" type="button">俯视书桌</button>
+            <button class="pl-pill cam-pill" data-cam="1" type="button">微距特写</button>
+            <button class="pl-pill cam-pill" data-cam="2" type="button">斜向暖阳</button>
+          </div>
+          <div class="pl-set-group">
+            <span>画质</span>
+            <button class="pl-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="pl-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="pl-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="pl-set-group">
+            <span>午后伴奏</span>
+            <button id="pl-bgm-toggle" class="pl-pill active" type="button">开启</button>
+          </div>
+          <div class="pl-set-group">
+            <label for="pl-vol">音量</label>
+            <input id="pl-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="pl-keys-grid">
+          <div><span>揭贴 3D 贴纸 / 旋转角度</span><span><kbd>1</kbd> 左键贴 · <kbd>R</kbd> 旋转</span></div>
+          <div><span>揭除已有贴纸</span><span><kbd>Alt+左键</kbd> / 点贴纸右键</span></div>
+          <div><span>黄铜钢笔书写 / 撤销笔迹</span><span><kbd>2</kbd> 拖拽写 · <kbd>Z</kbd> 撤销</span></div>
+          <div><span>前后卷页（共六跨页）</span><span><kbd>A / D</kbd> · <kbd>← / →</kbd></span></div>
+          <div><span>拖拽翻页与自由环视</span><span><kbd>3</kbd> 拖页角 · 右键环视</span></div>
+          <div><span>切换机位 / 远近微距缩放</span><span><kbd>C</kbd> 机位 · 滚轮缩放</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

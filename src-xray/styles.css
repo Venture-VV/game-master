@@ -1,0 +1,750 @@
+/* Medical Fluoroscopy Cyan (#22d3ee), Synaptic Gold (#f5b82e), Arterial Coral (#ef4444)
+   & Bone Ivory (#f2eadc) — Scoped Vanilla CSS (>=12px Typography, Zero Purple) */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #070e14;
+  overflow: hidden;
+}
+
+#xray-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #081017;
+  color: #f2eadc;
+  border: 1px solid rgba(34, 211, 238, 0.28);
+}
+
+#xray-app.tall {
+  height: 720px;
+}
+
+#xray-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#xr-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: crosshair;
+}
+
+/* Live Medical Fluoroscopy HUD */
+#xr-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+#xr-hud.visible {
+  opacity: 1;
+}
+
+/* Top-Left Telemetry Stack */
+#xr-top-left {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 280px;
+}
+
+#xr-perf {
+  padding: 3px 8px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(34, 211, 238, 0.30);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #22d3ee;
+  white-space: nowrap;
+}
+
+#xr-vitals {
+  padding: 3px 8px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(245, 184, 46, 0.30);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5b82e;
+  white-space: nowrap;
+}
+
+#xr-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: rgba(8, 16, 23, 0.90);
+  border: 1px solid rgba(34, 211, 238, 0.32);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#xr-mode-badge {
+  padding: 1px 6px;
+  background: #22d3ee;
+  color: #081017;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+#xr-mode-badge.full {
+  background: #f5b82e;
+  color: #081017;
+}
+
+#xr-mode-hint {
+  color: #f2eadc;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Top-Right Quick Bar, Pose Bar & Toast Feed */
+#xr-top-right {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  max-width: 495px;
+}
+
+#xr-quick-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.xr-mini-btn {
+  padding: 4px 8px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(34, 211, 238, 0.30);
+  color: #f2eadc;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.xr-mini-btn:hover,
+.xr-mini-btn.active {
+  background: rgba(16, 42, 54, 0.95);
+  border-color: #22d3ee;
+  color: #22d3ee;
+}
+
+#xr-pose-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.xr-pose-btn {
+  padding: 3px 7px;
+  background: rgba(8, 16, 23, 0.86);
+  border: 1px solid rgba(242, 234, 220, 0.24);
+  color: #d8cec0;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.xr-pose-btn:hover,
+.xr-pose-btn.active {
+  background: rgba(18, 46, 58, 0.92);
+  border-color: #22d3ee;
+  color: #ffffff;
+}
+
+.xr-pose-btn.coral {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+}
+
+.xr-pose-btn.coral:hover,
+.xr-pose-btn.coral.active {
+  background: rgba(127, 29, 29, 0.72);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.xr-pose-btn.gold {
+  border-color: rgba(245, 184, 46, 0.45);
+  color: #fde68a;
+}
+
+.xr-pose-btn.gold:hover,
+.xr-pose-btn.gold.active {
+  background: rgba(110, 74, 12, 0.78);
+  border-color: #f5b82e;
+  color: #ffffff;
+}
+
+#xr-toast-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 245px;
+}
+
+.xr-toast {
+  padding: 4px 9px;
+  background: rgba(8, 16, 23, 0.90);
+  border-right: 3px solid #22d3ee;
+  font-size: 12px;
+  text-align: right;
+  color: #f2eadc;
+  animation: xrToastIn 0.2s ease-out;
+}
+
+.xr-toast.gold {
+  border-right-color: #f5b82e;
+}
+
+.xr-toast.coral {
+  border-right-color: #ef4444;
+}
+
+@keyframes xrToastIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Center Diagnostic Milestone Banner */
+#xr-banner {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  max-width: 340px;
+  padding: 6px 15px;
+  background: rgba(8, 16, 23, 0.92);
+  border-top: 1px solid rgba(34, 211, 238, 0.62);
+  border-bottom: 1px solid rgba(245, 184, 46, 0.62);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#xr-banner.show {
+  opacity: 1;
+}
+
+#xr-banner-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #f5b82e;
+}
+
+#xr-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #d8cec0;
+}
+
+/* Bottom-Left Cardiac ECG & Jaw Telemetry Card */
+#xr-vital-card {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  width: 170px;
+  padding: 6px 9px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vital-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+#xr-bpm-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.vital-unit {
+  font-size: 12px;
+  color: #d8cec0;
+}
+
+#xr-ecg {
+  width: 100%;
+  height: 26px;
+  background: #050b10;
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  display: block;
+}
+
+.xr-meter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #d8cec0;
+}
+
+.xr-meter-lbl {
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.xr-meter-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(242, 234, 220, 0.14);
+}
+
+#xr-jaw-fill {
+  width: 0%;
+  height: 100%;
+  background: #22d3ee;
+  transition: width 0.06s linear;
+}
+
+#xr-spark-fill {
+  width: 35%;
+  height: 100%;
+  background: #f5b82e;
+  transition: width 0.08s linear;
+}
+
+/* Bottom-Center 4-Layer Peel Bar & Controls Tip (strictly clear of left/right cards at 800px!) */
+#xr-bottom-center {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 416px;
+}
+
+#xr-layer-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.xr-tool-btn {
+  padding: 4px 7px;
+  background: rgba(8, 16, 23, 0.90);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  color: #f2eadc;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.xr-tool-btn:hover {
+  border-color: #22d3ee;
+}
+
+.xr-tool-btn.active-cyan {
+  background: #22d3ee;
+  border-color: #67e8f9;
+  color: #081017;
+  font-weight: 700;
+}
+
+.xr-tool-btn.active-ivory {
+  background: #f2eadc;
+  border-color: #ffffff;
+  color: #081017;
+  font-weight: 700;
+}
+
+.xr-tool-btn.active-gold {
+  background: #f5b82e;
+  border-color: #fde68a;
+  color: #081017;
+  font-weight: 700;
+}
+
+.xr-tool-btn.active-terra {
+  background: #d95b38;
+  border-color: #fb923c;
+  color: #081017;
+  font-weight: 700;
+}
+
+#xr-controls-tip {
+  padding: 3px 9px;
+  background: rgba(8, 16, 23, 0.84);
+  border: 1px solid rgba(34, 211, 238, 0.20);
+  font-size: 12px;
+  color: #d8cec0;
+  white-space: nowrap;
+}
+
+/* Bottom-Right Live Anatomical Structure Readout Card */
+#xr-diag-card {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  width: 170px;
+  padding: 6px 9px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#xr-layer-lbl {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #22d3ee;
+  white-space: nowrap;
+}
+
+#xr-organ-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f5b82e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#xr-organ-sub {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #d8cec0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Touch Controls on Mobile/Coarse Pointer */
+#xr-touch {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+@media (pointer: coarse) {
+  #xr-touch.active {
+    display: block;
+  }
+  #xr-bottom-center {
+    display: none;
+  }
+}
+
+.xr-t-actions {
+  position: absolute;
+  right: 14px;
+  bottom: 92px;
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.xr-t-btn {
+  padding: 9px 11px;
+  background: rgba(8, 16, 23, 0.88);
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  color: #f2eadc;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.xr-t-btn.gold {
+  background: #f5b82e;
+  border-color: #fde68a;
+  color: #081017;
+}
+
+.xr-t-btn.cyan {
+  background: #22d3ee;
+  border-color: #67e8f9;
+  color: #081017;
+}
+
+/* Title & Diagnostic Menu Overlay */
+#xr-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(7, 14, 20, 0.58) 0%, rgba(7, 14, 20, 0.86) 100%);
+  overflow-y: auto;
+}
+
+#xr-overlay.hidden {
+  display: none;
+}
+
+.xr-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 14px 20px;
+  background: rgba(8, 16, 23, 0.91);
+  border: 1px solid rgba(34, 211, 238, 0.34);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.xr-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: #22d3ee;
+}
+
+.xr-placard h1 {
+  font-size: clamp(21px, 2.8vw, 29px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #f2eadc;
+  margin-top: 2px;
+}
+
+.xr-desc {
+  font-size: 13px;
+  line-height: 1.48;
+  color: #d8cec0;
+  margin-top: 3px;
+}
+
+/* Action Buttons Row */
+.xr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.xr-btn-primary {
+  padding: 8px 16px;
+  background: #22d3ee;
+  border: 1px solid #67e8f9;
+  color: #081017;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.xr-btn-primary:hover {
+  background: #5eead4;
+  transform: translateY(-1px);
+}
+
+.xr-btn-gold {
+  padding: 8px 14px;
+  background: rgba(245, 184, 46, 0.16);
+  border: 1px solid #f5b82e;
+  color: #fde68a;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.xr-btn-gold:hover {
+  background: rgba(245, 184, 46, 0.34);
+  color: #ffffff;
+}
+
+.xr-btn-secondary {
+  padding: 7px 12px;
+  background: rgba(14, 28, 38, 0.90);
+  border: 1px solid rgba(34, 211, 238, 0.30);
+  color: #f2eadc;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.xr-btn-secondary:hover {
+  background: rgba(20, 44, 58, 0.95);
+  border-color: #22d3ee;
+}
+
+/* Bio-Acoustic & Fluoroscopy Studio */
+#xr-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 9px 12px;
+  background: rgba(5, 11, 16, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.28);
+}
+
+#xr-studio.open {
+  display: flex;
+}
+
+.xr-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #22d3ee;
+}
+
+#xr-scope {
+  width: 100%;
+  height: 52px;
+  background: #04090d;
+  border: 1px solid rgba(34, 211, 238, 0.20);
+}
+
+.xr-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.xr-sfx-trigger {
+  padding: 5px 10px;
+  background: rgba(14, 28, 38, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.26);
+  color: #f2eadc;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.xr-sfx-trigger:hover {
+  border-color: #f5b82e;
+  background: rgba(22, 44, 58, 0.96);
+}
+
+/* Settings Bar & Keybind Grid */
+.xr-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 2px;
+}
+
+.xr-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #d8cec0;
+}
+
+.xr-pill {
+  padding: 3px 9px;
+  background: rgba(14, 28, 38, 0.85);
+  border: 1px solid rgba(34, 211, 238, 0.24);
+  color: #d8cec0;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.xr-pill.active {
+  background: #22d3ee;
+  border-color: #67e8f9;
+  color: #081017;
+  font-weight: 700;
+}
+
+.xr-set-group input[type="range"] {
+  width: 82px;
+  accent-color: #22d3ee;
+  cursor: pointer;
+}
+
+.xr-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px 14px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(34, 211, 238, 0.16);
+  font-size: 12px;
+  color: #d8cec0;
+}
+
+.xr-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+kbd {
+  padding: 1px 5px;
+  background: rgba(18, 36, 48, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #22d3ee;
+}
+
+@media (max-width: 680px) {
+  .xr-keys-grid {
+    grid-template-columns: 1fr;
+  }
+  #xr-pose-bar {
+    display: none;
+  }
+}

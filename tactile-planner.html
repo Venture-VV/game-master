@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>立体手帐与揭贴纸 · 3D TACTILE PLANNER — 零外部素材 WebGL2 微距文具与卷页沙盒</title>
+  <meta name="description" content="致敬 Fable 5.2 Animals at Work 3D Planner 与 Ballpoint Macro ASMR 的零外部素材 WebGL2 立体纸本手帐：等距圆柱/圆锥三维卷页变形、十款微雕 3D 揭贴动物与火漆贴纸、湿墨渐干黄铜钢笔书写与微距纸张文具 ASMR。" />
+  <style>*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:0;background:transparent;font-family:system-ui,-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,sans-serif;-webkit-font-smoothing:antialiased;user-select:none}body.standalone-body{background:#140f0b;overflow:hidden}#planner-app{position:relative;width:100%;height:446px;overflow:hidden;background:#140f0b;color:#fbf6ec;border:1px solid rgba(232,168,41,.34)}#planner-app.tall{height:720px}#planner-app.standalone{height:100vh;border:none}#pl-canvas{display:block;width:100%;height:100%;outline:none;cursor:pointer}#pl-canvas.pen-cursor{cursor:crosshair}#pl-canvas.grab-cursor{cursor:grab}#pl-canvas.grabbing-cursor{cursor:grabbing}#pl-hud{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity .25s ease}#pl-hud.visible{opacity:1}#pl-top-left{position:absolute;top:8px;left:10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:315px}#pl-perf{padding:3px 9px;background:#171310e0;border:1px solid rgba(232,168,41,.32);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#e8a829;white-space:nowrap}#pl-spread-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;background:#171310e6;border:1px solid rgba(229,146,56,.36);font-size:12px;white-space:nowrap}#pl-spread-badge{padding:1px 5px;background:#e8a829;color:#171310;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:12px}#pl-spread-name{color:#fbf6ec;font-weight:700;font-size:12px}#pl-counts{color:#fbf6ecc2;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}#pl-top-right{position:absolute;top:8px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:4px}#pl-quick-bar{display:flex;gap:4px;pointer-events:auto;flex-wrap:nowrap;justify-content:flex-end}.pl-mini-btn{padding:3px 8px;background:#171310e0;border:1px solid rgba(232,168,41,.34);color:#fbf6ec;font-size:12px;font-family:inherit;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .14s ease,border-color .14s ease}.pl-mini-btn:hover{background:#4a2e1bf0;border-color:#e8a829}#pl-spread-bar{display:flex;gap:4px;pointer-events:auto}.pl-tab-btn{padding:3px 7px;background:#171310db;border:1px solid rgba(251,246,236,.22);color:#fbf6ecd6;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .14s ease,border-color .14s ease,color .14s ease}.pl-tab-btn:hover,.pl-tab-btn.active{background:#4a2e1b;border-color:#e8a829;color:#fbf6ec;font-weight:700}#pl-toast-feed{display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:240px}.pl-toast{padding:4px 9px;background:#171310e6;border-right:3px solid #e8a829;font-size:12px;color:#fbf6ec;white-space:nowrap;animation:plToastIn .2s ease-out}.pl-toast.wax{border-right-color:#d95338}.pl-toast.matcha{border-right-color:#2e9e6b}@keyframes plToastIn{0%{opacity:0;transform:translate(8px)}to{opacity:1;transform:translate(0)}}#pl-banner{position:absolute;top:25%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:6px 16px;background:#171310e6;border-top:1px solid rgba(232,168,41,.65);border-bottom:1px solid rgba(232,168,41,.65);opacity:0;transition:opacity .25s ease;pointer-events:none}#pl-banner.show{opacity:1}#pl-banner-title{font-size:15px;font-weight:700;letter-spacing:.8px;color:#e8a829;white-space:nowrap}#pl-banner-sub{margin-top:2px;font-size:12px;color:#fbf6ecdb;white-space:nowrap}#pl-bottom-dock{position:absolute;bottom:8px;left:50%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;max-width:calc(100% - 20px)}.pl-sub-tray{display:none;align-items:center;justify-content:center;gap:4px;padding:3px 6px;background:#171310e6;border:1px solid rgba(232,168,41,.3);pointer-events:auto;flex-wrap:nowrap}.pl-sub-tray.active{display:flex}.pl-stk-chip,.pl-ink-chip,.pl-nib-chip,.pl-cam-chip,.pl-sub-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 6px;background:#2d1f15db;border:1px solid rgba(251,246,236,.2);color:#fbf6ec;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .14s ease,border-color .14s ease,color .14s ease}.pl-stk-chip i,.pl-ink-chip i{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid rgba(251,246,236,.55);flex-shrink:0}.pl-stk-chip:hover,.pl-ink-chip:hover,.pl-nib-chip:hover,.pl-cam-chip:hover,.pl-sub-btn:hover{border-color:#e8a829;background:#4a2e1bf2}.pl-stk-chip.active,.pl-ink-chip.active,.pl-nib-chip.active,.pl-cam-chip.active{background:#e8a829;border-color:#fbf6ec;color:#171310;font-weight:700}.pl-sep{width:1px;height:16px;background:#fbf6ec38;margin:0 2px}#pl-mode-bar{display:flex;align-items:center;gap:5px;padding:3px 7px;background:#171310eb;border:1px solid rgba(232,168,41,.36);pointer-events:auto;flex-wrap:nowrap}.pl-mode-btn{padding:3px 9px;background:#2d1f15e0;border:1px solid rgba(232,168,41,.28);color:#fbf6ec;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .14s ease,border-color .14s ease}.pl-mode-btn:hover{border-color:#e8a829}.pl-mode-btn.active{background:#e59238;border-color:#fbf6ec;color:#171310;font-weight:700}#pl-live-tip{padding-left:4px;font-size:12px;color:#fbf6ecd1;white-space:nowrap}#pl-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(180deg,#140f0b9e,#140f0bdb);overflow-y:auto}#pl-overlay.hidden{display:none}.pl-placard{width:min(760px,100%);max-height:100%;overflow-y:auto;padding:14px 18px;background:#1a120deb;border:1px solid rgba(232,168,41,.42);backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:9px}.pl-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1.4px;color:#e8a829}.pl-placard h1{font-size:clamp(20px,2.8vw,28px);font-weight:800;letter-spacing:1.5px;color:#fbf6ec;margin-top:2px}.pl-desc{font-size:13px;line-height:1.48;color:#fbf6ecdb;margin-top:3px}.pl-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.pl-btn-primary{padding:8px 15px;background:#e8a829;border:1px solid #fbf6ec;color:#171310;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;font-family:inherit;transition:background .14s ease,transform .12s ease}.pl-btn-primary:hover{background:#f2bc46;transform:translateY(-1px)}.pl-btn-gold{padding:8px 13px;background:#d9533838;border:1px solid #d95338;color:#fbf6ec;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .14s ease}.pl-btn-gold:hover{background:#d953386b}.pl-btn-secondary{padding:7px 12px;background:#302116e6;border:1px solid rgba(232,168,41,.36);color:#fbf6ec;font-size:12px;text-decoration:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;transition:background .14s ease,border-color .14s ease}.pl-btn-secondary:hover{background:#4a2e1bf5;border-color:#e8a829}#pl-studio{display:none;flex-direction:column;gap:6px;padding:8px 11px;background:#120d09eb;border:1px solid rgba(232,168,41,.3)}#pl-studio.open{display:flex}.pl-studio-head{display:flex;justify-content:space-between;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#e8a829}#pl-scope{width:100%;height:52px;background:#120d09;border:1px solid rgba(232,168,41,.24)}.pl-studio-btns{display:flex;flex-wrap:wrap;gap:6px}.pl-sfx-trigger{padding:4px 9px;background:#302116eb;border:1px solid rgba(232,168,41,.28);color:#fbf6ec;font-size:12px;cursor:pointer;font-family:inherit}.pl-sfx-trigger:hover{border-color:#e8a829;background:#4a2e1bf5}.pl-settings{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:6px;border-top:1px solid rgba(232,168,41,.18);font-size:12px;color:#fbf6ecd1}.pl-set-group{display:inline-flex;align-items:center;gap:5px}.pl-pill{padding:3px 8px;background:#302116db;border:1px solid rgba(232,168,41,.26);color:#fbf6ecdb;font-size:12px;cursor:pointer;font-family:inherit}.pl-pill.active{background:#e8a829;border-color:#fbf6ec;color:#171310;font-weight:700}#pl-vol{width:78px;accent-color:#e8a829}.pl-keys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 12px;padding-top:6px;border-top:1px solid rgba(232,168,41,.18);font-size:12px;color:#fbf6ecd1}.pl-keys-grid>div{display:flex;justify-content:space-between;gap:6px}kbd{padding:1px 5px;background:#e8a82929;border:1px solid rgba(232,168,41,.38);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#e8a829}@media(max-width:740px){#pl-live-tip{display:none}.pl-sub-tray{flex-wrap:wrap}.pl-keys-grid{grid-template-columns:1fr 1fr}}</style>
+</head>
+<body class="standalone-body">
+  <div id="planner-app" class="standalone">
+    <canvas id="pl-canvas" tabindex="0"></canvas>
+
+    <section id="pl-hud" aria-label="立体手帐创作工作台界面">
+      <div id="pl-top-left">
+        <div id="pl-perf">60 FPS · 暖阳胡桃木桌 · 120g 棉浆纸</div>
+        <div id="pl-spread-pill">
+          <span id="pl-spread-badge">01/06</span>
+          <span id="pl-spread-name">01 · 柴犬咖啡周记</span>
+          <span id="pl-counts">贴纸 3 · 墨迹 4</span>
+        </div>
+      </div>
+
+      <div id="pl-top-right">
+        <div id="pl-quick-bar">
+          <button id="btn-prev" class="pl-mini-btn" type="button">◀ 上页</button>
+          <button id="btn-next" class="pl-mini-btn" type="button">下页 ▶</button>
+          <button id="btn-cam" class="pl-mini-btn" type="button">机位 [C]</button>
+          <a href="./crosstown.html" class="pl-mini-btn">⇄ 曼哈顿狂飙</a><a href="./index.html" class="pl-mini-btn">⌂ 十二作大厅</a>
+          <button id="btn-fs" class="pl-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="pl-mini-btn" type="button">工坊 [Esc]</button>
+        </div>
+
+        <div id="pl-spread-bar" aria-label="六大主题跨页书签栏">
+          <button class="pl-tab-btn active" data-sp="0" type="button">01 柴犬</button>
+          <button class="pl-tab-btn" data-sp="1" type="button">02 水獭</button>
+          <button class="pl-tab-btn" data-sp="2" type="button">03 观星</button>
+          <button class="pl-tab-btn" data-sp="3" type="button">04 烘焙</button>
+          <button class="pl-tab-btn" data-sp="4" type="button">05 水豚</button>
+          <button class="pl-tab-btn" data-sp="5" type="button">06 折鹤</button>
+        </div>
+
+        <div id="pl-toast-feed"></div>
+      </div>
+
+      <div id="pl-banner" aria-live="polite">
+        <div id="pl-banner-title"></div>
+        <div id="pl-banner-sub"></div>
+      </div>
+
+      <div id="pl-bottom-dock">
+        <!-- Contextual Palette 1: 10 Sculpted 3D Peel-and-Stick Stickers -->
+        <div id="pl-tray-sticker" class="pl-sub-tray active" role="toolbar" aria-label="十款 3D 揭贴纸托盘">
+          <button class="pl-stk-chip active" data-stk="0" title="柴犬店长 (Shiba Barista)" type="button"><i style="background:#e59238"></i>柴犬</button>
+          <button class="pl-stk-chip" data-stk="1" title="水豚泡汤 (Onsen Capybara)" type="button"><i style="background:#b87442"></i>水豚</button>
+          <button class="pl-stk-chip" data-stk="2" title="宇航橘猫 (Astro Ginger Cat)" type="button"><i style="background:#2589bd"></i>橘猫</button>
+          <button class="pl-stk-chip" data-stk="3" title="小水獭帐篷 (Otter Tent)" type="button"><i style="background:#2e9e6b"></i>水獭</button>
+          <button class="pl-stk-chip" data-stk="4" title="猫头鹰博士 (Scholar Owl)" type="button"><i style="background:#8c5832"></i>猫头鹰</button>
+          <button class="pl-stk-chip" data-stk="5" title="火漆印章 (Crimson Wax Seal)" type="button"><i style="background:#d95338"></i>火漆</button>
+          <button class="pl-stk-chip" data-stk="6" title="黄金五星章 (Gold Star)" type="button"><i style="background:#e8a829"></i>金星</button>
+          <button class="pl-stk-chip" data-stk="7" title="手冲咖啡杯 (Latte Cup)" type="button"><i style="background:#c97a40"></i>拿铁</button>
+          <button class="pl-stk-chip" data-stk="8" title="多肉小盆栽 (Succulent)" type="button"><i style="background:#2e9e6b"></i>多肉</button>
+          <button class="pl-stk-chip" data-stk="9" title="折纸千纸鹤 (Origami Crane)" type="button"><i style="background:#e8a829"></i>纸鹤</button>
+          <button id="btn-rot-stk" class="pl-sub-btn" title="微调贴纸角度 [R]" type="button">旋转 [R]</button>
+        </div>
+
+        <!-- Contextual Palette 2: Fountain Pen Ink & Nib Widths -->
+        <div id="pl-tray-pen" class="pl-sub-tray" role="toolbar" aria-label="黄铜钢笔墨水与笔尖栏">
+          <button class="pl-ink-chip active" data-ink="0" type="button"><i style="background:#171310;border-color:#fbf6ec"></i>浓咖</button>
+          <button class="pl-ink-chip" data-ink="1" type="button"><i style="background:#e8a829"></i>鎏金</button>
+          <button class="pl-ink-chip" data-ink="2" type="button"><i style="background:#d95338"></i>赤陶</button>
+          <button class="pl-ink-chip" data-ink="3" type="button"><i style="background:#2e9e6b"></i>抹茶</button>
+          <button class="pl-ink-chip" data-ink="4" type="button"><i style="background:#2589bd"></i>钴蓝</button>
+          <span class="pl-sep"></span>
+          <button class="pl-nib-chip" data-nib="0" type="button">EF 细</button>
+          <button class="pl-nib-chip active" data-nib="1" type="button">M 中</button>
+          <button class="pl-nib-chip" data-nib="2" type="button">B 粗</button>
+          <button id="btn-undo-ink" class="pl-sub-btn" type="button">撤销 [Z]</button>
+          <button id="btn-sample-ink" class="pl-sub-btn" type="button">范例速写</button>
+        </div>
+
+        <!-- Contextual Palette 3: 3D Page Curl & Camera Angles -->
+        <div id="pl-tray-turn" class="pl-sub-tray" role="toolbar" aria-label="三维卷页与视角机位栏">
+          <button id="tray-prev-btn" class="pl-sub-btn" type="button">◀ 向前翻页 [A]</button>
+          <button id="tray-next-btn" class="pl-sub-btn" type="button">向后翻页 [D] ▶</button>
+          <span class="pl-sep"></span>
+          <button class="pl-cam-chip active" data-cam="0" type="button">俯视书桌</button>
+          <button class="pl-cam-chip" data-cam="1" type="button">微距特写</button>
+          <button class="pl-cam-chip" data-cam="2" type="button">斜向暖阳</button>
+          <button id="btn-rand-stk" class="pl-sub-btn" type="button">随机贴章</button>
+        </div>
+
+        <!-- Main 3-Mode Bar + Contextual Tactile Prompt -->
+        <div id="pl-mode-bar">
+          <button id="mode-btn-sticker" class="pl-mode-btn active" type="button">[1] 揭贴 3D 贴纸</button>
+          <button id="mode-btn-pen" class="pl-mode-btn" type="button">[2] 钢笔手写涂鸦</button>
+          <button id="mode-btn-turn" class="pl-mode-btn" type="button">[3] 拖拽翻页 / 视角</button>
+          <span id="pl-live-tip">左键按压贴合 · Alt/右键揭起 · 拖拽页角翻页</span>
+        </div>
+      </div>
+    </section>
+
+    <main id="pl-overlay">
+      <div class="pl-placard">
+        <header>
+          <div id="pl-kicker" class="pl-kicker">ARTISANAL PAPER &amp; MACRO STATIONERY // 零外部素材 WebGL2 立体手帐工坊</div>
+          <h1 id="pl-title">立体手帐与揭贴纸 · 3D TACTILE PLANNER</h1>
+          <p id="pl-desc" class="pl-desc">
+            午后百叶窗暖阳洒在胡桃木手作书桌与咖啡杯热雾间：亲手拖拽纸角触发等距圆柱三维卷页，从十款微雕动物与熔融火漆贴纸中揭起并贴入任意书页，执起 18K 黄铜钢笔在棉浆纸上书写湿墨渐干的立体笔迹，贴纸与字迹皆随翻页真实弯曲！
+          </p>
+        </header>
+
+        <div class="pl-actions">
+          <button id="pl-btn-open" class="pl-btn-primary" type="button">翻开 2027 立体手帐 · 开始创作</button>
+          <button id="pl-btn-sample-flip" class="pl-btn-gold" type="button">一键贴章并体验三维卷页</button>
+          <button id="pl-btn-studio" class="pl-btn-secondary" type="button">微距纸张与文具 ASMR 声学台</button>
+          <a href="./crosstown.html" class="pl-btn-secondary">⇄ 曼哈顿狂飙</a><a href="./index.html" class="pl-btn-secondary">⌂ 十二作典藏大厅</a>
+        </div>
+
+        <section id="pl-studio" aria-label="纯代码微距纸张与文具 ASMR 声学台">
+          <div class="pl-studio-head">
+            <span>MACRO PAPER &amp; NIB WEB AUDIO · 零采样棉浆摩擦与不干胶揭贴合成</span>
+            <span>FOLEY ASMR</span>
+          </div>
+          <canvas id="pl-scope" width="560" height="52"></canvas>
+          <div class="pl-studio-btns">
+            <button class="pl-sfx-trigger" data-s="kalimba" type="button">午后卡林巴木琴</button>
+            <button class="pl-sfx-trigger" data-s="page" type="button">棉浆纸卷页落定</button>
+            <button class="pl-sfx-trigger" data-s="peel" type="button">不干胶贴纸揭起</button>
+            <button class="pl-sfx-trigger" data-s="stick" type="button">拇指按压贴合声</button>
+            <button class="pl-sfx-trigger" data-s="nib" type="button">铱金笔尖沙沙声</button>
+            <button class="pl-sfx-trigger" data-s="wax" type="button">熔融火漆黄铜章</button>
+          </div>
+        </section>
+
+        <div class="pl-settings">
+          <div class="pl-set-group">
+            <span>镜头机位</span>
+            <button class="pl-pill cam-pill active" data-cam="0" type="button">俯视书桌</button>
+            <button class="pl-pill cam-pill" data-cam="1" type="button">微距特写</button>
+            <button class="pl-pill cam-pill" data-cam="2" type="button">斜向暖阳</button>
+          </div>
+          <div class="pl-set-group">
+            <span>画质</span>
+            <button class="pl-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="pl-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="pl-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="pl-set-group">
+            <span>午后伴奏</span>
+            <button id="pl-bgm-toggle" class="pl-pill active" type="button">开启</button>
+          </div>
+          <div class="pl-set-group">
+            <label for="pl-vol">音量</label>
+            <input id="pl-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="pl-keys-grid">
+          <div><span>揭贴 3D 贴纸 / 旋转角度</span><span><kbd>1</kbd> 左键贴 · <kbd>R</kbd> 旋转</span></div>
+          <div><span>揭除已有贴纸</span><span><kbd>Alt+左键</kbd> / 点贴纸右键</span></div>
+          <div><span>黄铜钢笔书写 / 撤销笔迹</span><span><kbd>2</kbd> 拖拽写 · <kbd>Z</kbd> 撤销</span></div>
+          <div><span>前后卷页（共六跨页）</span><span><kbd>A / D</kbd> · <kbd>← / →</kbd></span></div>
+          <div><span>拖拽翻页与自由环视</span><span><kbd>3</kbd> 拖页角 · 右键环视</span></div>
+          <div><span>切换机位 / 远近微距缩放</span><span><kbd>C</kbd> 机位 · 滚轮缩放</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">var ee=[{id:0,code:"01",short:"\u67F4\u72AC",title:"01 \xB7 \u67F4\u72AC\u5496\u5561\u5468\u8BB0",sub:"\u624B\u51B2\u8403\u53D6\u98CE\u5473\u8F6E\u4E0E\u6BCF\u5468\u65E5\u7A0B\u6E05\u5355",accent:"#e59238"},{id:1,code:"02",short:"\u6C34\u736D",title:"02 \xB7 \u6C34\u736D\u9732\u8425\u624B\u7ED8",sub:"\u677E\u6797\u6EAA\u8C37\u624E\u8425\u624B\u8BB0\u4E0E\u7BDD\u706B\u88C5\u5907\u70B9\u9635\u9875",accent:"#2e9e6b"},{id:2,code:"03",short:"\u89C2\u661F",title:"03 \xB7 \u732B\u5934\u9E70\u89C2\u661F\u53F0",sub:"\u9EC4\u94DC\u6D51\u5929\u4EEA\u661F\u56FE\u4E0E\u4E8C\u5341\u516B\u5BBF\u5F26\u6708\u89C2\u6D4B\u5F55",accent:"#2589bd"},{id:3,code:"04",short:"\u70D8\u7119",title:"04 \xB7 \u4F01\u9E45\u70D8\u7119\u5DE5\u574A",sub:"\u9165\u76AE\u53EF\u9882\u65B9\u683C\u98DF\u8C31\u4E0E\u7EA2\u8393\u631E\u51FA\u7089\u65F6\u523B\u8868",accent:"#d95338"},{id:4,code:"05",short:"\u6C34\u8C5A",title:"05 \xB7 \u6C34\u8C5A\u6E29\u6CC9\u65E5\u7A0B",sub:"\u6867\u6728\u67DA\u5B50\u6C64\u6C60\u63D2\u753B\u4E0E\u4E03\u65E5\u9759\u5FC3\u4E60\u60EF\u6253\u5361",accent:"#e8a829"},{id:5,code:"06",short:"\u6298\u9E64",title:"06 \xB7 \u5343\u7EB8\u9E64\u6298\u7EB8\u9875",sub:"\u51E0\u4F55\u6298\u75D5\u56FE\u89E3\u4E0E\u9752\u6D77\u6CE2\u91D1\u7B94\u7948\u613F\u4E66\u7B7E",accent:"#d95338"}],Ne=[{id:0,name:"\u67F4\u72AC\u5E97\u957F",en:"Shiba Barista",short:"\u67F4\u72AC",dot:"#e59238",isWax:!1},{id:1,name:"\u6C34\u8C5A\u6CE1\u6C64",en:"Onsen Capybara",short:"\u6C34\u8C5A",dot:"#b87442",isWax:!1},{id:2,name:"\u5B87\u822A\u6A58\u732B",en:"Astro Ginger Cat",short:"\u6A58\u732B",dot:"#2589bd",isWax:!1},{id:3,name:"\u5C0F\u6C34\u736D\u5E10\u7BF7",en:"Otter Tent",short:"\u6C34\u736D",dot:"#2e9e6b",isWax:!1},{id:4,name:"\u732B\u5934\u9E70\u535A\u58EB",en:"Scholar Owl",short:"\u732B\u5934\u9E70",dot:"#8c5832",isWax:!1},{id:5,name:"\u706B\u6F06\u5370\u7AE0",en:"Crimson Wax Seal",short:"\u706B\u6F06",dot:"#d95338",isWax:!0},{id:6,name:"\u9EC4\u91D1\u4E94\u661F\u7AE0",en:"Gold Star",short:"\u91D1\u661F",dot:"#e8a829",isWax:!1},{id:7,name:"\u624B\u51B2\u5496\u5561\u676F",en:"Latte Cup",short:"\u62FF\u94C1",dot:"#c97a40",isWax:!1},{id:8,name:"\u591A\u8089\u5C0F\u76C6\u683D",en:"Succulent",short:"\u591A\u8089",dot:"#2e9e6b",isWax:!1},{id:9,name:"\u6298\u7EB8\u5343\u7EB8\u9E64",en:"Origami Crane",short:"\u7EB8\u9E64",dot:"#e8a829",isWax:!1}],ct=[{id:0,name:"\u6D53\u5496\u94A2\u7B14\u58A8",short:"\u6D53\u5496",hex:"#171310",rgb:[.09,.075,.063],metallic:.05},{id:1,name:"\u9EC4\u94DC\u938F\u91D1\u58A8",short:"\u938F\u91D1",hex:"#e8a829",rgb:[.91,.659,.161],metallic:.78},{id:2,name:"\u8D64\u9676\u6731\u7802\u58A8",short:"\u8D64\u9676",hex:"#d95338",rgb:[.851,.325,.22],metallic:.12},{id:3,name:"\u5B87\u6CBB\u62B9\u8336\u58A8",short:"\u62B9\u8336",hex:"#2e9e6b",rgb:[.18,.62,.42],metallic:.1},{id:4,name:"\u6674\u7A7A\u94B4\u84DD\u58A8",short:"\u94B4\u84DD",hex:"#2589bd",rgb:[.145,.537,.741],metallic:.14}];function k(t,e,a){return t<e?e:t>a?a:t}function _e(t,e,a){return t+(e-t)*a}function te(t,e,a,n){return _e(t,e,1-Math.exp(-a*n))}function Ke(t=20270419){let e=t>>>0;return function(){e=e+1831565813>>>0;let n=Math.imul(e^e>>>15,1|e);return n=n+Math.imul(n^n>>>7,61|n)^n,((n^n>>>14)>>>0)/4294967296}}var st={len(t,e,a){return Math.hypot(t,e,a)},normalize(t,e,a){let n=Math.hypot(t,e,a)||1;return[t/n,e/n,a/n]},dot(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]},cross(t,e){return[t[1]*e[2]-t[2]*e[1],t[2]*e[0]-t[0]*e[2],t[0]*e[1]-t[1]*e[0]]}},Q={create(){let t=new Float32Array(16);return t[0]=1,t[5]=1,t[10]=1,t[15]=1,t},identity(t){return t.fill(0),t[0]=1,t[5]=1,t[10]=1,t[15]=1,t},perspective(t,e,a,n,o){let c=1/Math.tan(e*.5),s=1/(n-o);return t.fill(0),t[0]=c/a,t[5]=c,t[10]=(o+n)*s,t[11]=-1,t[14]=2*o*n*s,t},lookAt(t,e,a,n){let o=e[0]-a[0],c=e[1]-a[1],s=e[2]-a[2],r=Math.hypot(o,c,s)||1;o/=r,c/=r,s/=r;let d=n[1]*s-n[2]*c,f=n[2]*o-n[0]*s,p=n[0]*c-n[1]*o;r=Math.hypot(d,f,p)||1,d/=r,f/=r,p/=r;let u=c*p-s*f,l=s*d-o*p,h=o*f-c*d;return t[0]=d,t[1]=u,t[2]=o,t[3]=0,t[4]=f,t[5]=l,t[6]=c,t[7]=0,t[8]=p,t[9]=h,t[10]=s,t[11]=0,t[12]=-(d*e[0]+f*e[1]+p*e[2]),t[13]=-(u*e[0]+l*e[1]+h*e[2]),t[14]=-(o*e[0]+c*e[1]+s*e[2]),t[15]=1,t},multiply(t,e,a){let n=e[0],o=e[1],c=e[2],s=e[3],r=e[4],d=e[5],f=e[6],p=e[7],u=e[8],l=e[9],h=e[10],m=e[11],v=e[12],x=e[13],P=e[14],S=e[15],y=a[0],b=a[1],T=a[2],g=a[3];return t[0]=y*n+b*r+T*u+g*v,t[1]=y*o+b*d+T*l+g*x,t[2]=y*c+b*f+T*h+g*P,t[3]=y*s+b*p+T*m+g*S,y=a[4],b=a[5],T=a[6],g=a[7],t[4]=y*n+b*r+T*u+g*v,t[5]=y*o+b*d+T*l+g*x,t[6]=y*c+b*f+T*h+g*P,t[7]=y*s+b*p+T*m+g*S,y=a[8],b=a[9],T=a[10],g=a[11],t[8]=y*n+b*r+T*u+g*v,t[9]=y*o+b*d+T*l+g*x,t[10]=y*c+b*f+T*h+g*P,t[11]=y*s+b*p+T*m+g*S,y=a[12],b=a[13],T=a[14],g=a[15],t[12]=y*n+b*r+T*u+g*v,t[13]=y*o+b*d+T*l+g*x,t[14]=y*c+b*f+T*h+g*P,t[15]=y*s+b*p+T*m+g*S,t},invert(t,e){let a=e[0],n=e[1],o=e[2],c=e[3],s=e[4],r=e[5],d=e[6],f=e[7],p=e[8],u=e[9],l=e[10],h=e[11],m=e[12],v=e[13],x=e[14],P=e[15],S=a*r-n*s,y=a*d-o*s,b=a*f-c*s,T=n*d-o*r,g=n*f-c*r,C=o*f-c*d,E=p*v-u*m,M=p*x-l*m,V=p*P-h*m,U=u*x-l*v,_=u*P-h*v,H=l*P-h*x,D=S*H-y*_+b*U+T*V-g*M+C*E;return D?(D=1/D,t[0]=(r*H-d*_+f*U)*D,t[1]=(o*_-n*H-c*U)*D,t[2]=(v*C-x*g+P*T)*D,t[3]=(l*g-u*C-h*T)*D,t[4]=(d*V-s*H-f*M)*D,t[5]=(a*H-o*V+c*M)*D,t[6]=(x*b-m*C-P*y)*D,t[7]=(p*C-l*b+h*y)*D,t[8]=(s*_-r*V+f*E)*D,t[9]=(n*V-a*_-c*E)*D,t[10]=(m*g-v*b+P*S)*D,t[11]=(u*b-p*g-h*S)*D,t[12]=(r*M-s*U-d*E)*D,t[13]=(a*U-n*M+o*E)*D,t[14]=(v*y-m*T-x*S)*D,t[15]=(p*T-u*y+l*S)*D,t):null},composeTRS(t,e,a,n,o,c,s,r,d,f){let p=Math.cos(o),u=Math.sin(o),l=Math.cos(c),h=Math.sin(c),m=Math.cos(s),v=Math.sin(s),x=l*m,P=u*h*m+p*v,S=-p*h*m+u*v,y=-l*v,b=-u*h*v+p*m,T=p*h*v+u*m,g=h,C=-u*l,E=p*l;return t[0]=x*r,t[1]=P*r,t[2]=S*r,t[3]=0,t[4]=y*d,t[5]=b*d,t[6]=T*d,t[7]=0,t[8]=g*f,t[9]=C*f,t[10]=E*f,t[11]=0,t[12]=e,t[13]=a,t[14]=n,t[15]=1,t},unprojectRay(t,e,a){let n=Rt(t,e,a,-1,1),o=Rt(t,e,a,1,1),c=st.normalize(o[0]-n[0],o[1]-n[1],o[2]-n[2]);return{orig:n,dir:c}},projectToScreen(t,e,a,n,o,c){let s=t[0]*e+t[4]*a+t[8]*n+t[12],r=t[1]*e+t[5]*a+t[9]*n+t[13],d=t[3]*e+t[7]*a+t[11]*n+t[15];if(d<=.05)return null;let f=s/d,p=r/d;return{x:(f*.5+.5)*o,y:(.5-p*.5)*c,w:d}}};function Rt(t,e,a,n,o){let c=t[0]*e+t[4]*a+t[8]*n+t[12]*o,s=t[1]*e+t[5]*a+t[9]*n+t[13]*o,r=t[2]*e+t[6]*a+t[10]*n+t[14]*o,d=t[3]*e+t[7]*a+t[11]*n+t[15]*o||1;return[c/d,s/d,r/d]}function Ee(t,e,a,n=0,o=null){let c=k(a,0,1),s=Math.sin(c*Math.PI),r=k(c+(e-.5)*.12*s,0,1),d=r*r*(3-2*r),f=_e(.16,Math.PI-.16,d),p=f+(Math.PI*.5-f)*(.2*s),u=_e(-.26,.26,d)+.72*Math.sin(r*Math.PI*2),l=.31+n+.025*s,h,m;if(Math.abs(u)<1e-4)h=4.1*t*Math.cos(p),m=l+4.1*t*Math.sin(p);else{let X=p+u*t;h=4.1*(Math.sin(X)-Math.sin(p))/u,m=l+4.1*(-Math.cos(X)+Math.cos(p))/u}let v=(e-.5)*5.6,x=p+u*t,P=Math.cos(x),S=Math.sin(x),y=0,b=.01,T=k(e+b,0,1),g=k(c+(T-.5)*.12*s,0,1),C=g*g*(3-2*g),E=_e(.16,Math.PI-.16,C),M=E+(Math.PI*.5-E)*(.2*s),V=_e(-.26,.26,C)+.72*Math.sin(g*Math.PI*2),U,_;if(Math.abs(V)<1e-4)U=4.1*t*Math.cos(M),_=l+4.1*t*Math.sin(M);else{let X=M+V*t;U=4.1*(Math.sin(X)-Math.sin(M))/V,_=l+4.1*(-Math.cos(X)+Math.cos(M))/V}let H=e+b<=1?1/b:1,D=(U-h)*H,j=(_-m)*H,J=5.6,W=Math.hypot(D,j,J)||1;D/=W,j/=W,J/=W;let z=j*y-J*S,L=J*P-D*y,q=D*S-j*P,Y=Math.hypot(z,L,q)||1;z/=Y,L/=Y,q/=Y;let G=o||{};return G.x=h,G.y=m,G.z=v,G.nx=z,G.ny=L,G.nz=q,G.ux=P,G.uy=S,G.uz=y,G.vx=D,G.vy=j,G.vz=J,G}function W0(t,e,a,n=t===0?1:0,o=0){let c=t===1?e:1-e,s=a,r=Ee(c,s,n,o),d=t===1?1:-1;return{x:r.x,y:r.y,z:r.z,nx:r.nx*d,ny:r.ny*d,nz:r.nz*d,rx:r.ux*d,ry:r.uy*d,rz:r.uz*d,dx:r.vx,dy:r.vy,dz:r.vz,u:c,v:s}}function Ct(t,e){if(Math.abs(e[1])<1e-4)return null;let a=(.42-t[1])/e[1];if(a<=.05)return null;let n=t[0]+e[0]*a,o=t[2]+e[2]*a;for(let l=0;l<4;l++){let h=n>=0?1:0,m=k(Math.abs(n)/4.1,0,1),v=k(o/5.6+.5,0,1);if(a=(Ee(m,v,h===1?0:1,0).y-t[1])/e[1],a<=.05)return null;n=t[0]+e[0]*a,o=t[2]+e[2]*a}let c=Math.abs(n),s=o/5.6+.5;if(c>4.1*.992||c<.02||s<.012||s>.988)return null;let r=n>=0?1:0,d=k(c/4.1,0,1),f=r===1?d:1-d,p=k(s,0,1),u=W0(r,f,p,r===0?1:0,0);return{hit:!0,side:r,px:f,py:p,u:d,v:p,x:u.x,y:u.y,z:u.z,nx:u.nx,ny:u.ny,nz:u.nz}}var Ye=`
+const float PAGE_W = 4.10;
+const float PAGE_H = 5.60;
+const float SPINE_Y = 0.31;
+const float PI = 3.14159265359;
+
+float hash21(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float noise2D(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash21(i);
+  float b = hash21(i + vec2(1.0, 0.0));
+  float c = hash21(i + vec2(0.0, 1.0));
+  float d = hash21(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+float fbm2(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  mat2 rot = mat2(0.80, -0.60, 0.60, 0.80);
+  for (int i = 0; i < 4; i++) {
+    v += a * noise2D(p);
+    p = rot * p * 2.03 + vec2(17.1, 31.7);
+    a *= 0.5;
+  }
+  return v;
+}
+
+// Warm afternoon window-blind sunbeam pattern ("god-rays" dappled slats across desk & pages)
+float windowSunMask(vec3 wp, float time) {
+  vec2 proj = wp.xz - wp.y * vec2(0.68, 0.42);
+  float rotCoord = proj.x * 0.62 + proj.y * 0.78 + sin(time * 0.28) * 0.06;
+  float blinds = smoothstep(-0.22, 0.28, sin(rotCoord * 2.55));
+  float leafDapple = smoothstep(0.30, 0.72, noise2D(proj * 0.55 + vec2(time * 0.05, -time * 0.03)));
+  float windowFrame = smoothstep(10.5, 4.2, length(proj * vec2(0.75, 0.95) - vec2(0.4, -0.3)));
+  return blinds * (0.62 + 0.38 * leafDapple) * windowFrame;
+}
+`,lt=`
+const float PAGE_W = 4.10;
+const float PAGE_H = 5.60;
+const float SPINE_Y = 0.31;
+const float PI = 3.14159265359;
+
+void deformPageVertex(
+  in float u,
+  in float v,
+  in float turnProgress,
+  in float spineLift,
+  out vec3 outPos,
+  out vec3 outNormal,
+  out vec3 outTanU,
+  out vec3 outTanV
+) {
+  float p = clamp(turnProgress, 0.0, 1.0);
+  float turnBell = sin(p * PI);
+  float pLocal = clamp(p + (v - 0.5) * 0.12 * turnBell, 0.0, 1.0);
+  float sP = pLocal * pLocal * (3.0 - 2.0 * pLocal);
+
+  float rawA = mix(0.16, PI - 0.16, sP);
+  float a = rawA + (PI * 0.5 - rawA) * (0.20 * turnBell);
+  float b = mix(-0.26, 0.26, sP) + 0.72 * sin(pLocal * PI * 2.0);
+  float yBase = SPINE_Y + spineLift + 0.025 * turnBell;
+
+  float x;
+  float y;
+  if (abs(b) < 0.0001) {
+    x = PAGE_W * u * cos(a);
+    y = yBase + PAGE_W * u * sin(a);
+  } else {
+    float th = a + b * u;
+    x = PAGE_W * (sin(th) - sin(a)) / b;
+    y = yBase + PAGE_W * (-cos(th) + cos(a)) / b;
+  }
+  float z = (v - 0.5) * PAGE_H;
+
+  float thU = a + b * u;
+  vec3 tanU = vec3(cos(thU), sin(thU), 0.0);
+
+  float eps = 0.01;
+  float v2 = clamp(v + eps, 0.0, 1.0);
+  float pLocal2 = clamp(p + (v2 - 0.5) * 0.12 * turnBell, 0.0, 1.0);
+  float sP2 = pLocal2 * pLocal2 * (3.0 - 2.0 * pLocal2);
+  float rawA2 = mix(0.16, PI - 0.16, sP2);
+  float a2 = rawA2 + (PI * 0.5 - rawA2) * (0.20 * turnBell);
+  float b2 = mix(-0.26, 0.26, sP2) + 0.72 * sin(pLocal2 * PI * 2.0);
+
+  float x2;
+  float y2;
+  if (abs(b2) < 0.0001) {
+    x2 = PAGE_W * u * cos(a2);
+    y2 = yBase + PAGE_W * u * sin(a2);
+  } else {
+    float th2 = a2 + b2 * u;
+    x2 = PAGE_W * (sin(th2) - sin(a2)) / b2;
+    y2 = yBase + PAGE_W * (-cos(th2) + cos(a2)) / b2;
+  }
+  float dvScale = (v + eps <= 1.0) ? (1.0 / eps) : 1.0;
+  vec3 tanV = normalize(vec3((x2 - x) * dvScale, (y2 - y) * dvScale, PAGE_H));
+  vec3 nrm = normalize(cross(tanV, tanU));
+
+  outPos = vec3(x, y, z);
+  outNormal = nrm;
+  outTanU = tanU;
+  outTanV = tanV;
+}
+`,wt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec3 aColor;
+layout(location = 3) in vec2 aUV;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec3 vColor;
+out vec2 vUV;
+out vec3 vLocalPos;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  vLocalPos = aPos;
+  mat3 nMat = mat3(uModel);
+  vNormal = normalize(nMat * aNormal);
+  vColor = aColor;
+  vUV = aUV;
+  gl_Position = uProj * uView * wp;
+}
+`,kt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec3 vColor;
+in vec2 vUV;
+in vec3 vLocalPos;
+
+uniform vec3 uCamPos;
+uniform vec3 uSunDir;
+uniform float uTime;
+uniform int uMatType;
+
+out vec4 fragColor;
+
+${Ye}
+
+float sdBox2D(vec2 p, vec2 b) {
+  vec2 d = abs(p) - b;
+  return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+}
+
+void main() {
+  vec3 N = normalize(vNormal);
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 L = normalize(uSunDir);
+  vec3 H = normalize(L + V);
+
+  vec3 baseCol = vColor;
+  float rough = 0.55;
+  float metallic = 0.0;
+  float ao = 1.0;
+
+  if (uMatType == 0) {
+    // Sunlit Walnut Craft Desk with growth rings, timber pores & contact shadows
+    vec2 wp = vWorldPos.xz;
+    float plankId = floor((wp.y + 12.0) * 0.42);
+    vec2 gUv = vec2(wp.x * 0.36 + plankId * 3.7, wp.y * 1.65);
+    float warp = fbm2(gUv * 0.85) * 2.6;
+    float rings = sin((gUv.y + warp) * 7.5) * 0.5 + 0.5;
+    rings = pow(rings, 1.6);
+    float finePore = noise2D(vec2(wp.x * 24.0, wp.y * 5.5));
+
+    vec3 darkWalnut = vec3(0.185, 0.106, 0.062);
+    vec3 midWalnut  = vec3(0.290, 0.180, 0.106); // #4a2e1b
+    vec3 honeyGrain = vec3(0.435, 0.275, 0.155);
+    baseCol = mix(darkWalnut, midWalnut, rings);
+    baseCol = mix(baseCol, honeyGrain, smoothstep(0.65, 0.98, rings) * 0.55);
+    baseCol *= (0.91 + 0.14 * finePore);
+
+    // Subtle plank seam groove
+    float seam = abs(fract((wp.y + 12.0) * 0.42) - 0.5);
+    float seamMask = smoothstep(0.492, 0.50, seam);
+    baseCol *= (1.0 - 0.35 * seamMask);
+    rough = mix(0.36, 0.52, finePore);
+
+    // Desk contact AO under leather mat & mug coaster
+    float matDist = sdBox2D(wp - vec2(0.0, 0.10), vec2(7.65, 4.95));
+    ao *= mix(0.45, 1.0, smoothstep(-0.15, 0.55, matDist));
+    float mugDist = length(wp - vec2(-6.15, -2.25)) - 1.05;
+    ao *= mix(0.50, 1.0, smoothstep(-0.15, 0.45, mugDist));
+  } else if (uMatType == 1) {
+    // Stitched Saddle-Leather Desk Mat
+    vec2 wp = vWorldPos.xz;
+    float pebble = noise2D(wp * 32.0) * 0.5 + noise2D(wp * 64.0) * 0.5;
+    baseCol = vColor * (0.92 + 0.15 * pebble);
+    N = normalize(N + vec3((pebble - 0.5) * 0.08, 0.0, (pebble - 0.5) * 0.08));
+    rough = 0.62;
+
+    // Perimeter cream saddle-stitching dashes
+    vec2 rel = abs(wp - vec2(0.0, 0.10));
+    float borderDist = abs(max(rel.x - 7.36, rel.y - 4.66));
+    float insideMat = step(rel.x, 7.42) * step(rel.y, 4.72);
+    float along = (rel.x - 7.36 > rel.y - 4.66) ? wp.y : wp.x;
+    float dash = step(0.42, fract(along * 3.6));
+    float stitch = (1.0 - smoothstep(0.018, 0.036, borderDist)) * dash * insideMat;
+    baseCol = mix(baseCol, vec3(0.95, 0.88, 0.74), stitch * 0.88);
+
+    // Planner, mug, washi & pen rest soft AO on mat
+    float bookDist = sdBox2D(wp, vec2(4.42, 3.02));
+    ao *= mix(0.32, 1.0, smoothstep(-0.10, 0.55, bookDist));
+    float mugD = length(wp - vec2(-6.15, -2.25)) - 0.92;
+    ao *= mix(0.48, 1.0, smoothstep(-0.10, 0.35, mugD));
+    float washiD = length(wp - vec2(5.85, -2.35)) - 0.68;
+    ao *= mix(0.55, 1.0, smoothstep(-0.08, 0.30, washiD));
+  } else if (uMatType == 2) {
+    // Linen Cloth Hardcover Bookbinding
+    vec2 weaveUV = vWorldPos.xz * 38.0;
+    float wx = sin(weaveUV.x) * 0.5 + 0.5;
+    float wy = sin(weaveUV.y) * 0.5 + 0.5;
+    float linen = mix(wx, wy, 0.5) * 0.14 + noise2D(weaveUV * 0.35) * 0.08;
+    baseCol = vColor * (0.90 + linen);
+    rough = 0.76;
+    // Gold foil debossed border line near hardcover edge
+    vec2 bRel = abs(vWorldPos.xz);
+    float foilLine = 1.0 - smoothstep(0.015, 0.035, abs(max(bRel.x - 4.24, bRel.y - 2.88)));
+    if (vWorldPos.y > 0.11 && bRel.x > 0.4) {
+      baseCol = mix(baseCol, vec3(0.910, 0.659, 0.161), foilLine * 0.65);
+      metallic = max(metallic, foilLine * 0.6);
+    }
+  } else if (uMatType == 3) {
+    // Stacked Cream Paper Block Edges (200 fine horizontal page sheets + gilt sheen)
+    float sheets = sin(vWorldPos.y * 260.0) * 0.5 + 0.5;
+    float grain = noise2D(vec2(vWorldPos.x + vWorldPos.z, vWorldPos.y * 18.0) * 6.0);
+    baseCol = vColor * (0.93 + 0.07 * sheets) * (0.96 + 0.06 * grain);
+    rough = 0.68;
+  } else if (uMatType == 4) {
+    // Polished 18k Brass / Gold Nib, Corner Protectors & Binder Clip
+    float brush = noise2D(vWorldPos.xz * 45.0 + vWorldPos.y * 25.0);
+    baseCol = vColor * (0.95 + 0.10 * brush);
+    rough = 0.20;
+    metallic = 0.88;
+  } else {
+    // Ceramic Coffee Mug, Washi Tape, Terracotta Ribbon & Lacquer Pen Barrel
+    if (vUV.y > 0.88) {
+      // Glossy dark espresso liquid inside the ceramic mug with concentric crema ring!
+      float r = vUV.x;
+      float ripple = sin(r * 22.0 - uTime * 2.2) * 0.015;
+      vec3 espresso = vec3(0.085, 0.048, 0.028);
+      vec3 crema = vec3(0.76, 0.48, 0.22);
+      baseCol = mix(espresso, crema, smoothstep(0.62, 0.95, r + ripple) * 0.78);
+      rough = 0.08;
+    } else if (vUV.y > 0.60 && vUV.y <= 0.88) {
+      // Striped / patterned Washi Tape roll
+      float stripe = step(0.48, fract((vUV.x * 9.0 + vWorldPos.y * 4.5)));
+      baseCol = mix(vColor, vec3(0.984, 0.965, 0.925), stripe * 0.38);
+      rough = 0.48;
+    } else {
+      float micro = noise2D(vWorldPos.xz * 18.0 + vWorldPos.y * 18.0);
+      baseCol = vColor * (0.96 + 0.07 * micro);
+      rough = 0.26;
+    }
+  }
+
+  float sunSlats = windowSunMask(vWorldPos, uTime);
+  float ndl = max(dot(N, L), 0.0);
+  float sunLight = ndl * (0.42 + 0.88 * sunSlats);
+
+  // Warm sky bounce + desk bounce
+  vec3 hemiAmb = mix(vec3(0.24, 0.17, 0.12), vec3(0.56, 0.49, 0.40), N.y * 0.5 + 0.5);
+  vec3 sunCol = vec3(1.06, 0.93, 0.74);
+
+  float specPow = mix(128.0, 10.0, rough);
+  float spec = pow(max(dot(N, H), 0.0), specPow) * mix(0.06, 1.15, 1.0 - rough);
+  vec3 specTint = mix(vec3(1.0, 0.97, 0.90), baseCol, metallic);
+
+  vec3 diffuse = baseCol * (1.0 - metallic * 0.68);
+  vec3 col = (diffuse * (hemiAmb * ao + sunCol * sunLight) + specTint * spec * (0.35 + 0.85 * sunSlats));
+
+  // Brass environment reflection boost so gold hardware gleams warmly even in shadow
+  if (metallic > 0.5) {
+    float envRef = pow(max(N.y * 0.6 + 0.4, 0.0), 1.5);
+    col += baseCol * envRef * 0.34;
+  }
+
+  fragColor = vec4(col, 1.0);
+}
+`,Ft=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec2 aUV;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform float uTurnProgress;
+uniform float uSpineLift;
+uniform int uPageSide;
+uniform float uSheetFace;
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec2 vPageUV;
+out float vSpineDist;
+
+${lt}
+
+void main() {
+  float u = aUV.x;
+  float v = aUV.y;
+  vec3 pos;
+  vec3 nrm;
+  vec3 tanU;
+  vec3 tanV;
+  deformPageVertex(u, v, uTurnProgress, uSpineLift, pos, nrm, tanU, tanV);
+
+  vWorldPos = pos;
+  vNormal = nrm * uSheetFace;
+  // Standard left-to-right reading UV on each individual page
+  float px = (uPageSide == 1) ? u : (1.0 - u);
+  vPageUV = vec2(px, v);
+  vSpineDist = u;
+
+  gl_Position = uProj * uView * vec4(pos, 1.0);
+}
+`,Bt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec2 vPageUV;
+in float vSpineDist;
+
+uniform vec3 uCamPos;
+uniform vec3 uSunDir;
+uniform float uTime;
+uniform int uSpreadIdx;
+uniform int uPageSide;
+uniform float uTurnProgress;
+uniform vec4 uHoverUV; // (px, py, activeOnThisPage, toolMode)
+
+out vec4 fragColor;
+
+${Ye}
+
+// Crisp screen-space anti-aliased SDF stroke & fill helpers
+float aaFill(float d) {
+  float w = max(fwidth(d), 0.0018);
+  return 1.0 - smoothstep(-w, w, d);
+}
+
+float aaStroke(float d, float halfWidth) {
+  return aaFill(abs(d) - halfWidth);
+}
+
+float sdSegment(vec2 p, vec2 a, vec2 b) {
+  vec2 pa = p - a, ba = b - a;
+  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  return length(pa - ba * h);
+}
+
+float sdRoundRect(vec2 p, vec2 b, float r) {
+  vec2 q = abs(p) - b + r;
+  return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+}
+
+float sdTriangleIsosceles(vec2 p, vec2 q) {
+  p.x = abs(p.x);
+  vec2 a = p - q * clamp(dot(p, q) / dot(q, q), 0.0, 1.0);
+  vec2 b = p - q * vec2(clamp(p.x / q.x, 0.0, 1.0), 1.0);
+  float s = -sign(q.y);
+  vec2 d = min(vec2(dot(a, a), s * (p.x * q.y - p.y * q.x)),
+               vec2(dot(b, b), s * (p.y - q.y)));
+  return -sqrt(d.x) * sign(d.y);
+}
+
+void main() {
+  // Aspect-corrected 2D canvas coordinates p in [0..1] x [0..1.366]
+  vec2 uv = vPageUV;
+  vec2 p = vec2(uv.x, uv.y * 1.366);
+
+  // Warm stationery palette constants
+  vec3 cCream      = vec3(0.984, 0.965, 0.925); // #fbf6ec
+  vec3 cEspresso   = vec3(0.090, 0.075, 0.063); // #171310
+  vec3 cBrass      = vec3(0.860, 0.595, 0.125); // rich printed gilt
+  vec3 cTerracotta = vec3(0.820, 0.295, 0.190); // #d95338
+  vec3 cMatcha     = vec3(0.155, 0.565, 0.375); // #2e9e6b
+  vec3 cSky        = vec3(0.125, 0.485, 0.685); // #2589bd
+  vec3 cHoney      = vec3(0.865, 0.525, 0.175); // #e59238
+  vec3 cRuleFaint  = vec3(0.695, 0.630, 0.545);
+
+  // 120gsm Cotton Paper Tooth & Fiber Texture
+  float fiberCoarse = noise2D(p * 32.0) * 0.65 + noise2D(p * 68.0 + 11.3) * 0.35;
+  float fiberFine   = noise2D(p * 145.0);
+  vec3 col = cCream * (0.972 + 0.032 * fiberCoarse + 0.018 * (fiberFine - 0.5));
+
+  // Common Printed Planner Header Bar (y = 0.105) & Footer Folio
+  float marginMask = step(0.075, uv.x) * step(uv.x, 0.925);
+  float headerLine = aaStroke(p.y - 0.135, 0.0024) * marginMask;
+  float subHeaderLine = aaStroke(p.y - 0.150, 0.0012) * marginMask;
+  col = mix(col, mix(cCream, cEspresso, 0.78), headerLine);
+  col = mix(col, cBrass, subHeaderLine * 0.88);
+
+  // Corner Folio Badge in top outer corner
+  vec2 badgePos = (uPageSide == 0) ? vec2(0.125, 0.088) : vec2(0.875, 0.088);
+  float badgeBox = sdRoundRect(p - badgePos, vec2(0.045, 0.024), 0.008);
+  vec3 spreadAccent = (uSpreadIdx == 0) ? cHoney :
+                      (uSpreadIdx == 1) ? cMatcha :
+                      (uSpreadIdx == 2) ? cSky :
+                      (uSpreadIdx == 3) ? cTerracotta :
+                      (uSpreadIdx == 4) ? cBrass : cTerracotta;
+  col = mix(col, spreadAccent, aaFill(badgeBox) * 0.88);
+  // Decorative header title rule bars beside badge
+  vec2 barStart = (uPageSide == 0) ? vec2(0.19, 0.088) : vec2(0.56, 0.088);
+  vec2 barEnd   = (uPageSide == 0) ? vec2(0.44, 0.088) : vec2(0.81, 0.088);
+  col = mix(col, mix(cCream, cEspresso, 0.55), aaStroke(sdSegment(p, barStart, barEnd), 0.0032));
+
+  // Content area mask
+  float inBody = step(0.08, uv.x) * step(uv.x, 0.92) * step(0.175, p.y) * step(p.y, 1.27);
+
+  // =========================================================================
+  // 6 DISTINCT PROCEDURAL THEMED SPREADS (0..5)
+  // =========================================================================
+  if (uSpreadIdx == 0) {
+    // 01 \xB7 \u67F4\u72AC\u5496\u5561\u5468\u8BB0 (Shiba Coffee Weekly)
+    if (uPageSide == 0) {
+      // Left: 6 Weekly Day Blocks + Checkboxes
+      for (int i = 0; i < 6; i++) {
+        float rowY = 0.25 + float(i) * 0.172;
+        float boxD = sdRoundRect(p - vec2(0.50, rowY), vec2(0.40, 0.070), 0.012);
+        col = mix(col, mix(cCream, cHoney, 0.09), aaFill(boxD));
+        col = mix(col, mix(cCream, cEspresso, 0.25), aaStroke(boxD, 0.0015));
+        // Day pill on left of row
+        float dayPill = sdRoundRect(p - vec2(0.16, rowY - 0.032), vec2(0.042, 0.018), 0.006);
+        col = mix(col, mix(cCream, cHoney, 0.72), aaFill(dayPill));
+        // Two task checkboxes per row
+        for (int k = 0; k < 2; k++) {
+          float cy = rowY - 0.01 + float(k) * 0.036;
+          float chk = sdRoundRect(p - vec2(0.245, cy), vec2(0.011, 0.011), 0.002);
+          col = mix(col, mix(cCream, cEspresso, 0.45), aaStroke(chk, 0.0014));
+          col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.275, cy), vec2(0.86, cy)), 0.001));
+        }
+      }
+    } else {
+      // Right: Framed Shiba Pour-Over Caf\xE9 Illustration + Coffee Flavor Wheel
+      vec2 fc = vec2(0.50, 0.52);
+      float frameD = sdRoundRect(p - fc, vec2(0.38, 0.30), 0.02);
+      col = mix(col, vec3(0.968, 0.935, 0.875), aaFill(frameD));
+      col = mix(col, cHoney, aaStroke(frameD, 0.0028));
+
+      // Shiba Inu portrait inside frame
+      vec2 sc = vec2(0.39, 0.54);
+      float headD = length((p - sc) * vec2(1.0, 1.12)) - 0.115;
+      float earL = sdTriangleIsosceles(vec2(p.x - (sc.x - 0.072), (sc.y - 0.072) - p.y), vec2(0.042, 0.085));
+      float earR = sdTriangleIsosceles(vec2(p.x - (sc.x + 0.072), (sc.y - 0.072) - p.y), vec2(0.042, 0.085));
+      float shiba = min(headD, min(earL, earR));
+      col = mix(col, cHoney, aaFill(shiba));
+      // Cream Shiba cheeks & muzzle
+      float muzzle = min(
+        length((p - (sc + vec2(0.0, 0.038))) * vec2(0.95, 1.25)) - 0.068,
+        min(length(p - (sc + vec2(-0.048, 0.025))) - 0.042, length(p - (sc + vec2(0.048, 0.025))) - 0.042)
+      );
+      col = mix(col, cCream, aaFill(max(muzzle, headD)));
+      // Shiba eyes, eyebrows & espresso nose
+      float eyes = min(length(p - (sc + vec2(-0.042, -0.012))) - 0.010, length(p - (sc + vec2(0.042, -0.012))) - 0.010);
+      float brows = min(length(p - (sc + vec2(-0.038, -0.036))) - 0.008, length(p - (sc + vec2(0.038, -0.036))) - 0.008);
+      float nose = length((p - (sc + vec2(0.0, 0.018))) * vec2(1.0, 1.35)) - 0.012;
+      col = mix(col, cCream, aaFill(brows));
+      col = mix(col, cEspresso, aaFill(min(eyes, nose)));
+      // Matcha barista apron below Shiba
+      float apron = sdRoundRect(p - (sc + vec2(0.0, 0.165)), vec2(0.085, 0.055), 0.01);
+      col = mix(col, cMatcha, aaFill(max(apron, frameD)));
+
+      // V60 Pour-over dripper & carafe on counter right
+      vec2 dc = vec2(0.67, 0.56);
+      float cone = sdTriangleIsosceles(vec2(p.x - dc.x, p.y - (dc.y - 0.10)), vec2(0.072, -0.10));
+      float carafe = sdRoundRect(p - (dc + vec2(0.0, 0.075)), vec2(0.062, 0.058), 0.022);
+      col = mix(col, cTerracotta, aaFill(cone));
+      col = mix(col, mix(cCream, cEspresso, 0.78), aaFill(carafe));
+      // Steam waves above dripper
+      for (int s = -1; s <= 1; s++) {
+        float sx = dc.x + float(s) * 0.028 + sin(p.y * 45.0) * 0.008;
+        float st = sdSegment(p, vec2(sx, dc.y - 0.13), vec2(sx, dc.y - 0.21));
+        col = mix(col, cHoney, aaStroke(st, 0.0022));
+      }
+
+      // Tasting notes & Flavor Radar below frame
+      vec2 rc = vec2(0.26, 1.05);
+      for (int r = 1; r <= 3; r++) {
+        col = mix(col, mix(cCream, cHoney, 0.45), aaStroke(length(p - rc) - float(r) * 0.042, 0.0013));
+      }
+      for (int l = 0; l < 5; l++) {
+        float ly = 0.92 + float(l) * 0.068;
+        col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.45, ly), vec2(0.88, ly)), 0.0012));
+      }
+    }
+  } else if (uSpreadIdx == 1) {
+    // 02 \xB7 \u6C34\u736D\u9732\u8425\u624B\u7ED8 (Otter Camping Dotted Sketchbook)
+    // 5mm Matcha-tinted Bullet Journal Dot Grid across both pages
+    vec2 gCell = fract(p * 22.0) - 0.5;
+    float dotD = (length(gCell) - 0.075) / 22.0;
+    col = mix(col, mix(cCream, cMatcha, 0.42), aaFill(dotD) * inBody);
+
+    if (uPageSide == 0) {
+      // Left: Camp Gear Packing Checklist + Mini Compass Rose
+      for (int i = 0; i < 8; i++) {
+        float ly = 0.26 + float(i) * 0.095;
+        float cBox = length(p - vec2(0.15, ly)) - 0.013;
+        col = mix(col, cMatcha, aaStroke(cBox, 0.0018));
+        col = mix(col, mix(cCream, cMatcha, 0.30), aaStroke(sdSegment(p, vec2(0.19, ly), vec2(0.84, ly)), 0.0012));
+      }
+      vec2 cmp = vec2(0.50, 1.12);
+      col = mix(col, cBrass, aaStroke(length(p - cmp) - 0.09, 0.0022));
+      col = mix(col, cTerracotta, aaFill(sdTriangleIsosceles(vec2(p.x - cmp.x, cmp.y - 0.075 - p.y), vec2(0.020, -0.075))));
+      col = mix(col, cEspresso, aaFill(sdTriangleIsosceles(vec2(p.x - cmp.x, p.y - (cmp.y + 0.075)), vec2(0.020, -0.075))));
+    } else {
+      // Right: Mountain & Pine Forest A-Frame Tent + Campfire + River Illustration
+      vec2 center = vec2(0.50, 0.68);
+      float border = sdRoundRect(p - center, vec2(0.39, 0.44), 0.018);
+      float clipIn = aaFill(border);
+      col = mix(col, vec3(0.955, 0.968, 0.935), clipIn * 0.65);
+
+      // Twin peaks
+      float mtn1 = sdTriangleIsosceles(vec2(p.x - 0.37, p.y - 0.34), vec2(0.24, 0.34));
+      float mtn2 = sdTriangleIsosceles(vec2(p.x - 0.64, p.y - 0.40), vec2(0.22, 0.28));
+      col = mix(col, mix(cCream, cSky, 0.35), aaFill(min(mtn1, mtn2)) * clipIn);
+
+      // Pine trees
+      for (int t = 0; t < 4; t++) {
+        float tx = 0.20 + float(t) * 0.20;
+        float tree = min(
+          sdTriangleIsosceles(vec2(p.x - tx, p.y - 0.56), vec2(0.045, 0.11)),
+          sdTriangleIsosceles(vec2(p.x - tx, p.y - 0.61), vec2(0.058, 0.12))
+        );
+        col = mix(col, cMatcha, aaFill(tree) * clipIn);
+      }
+
+      // Cozy A-Frame Tent & Campfire
+      float tent = sdTriangleIsosceles(vec2(p.x - 0.43, p.y - 0.68), vec2(0.12, 0.18));
+      float tentDoor = sdTriangleIsosceles(vec2(p.x - 0.43, p.y - 0.74), vec2(0.05, 0.12));
+      col = mix(col, cHoney, aaFill(tent) * clipIn);
+      col = mix(col, cEspresso, aaFill(tentDoor) * clipIn);
+
+      float flame = length((p - vec2(0.67, 0.82)) * vec2(1.3, 0.85)) - 0.036;
+      col = mix(col, cTerracotta, aaFill(flame) * clipIn);
+      col = mix(col, cBrass, aaFill(flame + 0.016) * clipIn);
+
+      // Winding creek waves at bottom
+      float waveY = 0.99 + sin(p.x * 20.0) * 0.025;
+      float river = abs(p.y - waveY) - 0.038;
+      col = mix(col, mix(cCream, cSky, 0.65), aaFill(river) * clipIn);
+      col = mix(col, cMatcha, aaStroke(border, 0.0028));
+    }
+  } else if (uSpreadIdx == 2) {
+    // 03 \xB7 \u732B\u5934\u9E70\u89C2\u661F\u53F0 (Owl Observatory & Brass Star-Chart Wheel)
+    if (uPageSide == 0) {
+      // Left: Lunar Phase Row + Fountain-Pen Ruled Observation Log
+      for (int m = 0; m < 5; m++) {
+        vec2 mc = vec2(0.20 + float(m) * 0.15, 0.25);
+        float moon = length(p - mc) - 0.032;
+        float shadowShift = (float(m) - 2.0) * 0.026;
+        float cutout = length(p - (mc + vec2(shadowShift, 0.0))) - 0.030;
+        col = mix(col, cSky, aaStroke(moon, 0.0018));
+        float lit = (m == 2) ? aaFill(moon) : aaFill(max(moon, -cutout));
+        col = mix(col, cBrass, lit * 0.88);
+      }
+      for (int r = 0; r < 11; r++) {
+        float ry = 0.36 + float(r) * 0.080;
+        col = mix(col, mix(cCream, cSky, 0.32), aaStroke(sdSegment(p, vec2(0.10, ry), vec2(0.90, ry)), 0.0011));
+      }
+    } else {
+      // Right: Golden Brass & Sky-Cobalt Armillary Star-Chart Wheel
+      vec2 wc = vec2(0.50, 0.66);
+      vec2 dp = p - wc;
+      float rad = length(dp);
+      float ang = atan(dp.y, dp.x);
+
+      // Deep sky-tinted parchment disc
+      col = mix(col, mix(cCream, cSky, 0.14), aaFill(rad - 0.37));
+      col = mix(col, cSky, aaStroke(rad - 0.37, 0.0032));
+      col = mix(col, cBrass, aaStroke(rad - 0.33, 0.0020));
+      col = mix(col, mix(cCream, cSky, 0.45), aaStroke(rad - 0.21, 0.0014));
+      col = mix(col, cBrass, aaStroke(rad - 0.10, 0.0016));
+
+      // Degree tick marks around outer ring
+      float tickAng = abs(fract(ang * 18.0 / PI + 0.5) - 0.5) / (18.0 / PI);
+      float tickArc = tickAng * rad;
+      float inRing = step(0.33, rad) * step(rad, 0.37);
+      col = mix(col, cSky, (1.0 - smoothstep(0.001, 0.0035, tickArc)) * inRing * 0.75);
+
+      // Crosshairs & ecliptic ring
+      col = mix(col, mix(cCream, cBrass, 0.65), aaStroke(sdSegment(p, wc - vec2(0.37, 0.0), wc + vec2(0.37, 0.0)), 0.0012));
+      col = mix(col, mix(cCream, cBrass, 0.65), aaStroke(sdSegment(p, wc - vec2(0.0, 0.37), wc + vec2(0.0, 0.37)), 0.0012));
+      float eclip = length(dp - vec2(0.05, -0.04)) - 0.25;
+      col = mix(col, cTerracotta, aaStroke(eclip, 0.0015) * aaFill(rad - 0.36));
+
+      // Big Dipper constellation lines & golden stars
+      vec2 s0 = wc + vec2(-0.18, -0.10);
+      vec2 s1 = wc + vec2(-0.09, -0.13);
+      vec2 s2 = wc + vec2(-0.02, -0.07);
+      vec2 s3 = wc + vec2(0.05, -0.04);
+      vec2 s4 = wc + vec2(0.07, 0.06);
+      vec2 s5 = wc + vec2(0.17, 0.08);
+      vec2 s6 = wc + vec2(0.19, -0.02);
+      float cLines = min(
+        min(sdSegment(p, s0, s1), sdSegment(p, s1, s2)),
+        min(min(sdSegment(p, s2, s3), sdSegment(p, s3, s4)),
+            min(sdSegment(p, s4, s5), min(sdSegment(p, s5, s6), sdSegment(p, s6, s3))))
+      );
+      col = mix(col, cSky, aaStroke(cLines, 0.0020));
+      float cStars = min(
+        min(length(p - s0), min(length(p - s1), length(p - s2))),
+        min(min(length(p - s3), length(p - s4)), min(length(p - s5), length(p - s6)))
+      ) - 0.011;
+      col = mix(col, cBrass, aaFill(cStars));
+      col = mix(col, cEspresso, aaStroke(cStars, 0.0014));
+
+      // Footer caption lines
+      col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.16, 1.13), vec2(0.84, 1.13)), 0.0012));
+      col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.24, 1.20), vec2(0.76, 1.20)), 0.0012));
+    }
+  } else if (uSpreadIdx == 3) {
+    // 04 \xB7 \u4F01\u9E45\u70D8\u7119\u5DE5\u574A (Penguin Bakery Squared Recipe Grid)
+    vec2 g2 = abs(fract(p * 18.0) - 0.5) / 18.0;
+    float gridD = min(g2.x, g2.y);
+    col = mix(col, mix(cCream, cTerracotta, 0.16), (1.0 - smoothstep(0.0, 0.0022, gridD)) * inBody);
+
+    if (uPageSide == 0) {
+      // Left: Ingredient Ratio Bars & Oven Temperature Cards
+      for (int i = 0; i < 5; i++) {
+        float by = 0.28 + float(i) * 0.11;
+        float barBg = sdRoundRect(p - vec2(0.52, by), vec2(0.34, 0.022), 0.008);
+        float fillW = 0.12 + fract(float(i) * 0.37 + 0.25) * 0.20;
+        float barFill = sdRoundRect(p - vec2(0.18 + fillW, by), vec2(fillW, 0.022), 0.008);
+        col = mix(col, mix(cCream, cHoney, 0.22), aaFill(barBg));
+        col = mix(col, (i % 2 == 0) ? cHoney : cTerracotta, aaFill(barFill) * 0.82);
+        col = mix(col, mix(cCream, cEspresso, 0.35), aaStroke(barBg, 0.0014));
+      }
+      // Two oven dial cards at bottom
+      for (int d = 0; d < 2; d++) {
+        vec2 dc = vec2(0.31 + float(d) * 0.38, 1.04);
+        float card = sdRoundRect(p - dc, vec2(0.15, 0.14), 0.016);
+        col = mix(col, cCream, aaFill(card));
+        col = mix(col, cTerracotta, aaStroke(card, 0.0020));
+        col = mix(col, cBrass, aaStroke(length(p - dc) - 0.075, 0.0025));
+        col = mix(col, cEspresso, aaStroke(sdSegment(p, dc, dc + vec2(0.045, -0.042)), 0.003));
+      }
+    } else {
+      // Right: Golden Croissant & Scalloped Terracotta Berry Tart Card
+      vec2 cardC = vec2(0.50, 0.66);
+      float rCard = sdRoundRect(p - cardC, vec2(0.37, 0.43), 0.022);
+      col = mix(col, vec3(0.99, 0.97, 0.93), aaFill(rCard));
+      col = mix(col, cTerracotta, aaStroke(rCard, 0.0028));
+
+      // Layered Golden Croissant (top half of card)
+      vec2 cc = vec2(0.50, 0.45);
+      float cMid = length((p - cc) * vec2(0.85, 1.35)) - 0.088;
+      float cL   = length((p - (cc + vec2(-0.105, 0.028))) * vec2(1.0, 1.35)) - 0.062;
+      float cR   = length((p - (cc + vec2(0.105, 0.028))) * vec2(1.0, 1.35)) - 0.062;
+      float tipL = length(p - (cc + vec2(-0.175, 0.068))) - 0.036;
+      float tipR = length(p - (cc + vec2(0.175, 0.068))) - 0.036;
+      float crois = min(cMid, min(min(cL, cR), min(tipL, tipR)));
+      col = mix(col, cHoney, aaFill(crois));
+      col = mix(col, cBrass, aaFill(cMid + 0.018));
+      col = mix(col, cEspresso, aaStroke(crois, 0.0020));
+
+      // Scalloped Berry Tart (bottom half of card)
+      vec2 tc = vec2(0.50, 0.84);
+      vec2 tdp = p - tc;
+      float tAng = atan(tdp.y, tdp.x);
+      float scallop = length(tdp) - (0.135 + 0.010 * cos(tAng * 14.0));
+      col = mix(col, cHoney, aaFill(scallop));
+      col = mix(col, cTerracotta, aaFill(length(tdp) - 0.102));
+      // Matcha mint leaf on tart center
+      float leaf = length((p - (tc + vec2(0.02, -0.01))) * vec2(0.7, 1.6)) - 0.022;
+      col = mix(col, cMatcha, aaFill(leaf));
+    }
+  } else if (uSpreadIdx == 4) {
+    // 05 \xB7 \u6C34\u8C5A\u6E29\u6CC9\u65E5\u7A0B (Capybara Onsen Habit Tracker)
+    if (uPageSide == 0) {
+      // Left: 7x6 Circular Habit Tracker Matrix + Tea Log
+      for (int row = 0; row < 6; row++) {
+        float ry = 0.27 + float(row) * 0.105;
+        float tag = sdRoundRect(p - vec2(0.20, ry), vec2(0.085, 0.020), 0.008);
+        col = mix(col, mix(cCream, cMatcha, 0.25), aaFill(tag));
+        for (int d = 0; d < 7; d++) {
+          vec2 bc = vec2(0.35 + float(d) * 0.078, ry);
+          float bub = length(p - bc) - 0.022;
+          if ((row + d) % 3 == 0 && row < 3) {
+            col = mix(col, (row == 0) ? cBrass : cMatcha, aaFill(bub) * 0.78);
+          }
+          col = mix(col, mix(cCream, cEspresso, 0.38), aaStroke(bub, 0.0014));
+        }
+      }
+      for (int l = 0; l < 4; l++) {
+        float ly = 0.96 + float(l) * 0.075;
+        col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.12, ly), vec2(0.88, ly)), 0.0012));
+      }
+    } else {
+      // Right: Steaming Hinoki Wood Onsen Tub, Capybara & Floating Yuzu
+      vec2 oc = vec2(0.50, 0.68);
+      float frame = sdRoundRect(p - oc, vec2(0.38, 0.42), 0.024);
+      float inF = aaFill(frame);
+      col = mix(col, vec3(0.955, 0.968, 0.945), inF);
+
+      // Bamboo stalks in background
+      for (int b = 0; b < 3; b++) {
+        float bx = 0.22 + float(b) * 0.065;
+        col = mix(col, mix(cCream, cMatcha, 0.65), aaStroke(sdSegment(p, vec2(bx, 0.30), vec2(bx, 0.72)), 0.0055) * inF);
+      }
+
+      // Warm Onsen Water ellipse & Hinoki tub rim
+      float tubOuter = length((p - vec2(0.52, 0.82)) * vec2(0.82, 1.45)) - 0.27;
+      float tubWater = length((p - vec2(0.52, 0.81)) * vec2(0.88, 1.62)) - 0.23;
+      col = mix(col, cHoney, aaFill(tubOuter) * inF);
+      col = mix(col, mix(cCream, cSky, 0.42), aaFill(tubWater) * inF);
+
+      // Chill Capybara emerging from warm water + golden Yuzu citrus on head!
+      vec2 capC = vec2(0.50, 0.72);
+      float capHead = sdRoundRect(p - capC, vec2(0.105, 0.075), 0.045);
+      float capSnout = sdRoundRect(p - (capC + vec2(0.055, 0.012)), vec2(0.055, 0.048), 0.025);
+      float capy = min(capHead, capSnout);
+      col = mix(col, vec3(0.66, 0.42, 0.24), aaFill(capy) * inF);
+      // Peaceful closed happy eye line
+      col = mix(col, cEspresso, aaStroke(sdSegment(p, capC + vec2(-0.02, -0.01), capC + vec2(0.015, -0.01)), 0.0025) * inF);
+      // Bright Brass-Gold Yuzu balanced on Capybara's head + floating yuzus!
+      float yuzuTop = length(p - (capC + vec2(-0.015, -0.092))) - 0.028;
+      float yuzuF1  = length(p - vec2(0.33, 0.84)) - 0.024;
+      float yuzuF2  = length(p - vec2(0.70, 0.83)) - 0.024;
+      col = mix(col, cBrass, aaFill(min(yuzuTop, min(yuzuF1, yuzuF2))) * inF);
+      col = mix(col, cMatcha, aaStroke(frame, 0.0028));
+    }
+  } else {
+    // 06 \xB7 \u5343\u7EB8\u9E64\u6298\u7EB8\u9875 (Origami Crane Crease Diagrams & Seigaiha Waves)
+    if (uPageSide == 0) {
+      // Left: 4 Geometric Origami Crease-Pattern Step Squares
+      for (int i = 0; i < 4; i++) {
+        vec2 sc = vec2(0.30 + float(i % 2) * 0.40, 0.40 + float(i / 2) * 0.38);
+        float sq = sdRoundRect(p - sc, vec2(0.145, 0.145), 0.004);
+        col = mix(col, vec3(0.99, 0.975, 0.94), aaFill(sq));
+        col = mix(col, cEspresso, aaStroke(sq, 0.0018));
+        // Diagonal & median valley/mountain crease lines
+        float diag1 = sdSegment(p, sc - vec2(0.14, 0.14), sc + vec2(0.14, 0.14));
+        float diag2 = sdSegment(p, sc + vec2(-0.14, 0.14), sc + vec2(0.14, -0.14));
+        float dash = step(0.4, fract((p.x + p.y) * 45.0));
+        col = mix(col, cTerracotta, aaStroke(diag1, 0.0013) * dash);
+        col = mix(col, cSky, aaStroke(diag2, 0.0013));
+        if (i >= 1) {
+          float diamond = abs(p.x - sc.x) + abs(p.y - sc.y) - 0.10;
+          col = mix(col, cBrass, aaStroke(diamond, 0.0015) * aaFill(sq));
+        }
+      }
+      col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.15, 1.06), vec2(0.85, 1.06)), 0.0012));
+      col = mix(col, cRuleFaint, aaStroke(sdSegment(p, vec2(0.15, 1.15), vec2(0.85, 1.15)), 0.0012));
+    } else {
+      // Right: Golden Sun Disc, Soaring Geometric Paper Cranes & Seigaiha Waves
+      vec2 fc = vec2(0.50, 0.68);
+      float box = sdRoundRect(p - fc, vec2(0.38, 0.43), 0.018);
+      float inB = aaFill(box);
+
+      // Terracotta-gold rising sun disc
+      float sunD = length(p - vec2(0.58, 0.46)) - 0.115;
+      col = mix(col, mix(cTerracotta, cBrass, 0.35), aaFill(sunD) * inB * 0.88);
+
+      // Seigaiha concentric wave arcs along bottom of frame
+      if (p.y > 0.84 && p.y < 1.11) {
+        vec2 wuv = p * 11.0;
+        float row = floor(wuv.y);
+        vec2 cell = vec2(fract(wuv.x + mod(row, 2.0) * 0.5) - 0.5, fract(wuv.y) - 0.85);
+        float r = length(cell);
+        float rings = abs(fract(r * 3.2) - 0.5);
+        float waveStroke = 1.0 - smoothstep(0.08, 0.18, rings);
+        col = mix(col, mix(cCream, cSky, 0.55), waveStroke * inB * step(r, 0.95));
+      }
+
+      // Geometric Origami Crane Silhouette soaring across sun
+      vec2 cr = vec2(0.42, 0.56);
+      float wingL = sdTriangleIsosceles(vec2(p.x - (cr.x - 0.06), p.y - (cr.y - 0.11)), vec2(0.075, 0.13));
+      float wingR = sdTriangleIsosceles(vec2(p.x - (cr.x + 0.07), (cr.y + 0.09) - p.y), vec2(0.065, 0.11));
+      float body  = abs(p.x - cr.x) + abs(p.y - cr.y) - 0.065;
+      float crane = min(body, min(wingL, wingR));
+      col = mix(col, cBrass, aaFill(crane) * inB);
+      col = mix(col, cEspresso, aaStroke(crane, 0.0018) * inB);
+      col = mix(col, cTerracotta, aaStroke(box, 0.0028));
+    }
+  }
+
+  // Interactive Hover Ring & Soft Contact Shadow under Cursor (Sticker or Pen preview!)
+  if (uHoverUV.z > 0.5) {
+    vec2 hP = vec2(uHoverUV.x, uHoverUV.y * 1.366);
+    float dHover = length(p - hP);
+    if (uHoverUV.w < 0.5) {
+      // Sticker mode: soft warm drop-shadow beneath floating curled sticker + subtle brass placement ring
+      float shadowSoft = exp(-dHover * dHover * 110.0) * 0.22;
+      col *= (1.0 - shadowSoft);
+      float ring = aaStroke(dHover - 0.092, 0.0018);
+      col = mix(col, cBrass, ring * 0.65);
+    } else if (uHoverUV.w < 1.5) {
+      // Fountain Pen mode: tiny crisp nib target dot
+      float nibShadow = exp(-dHover * dHover * 650.0) * 0.18;
+      col *= (1.0 - nibShadow);
+    }
+  }
+
+  // Spine Gutter Ambient Occlusion & Outer Fore-Edge Bevel
+  float spineAO = mix(0.56, 1.0, smoothstep(0.0, 0.16, vSpineDist));
+  spineAO *= mix(0.88, 1.0, smoothstep(0.0, 0.42, vSpineDist));
+  float edgeShade = mix(0.92, 1.0, smoothstep(0.0, 0.025, 1.0 - vSpineDist));
+
+  // Physical Paper Lighting + Micro-tooth Normal Perturbation + Sunbeams
+  vec3 N = normalize(vNormal + vec3((fiberFine - 0.5) * 0.06, 0.0, (fiberCoarse - 0.5) * 0.06));
+  vec3 L = normalize(uSunDir);
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 H = normalize(L + V);
+
+  float sunSlats = windowSunMask(vWorldPos, uTime);
+  float ndl = max(dot(N, L), 0.0);
+  // Cotton paper also has warm subsurface wrap lighting when lifted mid-turn!
+  float turnLift = sin(clamp(uTurnProgress, 0.0, 1.0) * PI);
+  float wrapTranslucency = max(dot(-N, L), 0.0) * 0.26 * turnLift;
+
+  vec3 ambient = mix(vec3(0.45, 0.38, 0.31), vec3(0.70, 0.65, 0.58), N.y * 0.5 + 0.5);
+  vec3 sunCol = vec3(0.96, 0.87, 0.72);
+  float paperSheen = pow(max(dot(N, H), 0.0), 18.0) * 0.045 * (0.4 + 0.6 * sunSlats);
+
+  vec3 lit = col * (ambient * spineAO * edgeShade + sunCol * (ndl * (0.34 + 0.58 * sunSlats) + wrapTranslucency)) + paperSheen;
+
+  fragColor = vec4(lit, 1.0);
+}
+`,Dt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec3 aColor;
+layout(location = 3) in float aPartMat; // 0 = glossy white border, 1 = matte-satin animal, 2 = brass metallic, 3 = molten wax
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+uniform int uPlacementMode; // 0 = attached/hovered on 3D planner page, 1 = world-space desk prop
+uniform int uPageSide;
+uniform vec2 uStickerUV;    // (px, py) on page
+uniform float uStickerRot;
+uniform float uStickerScale;
+uniform float uTurnProgress;
+uniform float uSpineLift;
+uniform float uSheetFace;   // +1.0 front/resting, -1.0 back of turning sheet
+uniform float uPeelAmount;  // [0..1] live 3D peel-curl wave!
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec3 vColor;
+out float vPartMat;
+out float vPeelLift;
+
+${lt}
+
+void main() {
+  if (uPlacementMode == 1) {
+    vec4 wp = uModel * vec4(aPos, 1.0);
+    vWorldPos = wp.xyz;
+    vNormal = normalize(mat3(uModel) * aNormal);
+    vColor = aColor;
+    vPartMat = aPartMat;
+    vPeelLift = 0.0;
+    gl_Position = uProj * uView * wp;
+    return;
+  }
+
+  // Local sticker footprint in [-1..1] scaled to world size (~0.40 radius at scale=1)
+  float rad = 0.40 * uStickerScale;
+  float lx = aPos.x;
+  float lz = aPos.z;
+  float ly = aPos.y * uStickerScale;
+
+  // Live 3D Peel-Curl Wave: rolls the bottom-right corner upward & slightly inward!
+  float peelCoord = clamp((lx * 0.72 + lz * 0.69) * 0.5 + 0.5, 0.0, 1.0);
+  float peelCurve = pow(peelCoord, 2.15) * uPeelAmount;
+  float peelSlope = 2.15 * pow(max(peelCoord, 0.001), 1.15) * uPeelAmount;
+  float peelLift = peelCurve * 0.42 + uPeelAmount * 0.045;
+  float inwardPull = peelCurve * peelCurve * 0.14;
+
+  float modX = (lx - inwardPull * 0.72) * rad;
+  float modZ = (lz - inwardPull * 0.69) * rad;
+
+  // Rotate in page tangent plane
+  float c = cos(uStickerRot);
+  float s = sin(uStickerRot);
+  float dx = modX * c - modZ * s;
+  float dz = modX * s + modZ * c;
+
+  float px = clamp(uStickerUV.x + dx / PAGE_W, 0.002, 0.998);
+  float py = clamp(uStickerUV.y + dz / PAGE_H, 0.002, 0.998);
+  float u = (uPageSide == 1) ? px : (1.0 - px);
+  float v = py;
+
+  vec3 surfPos;
+  vec3 surfNrm;
+  vec3 tanU;
+  vec3 tanV;
+  deformPageVertex(u, v, uTurnProgress, uSpineLift, surfPos, surfNrm, tanU, tanV);
+
+  // Page-local right (+px) and down (+py) basis vectors on the active face
+  float rightSign = (uPageSide == 1) ? 1.0 : -1.0;
+  vec3 basisRight = tanU * rightSign;
+  vec3 basisUp    = surfNrm * uSheetFace;
+  vec3 basisDown  = tanV;
+
+  // Perturb local normal by peel slope + rotate into deformed 3D page basis
+  vec3 locN = normalize(aNormal + vec3(-peelSlope * 0.45, 0.0, -peelSlope * 0.45));
+  vec3 rotLocN = vec3(
+    locN.x * c - locN.z * s,
+    locN.y,
+    locN.x * s + locN.z * c
+  );
+
+  vec3 worldN = normalize(basisRight * rotLocN.x + basisUp * rotLocN.y + basisDown * rotLocN.z);
+  vec3 worldP = surfPos + basisUp * (0.011 + ly + peelLift);
+
+  vWorldPos = worldP;
+  vNormal = worldN;
+  vColor = aColor;
+  vPartMat = aPartMat;
+  vPeelLift = peelLift;
+
+  gl_Position = uProj * uView * vec4(worldP, 1.0);
+}
+`,Vt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec3 vColor;
+in float vPartMat;
+in float vPeelLift;
+
+uniform vec3 uCamPos;
+uniform vec3 uSunDir;
+uniform float uTime;
+uniform float uHighlight; // > 0 when hovered for peel-off or active preview
+
+out vec4 fragColor;
+
+${Ye}
+
+void main() {
+  vec3 N = normalize(vNormal);
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 L = normalize(uSunDir);
+  vec3 H = normalize(L + V);
+
+  float sunSlats = windowSunMask(vWorldPos, uTime);
+  float ndl = max(dot(N, L), 0.0);
+  vec3 baseCol = vColor;
+
+  float rough = 0.42;
+  float metallic = 0.0;
+  float clearcoat = 0.0;
+
+  if (vPartMat < 0.5) {
+    // Glossy white die-cut sticker vinyl border
+    rough = 0.16;
+    clearcoat = 0.85;
+  } else if (vPartMat < 1.5) {
+    // Matte-satin sculpted 3D animal / craft clay-vinyl relief
+    rough = 0.44;
+    clearcoat = 0.25;
+  } else if (vPartMat < 2.5) {
+    // 18k Brass / Gold Star / Spectacles / Space Helmet Rim
+    rough = 0.18;
+    metallic = 0.86;
+    clearcoat = 0.5;
+  } else {
+    // Molten Terracotta-Crimson Wax Seal (waxy subsurface warmth + satin gloss)
+    rough = 0.28;
+    clearcoat = 0.45;
+    float wrapWax = max(dot(N, L) * 0.5 + 0.5, 0.0);
+    baseCol += vec3(0.14, 0.03, 0.01) * wrapWax;
+  }
+
+  vec3 amb = mix(vec3(0.42, 0.35, 0.28), vec3(0.76, 0.71, 0.63), N.y * 0.5 + 0.5);
+  vec3 sunCol = vec3(1.06, 0.96, 0.82);
+
+  float specPow = mix(96.0, 14.0, rough);
+  float spec = pow(max(dot(N, H), 0.0), specPow) * mix(0.08, 0.95, 1.0 - rough);
+  float coatSpec = pow(max(dot(N, H), 0.0), 110.0) * clearcoat * 0.55;
+  float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0) * 0.18;
+
+  vec3 specCol = mix(vec3(1.0, 0.98, 0.92), baseCol, metallic);
+  vec3 diffCol = baseCol * (1.0 - metallic * 0.62);
+
+  vec3 col = diffCol * (amb + sunCol * ndl * (0.42 + 0.68 * sunSlats))
+           + specCol * spec * (0.45 + 0.70 * sunSlats)
+           + vec3(1.0, 0.98, 0.92) * coatSpec
+           + vec3(0.98, 0.88, 0.68) * rim * (0.5 + vPeelLift * 1.5);
+
+  if (metallic > 0.5) {
+    col += baseCol * 0.28 * (N.y * 0.5 + 0.5);
+  }
+
+  if (uHighlight > 0.01) {
+    float pulse = 0.5 + 0.5 * sin(uTime * 8.0);
+    col = mix(col, vec3(0.95, 0.76, 0.28), uHighlight * (0.22 + 0.14 * pulse));
+  }
+
+  fragColor = vec4(col, 1.0);
+}
+`,Lt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec2 aPageUV;    // (px, py)
+layout(location = 1) in vec3 aInkMeta;   // (birthTime, colorIdx, edgeCoord [-1..1])
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform int uPageSide;
+uniform float uTurnProgress;
+uniform float uSpineLift;
+uniform float uSheetFace;
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out float vBirthTime;
+out float vColorIdx;
+out float vEdge;
+
+${lt}
+
+void main() {
+  float px = clamp(aPageUV.x, 0.001, 0.999);
+  float py = clamp(aPageUV.y, 0.001, 0.999);
+  float u = (uPageSide == 1) ? px : (1.0 - px);
+  float v = py;
+
+  vec3 pos;
+  vec3 nrm;
+  vec3 tanU;
+  vec3 tanV;
+  deformPageVertex(u, v, uTurnProgress, uSpineLift, pos, nrm, tanU, tanV);
+
+  vec3 faceN = nrm * uSheetFace;
+  vec3 wp = pos + faceN * 0.0065;
+
+  vWorldPos = wp;
+  vNormal = faceN;
+  vBirthTime = aInkMeta.x;
+  vColorIdx = aInkMeta.y;
+  vEdge = aInkMeta.z;
+
+  gl_Position = uProj * uView * vec4(wp, 1.0);
+}
+`,It=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vNormal;
+in float vBirthTime;
+in float vColorIdx;
+in float vEdge;
+
+uniform vec3 uCamPos;
+uniform vec3 uSunDir;
+uniform float uTime;
+
+out vec4 fragColor;
+
+${Ye}
+
+void main() {
+  int cid = int(vColorIdx + 0.5);
+  vec3 inkCol = vec3(0.090, 0.075, 0.063); // 0: Espresso
+  float metallic = 0.04;
+  if (cid == 1) {
+    inkCol = vec3(0.910, 0.659, 0.161);    // 1: Brass Nib Gold
+    metallic = 0.82;
+  } else if (cid == 2) {
+    inkCol = vec3(0.851, 0.325, 0.220);    // 2: Terracotta Crimson
+    metallic = 0.10;
+  } else if (cid == 3) {
+    inkCol = vec3(0.180, 0.620, 0.420);    // 3: Matcha Sage
+    metallic = 0.08;
+  } else if (cid == 4) {
+    inkCol = vec3(0.145, 0.537, 0.741);    // 4: Sky Cobalt
+    metallic = 0.12;
+  }
+
+  // Soft cotton-paper feathering + real fountain-ink edge pooling
+  float fiber = noise2D(vWorldPos.xz * 85.0);
+  float edgeDist = abs(vEdge);
+  float alpha = 1.0 - smoothstep(0.68, 1.0, edgeDist + (fiber - 0.5) * 0.16);
+  if (alpha < 0.04) discard;
+
+  // Wet-to-dry glistening transition over 2.8 seconds!
+  float age = max(0.0, uTime - vBirthTime);
+  float wetness = clamp(1.0 - age * 0.36, 0.0, 1.0);
+  float edgePool = smoothstep(0.35, 0.82, edgeDist) * 0.25;
+  vec3 baseCol = inkCol * (1.0 - edgePool - wetness * 0.16);
+
+  vec3 N = normalize(vNormal + vec3((fiber - 0.5) * 0.10, 0.0, (fiber - 0.5) * 0.10));
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 L = normalize(uSunDir);
+  vec3 H = normalize(L + V);
+
+  float sunSlats = windowSunMask(vWorldPos, uTime);
+  float ndl = max(dot(N, L), 0.0);
+
+  float rough = mix(0.58, 0.09, max(wetness, metallic * 0.75));
+  float specPow = mix(120.0, 16.0, rough);
+  float spec = pow(max(dot(N, H), 0.0), specPow) * (wetness * 1.15 + metallic * 0.85 + 0.05);
+
+  vec3 specTint = mix(vec3(1.0, 0.97, 0.88), inkCol, metallic);
+  vec3 lit = baseCol * (0.58 + 0.52 * ndl * (0.45 + 0.65 * sunSlats)) + specTint * spec;
+  if (metallic > 0.5) {
+    lit += inkCol * 0.25;
+  }
+
+  fragColor = vec4(lit, alpha);
+}
+`,_t=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec2 aQuad;
+layout(location = 1) in vec4 aSeed; // (seedA, seedB, seedC, kind: 0=steam, 1=dust)
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uCamRight;
+uniform vec3 uCamUp;
+uniform float uTime;
+
+out vec2 vUV;
+out float vAlpha;
+out float vKind;
+
+void main() {
+  vUV = aQuad;
+  vKind = aSeed.w;
+
+  vec3 center;
+  float size;
+
+  if (aSeed.w < 0.5) {
+    // Rising 3D Ceramic Coffee Mug Steam Wisps above (-6.15, 1.12, -2.25)
+    float life = fract(aSeed.x + uTime * (0.19 + 0.07 * aSeed.y));
+    float angle = aSeed.z * 6.28318 + uTime * 1.15 + life * 4.2;
+    float spiralR = 0.08 + life * 0.34;
+    center = vec3(
+      -6.15 + cos(angle) * spiralR + life * 0.22,
+      1.10 + life * 2.15,
+      -2.25 + sin(angle) * spiralR * 0.85
+    );
+    size = mix(0.16, 0.52, life);
+    vAlpha = sin(life * 3.14159) * 0.24;
+  } else {
+    // Warm Afternoon Golden Paper-Dust Motes floating in sunbeams
+    float phase = uTime * (0.22 + 0.15 * aSeed.z) + aSeed.x * 20.0;
+    center = vec3(
+      (aSeed.x - 0.5) * 13.5 + sin(phase) * 0.45,
+      0.55 + aSeed.y * 3.8 + cos(phase * 0.8) * 0.28,
+      (aSeed.z - 0.5) * 8.5 + sin(phase * 0.65) * 0.35
+    );
+    size = 0.032 + 0.036 * aSeed.y;
+    float twinkle = 0.55 + 0.45 * sin(uTime * 2.4 + aSeed.x * 31.0);
+    vAlpha = 0.52 * twinkle;
+  }
+
+  vec3 wp = center + (uCamRight * aQuad.x + uCamUp * aQuad.y) * size;
+  gl_Position = uProj * uView * vec4(wp, 1.0);
+}
+`,Nt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUV;
+in float vAlpha;
+in float vKind;
+
+out vec4 fragColor;
+
+void main() {
+  float r2 = dot(vUV, vUV);
+  if (r2 > 1.0) discard;
+  float soft = pow(1.0 - r2, (vKind < 0.5) ? 2.2 : 1.6);
+
+  vec3 steamCol = vec3(0.99, 0.96, 0.90);
+  vec3 dustCol  = vec3(0.98, 0.82, 0.42);
+  vec3 col = (vKind < 0.5) ? steamCol : dustCol;
+
+  fragColor = vec4(col, soft * vAlpha);
+}
+`,Ut=`#version 300 es
+precision highp float;
+precision highp int;
+
+out vec2 vUV;
+
+void main() {
+  vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  vUV = p;
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}
+`,Wt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUV;
+
+uniform sampler2D uSceneTex;
+uniform vec2 uTexel;
+
+out vec4 fragColor;
+
+vec3 acesWarm(vec3 x) {
+  const float a = 2.51;
+  const float b = 0.03;
+  const float c = 2.43;
+  const float d = 0.59;
+  const float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+void main() {
+  vec3 col = texture(uSceneTex, vUV).rgb;
+
+  // Soft 4-tap warm sunlight bloom halo on highlights (cream paper sunbars & brass glints)
+  vec2 o = uTexel * 2.5;
+  vec3 b0 = texture(uSceneTex, vUV + vec2( o.x,  o.y)).rgb;
+  vec3 b1 = texture(uSceneTex, vUV + vec2(-o.x,  o.y)).rgb;
+  vec3 b2 = texture(uSceneTex, vUV + vec2( o.x, -o.y)).rgb;
+  vec3 b3 = texture(uSceneTex, vUV + vec2(-o.x, -o.y)).rgb;
+  vec3 avg = (b0 + b1 + b2 + b3) * 0.25;
+  float lum = dot(avg, vec3(0.299, 0.587, 0.114));
+  vec3 bloom = max(avg - 0.72, 0.0) * smoothstep(0.68, 1.15, lum);
+  col += bloom * vec3(0.32, 0.27, 0.18);
+
+  // Subtle warm studio vignette
+  vec2 d = vUV - 0.5;
+  float vig = 1.0 - dot(d, d) * 0.34;
+  col *= clamp(vig, 0.72, 1.0);
+
+  col = acesWarm(col * 1.04);
+  col = pow(col, vec3(1.0 / 2.2));
+
+  fragColor = vec4(col, 1.0);
+}
+`;var le=class{constructor(){this.verts=[],this.indices=[]}addVertex(e,a,n,o,c,s,r,d,f,p=0,u=0){let l=this.verts.length/11;return this.verts.push(e,a,n,o,c,s,r,d,f,p,u),l}addTri(e,a,n){this.indices.push(e,a,n)}addQuad(e,a,n,o){this.indices.push(e,a,n,e,n,o)}addBox(e,a,n,o,c,s,r,d=0){let f=o*.5,p=c*.5,u=s*.5,[l,h,m]=r,v=[{n:[0,1,0],p:[[-f,p,-u],[-f,p,u],[f,p,u],[f,p,-u]]},{n:[0,-1,0],p:[[-f,-p,u],[-f,-p,-u],[f,-p,-u],[f,-p,u]]},{n:[0,0,1],p:[[-f,-p,u],[f,-p,u],[f,p,u],[-f,p,u]]},{n:[0,0,-1],p:[[f,-p,-u],[-f,-p,-u],[-f,p,-u],[f,p,-u]]},{n:[1,0,0],p:[[f,-p,u],[f,-p,-u],[f,p,-u],[f,p,u]]},{n:[-1,0,0],p:[[-f,-p,-u],[-f,-p,u],[-f,p,u],[-f,p,-u]]}];for(let x of v){let P=this.addVertex(e+x.p[0][0],a+x.p[0][1],n+x.p[0][2],x.n[0],x.n[1],x.n[2],l,h,m,0,d),S=this.addVertex(e+x.p[1][0],a+x.p[1][1],n+x.p[1][2],x.n[0],x.n[1],x.n[2],l,h,m,1,d),y=this.addVertex(e+x.p[2][0],a+x.p[2][1],n+x.p[2][2],x.n[0],x.n[1],x.n[2],l,h,m,1,d),b=this.addVertex(e+x.p[3][0],a+x.p[3][1],n+x.p[3][2],x.n[0],x.n[1],x.n[2],l,h,m,0,d);this.addQuad(P,S,y,b)}}addCylinder(e,a,n,o,c,s,r,d,f=!0,p=!0,u=0){let[l,h,m]=d,v=a+s,x=(o-c)/(s||1e-4);for(let P=0;P<r;P++){let S=P/r*Math.PI*2,y=(P+1)/r*Math.PI*2,b=Math.cos(S),T=Math.sin(S),g=Math.cos(y),C=Math.sin(y),E=Math.hypot(1,x),M=this.addVertex(e+b*o,a,n+T*o,b/E,x/E,T/E,l,h,m,P/r,u),V=this.addVertex(e+g*o,a,n+C*o,g/E,x/E,C/E,l,h,m,(P+1)/r,u),U=this.addVertex(e+g*c,v,n+C*c,g/E,x/E,C/E,l,h,m,(P+1)/r,u),_=this.addVertex(e+b*c,v,n+T*c,b/E,x/E,T/E,l,h,m,P/r,u);this.addQuad(M,_,U,V)}if(f&&c>1e-4){let P=this.addVertex(e,v,n,0,1,0,l,h,m,0,u);for(let S=0;S<r;S++){let y=S/r*Math.PI*2,b=(S+1)/r*Math.PI*2,T=this.addVertex(e+Math.cos(y)*c,v,n+Math.sin(y)*c,0,1,0,l,h,m,1,u),g=this.addVertex(e+Math.cos(b)*c,v,n+Math.sin(b)*c,0,1,0,l,h,m,1,u);this.addTri(P,g,T)}}if(p&&o>1e-4){let P=this.addVertex(e,a,n,0,-1,0,l,h,m,0,u);for(let S=0;S<r;S++){let y=S/r*Math.PI*2,b=(S+1)/r*Math.PI*2,T=this.addVertex(e+Math.cos(y)*o,a,n+Math.sin(y)*o,0,-1,0,l,h,m,1,u),g=this.addVertex(e+Math.cos(b)*o,a,n+Math.sin(b)*o,0,-1,0,l,h,m,1,u);this.addTri(P,T,g)}}}addHollowTube(e,a,n,o,c,s,r,d,f,p=0){this.addCylinder(e,a,n,o,o,s,r,d,!1,!1,p);let u=a+s,[l,h,m]=f,[v,x,P]=d;for(let S=0;S<r;S++){let y=S/r*Math.PI*2,b=(S+1)/r*Math.PI*2,T=Math.cos(y),g=Math.sin(y),C=Math.cos(b),E=Math.sin(b),M=this.addVertex(e+T*c,a,n+g*c,-T,0,-g,l,h,m,0,0),V=this.addVertex(e+C*c,a,n+E*c,-C,0,-E,l,h,m,0,0),U=this.addVertex(e+C*c,u,n+E*c,-C,0,-E,l,h,m,0,0),_=this.addVertex(e+T*c,u,n+g*c,-T,0,-g,l,h,m,0,0);this.addQuad(M,V,U,_);let H=this.addVertex(e+T*o,u,n+g*o,0,1,0,v,x,P,0,0),D=this.addVertex(e+C*o,u,n+E*o,0,1,0,v,x,P,0,0),j=this.addVertex(e+C*c,u,n+E*c,0,1,0,l,h,m,0,0),J=this.addVertex(e+T*c,u,n+g*c,0,1,0,l,h,m,0,0);this.addQuad(J,j,D,H)}}upload(e){let a=e.createVertexArray();e.bindVertexArray(a);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,new Float32Array(this.verts),e.STATIC_DRAW);let o=44;e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,o,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,o,12),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,3,e.FLOAT,!1,o,24),e.enableVertexAttribArray(3),e.vertexAttribPointer(3,2,e.FLOAT,!1,o,36);let c=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,c);let s=this.verts.length/11>65530,r=s?new Uint32Array(this.indices):new Uint16Array(this.indices);return e.bufferData(e.ELEMENT_ARRAY_BUFFER,r,e.STATIC_DRAW),e.bindVertexArray(null),{vao:a,count:this.indices.length,indexType:s?e.UNSIGNED_INT:e.UNSIGNED_SHORT}}},ae=class{constructor(){this.verts=[],this.indices=[]}v(e,a,n,o,c,s,r,d=1){let f=this.verts.length/10;return this.verts.push(e,a,n,o,c,s,r[0],r[1],r[2],d),f}tri(e,a,n){this.indices.push(e,a,n)}quad(e,a,n,o){this.indices.push(e,a,n,e,n,o)}addDieCutDisc(e=.92,a=.036,n=28,o=[.995,.988,.972],c=0,s=0,r=6){let d=this.v(0,a,0,0,1,0,o,c),f=this.v(0,0,0,0,-1,0,o,c);for(let p=0;p<n;p++){let u=p/n*Math.PI*2,l=(p+1)/n*Math.PI*2,h=e*(1+s*Math.sin(u*r+.5)),m=e*(1+s*Math.sin(l*r+.5)),v=Math.cos(u)*h,x=Math.sin(u)*h,P=Math.cos(l)*m,S=Math.sin(l)*m,y=this.v(v,a,x,0,1,0,o,c),b=this.v(P,a,S,0,1,0,o,c);this.tri(d,b,y);let T=this.v(v,0,x,0,-1,0,o,c),g=this.v(P,0,S,0,-1,0,o,c);this.tri(f,T,g);let C=this.v(v,0,x,Math.cos(u),.25,Math.sin(u),o,c),E=this.v(P,0,S,Math.cos(l),.25,Math.sin(l),o,c),M=this.v(P,a,S,Math.cos(l),.25,Math.sin(l),o,c),V=this.v(v,a,x,Math.cos(u),.25,Math.sin(u),o,c);this.quad(C,V,M,E)}}addDome(e,a,n,o,c,s,r,d=1,f=6,p=16){for(let u=0;u<f;u++){let l=u/f*(Math.PI*.5),h=(u+1)/f*(Math.PI*.5),m=Math.sin(l),v=Math.cos(l),x=Math.sin(h),P=Math.cos(h);for(let S=0;S<p;S++){let y=S/p*Math.PI*2,b=(S+1)/p*Math.PI*2,g=[[v*Math.cos(y),m,v*Math.sin(y)],[v*Math.cos(b),m,v*Math.sin(b)],[P*Math.cos(b),x,P*Math.sin(b)],[P*Math.cos(y),x,P*Math.sin(y)]].map(([C,E,M])=>{let V=C/(o||1),U=E/(c||1),_=M/(s||1),H=Math.hypot(V,U,_)||1;return this.v(e+C*o,a+E*c,n+M*s,V/H,U/H,_/H,r,d)});this.quad(g[0],g[3],g[2],g[1])}}}addRing(e,a,n,o,c,s,r=2,d=20,f=8){for(let p=0;p<d;p++){let u=p/d*Math.PI*2,l=(p+1)/d*Math.PI*2;for(let h=0;h<f;h++){let m=h/f*Math.PI,v=(h+1)/f*Math.PI,x=(T,g)=>{let C=Math.cos(T),E=Math.sin(T),M=Math.cos(g),V=Math.sin(g),U=o+M*c,_=e+C*U,H=a+V*c,D=n+E*U;return this.v(_,H,D,C*M,V,E*M,s,r)},P=x(u,m),S=x(l,m),y=x(l,v),b=x(u,v);this.quad(P,b,y,S)}}}addTriRelief(e,a,n,o,c,s,r,d=1){let f=o[0],p=c+s,u=o[1],l=[[e,a],[a,n],[n,e]];for(let[h,m]of l){let v=m[0]-h[0],x=m[1]-h[1],P=f-h[0],S=s,y=u-h[1],b=-x*S,T=Math.abs(x*P-v*y),g=v*S,C=Math.hypot(b,T,g)||1;b/=C,T/=C,g/=C;let E=this.v(h[0],c,h[1],b,T,g,r,d),M=this.v(m[0],c,m[1],b,T,g,r,d),V=this.v(f,p,u,b,T,g,r,d);(m[0]-h[0])*(u-h[1])-(m[1]-h[1])*(f-h[0])<0?this.tri(E,M,V):this.tri(M,E,V)}}upload(e){let a=e.createVertexArray();e.bindVertexArray(a);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,new Float32Array(this.verts),e.STATIC_DRAW);let o=40;e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,o,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,o,12),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,3,e.FLOAT,!1,o,24),e.enableVertexAttribArray(3),e.vertexAttribPointer(3,1,e.FLOAT,!1,o,36);let c=e.createBuffer();return e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,c),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(this.indices),e.STATIC_DRAW),e.bindVertexArray(null),{vao:a,count:this.indices.length}}};function Gt(t){let e=[.29,.18,.106],a=[.205,.125,.082],n=[.155,.275,.215],o=[.895,.84,.735],c=[.965,.935,.875],s=[.91,.659,.161],r=[.851,.325,.22],d=[.972,.948,.905],f=[.18,.62,.42],p=[.898,.573,.22],u=[.74,.59,.41],l=new le;l.addBox(0,-.25,0,28,.5,18.5,e);let h=new le;h.addBox(0,.02,.1,15.2,.04,9.8,a),h.addBox(5.55,.085,.55,.46,.1,3.1,[.34,.21,.12]);let m=new le;m.addBox(-2.22,.085,0,4.32,.09,6.02,n),m.addBox(2.22,.085,0,4.32,.09,6.02,n),m.addBox(0,.072,0,.56,.08,6.04,[.125,.225,.175]),m.addBox(-2.18,.134,0,4.18,.012,5.84,o),m.addBox(2.18,.134,0,4.18,.012,5.84,o);let v=new le,x=18,P=-5.6*.5,S=5.6*.5,y=.14;for(let W of[0,1]){let z=W===1?0:1;for(let Y=0;Y<x;Y++){let G=Y/x,X=(Y+1)/x,be=Ee(G,.5,z,-.008),ze=Ee(X,.5,z,-.008),Oe=W===1?be.x:ze.x,Et=W===1?be.y:ze.y,qe=W===1?ze.x:be.x,Mt=W===1?ze.y:be.y,B0=v.addVertex(Oe,y,S,0,0,1,...c),D0=v.addVertex(qe,y,S,0,0,1,...c),V0=v.addVertex(qe,Mt,S,0,0,1,...c),L0=v.addVertex(Oe,Et,S,0,0,1,...c);v.addQuad(B0,D0,V0,L0);let I0=v.addVertex(qe,y,P,0,0,-1,...c),_0=v.addVertex(Oe,y,P,0,0,-1,...c),N0=v.addVertex(Oe,Et,P,0,0,-1,...c),U0=v.addVertex(qe,Mt,P,0,0,-1,...c);v.addQuad(I0,_0,N0,U0)}let L=Ee(1,.5,z,-.008),q=W===1?1:-1;if(W===1){let Y=v.addVertex(L.x,y,S,q,0,0,...c),G=v.addVertex(L.x,y,P,q,0,0,...c),X=v.addVertex(L.x,L.y,P,q,0,0,...c),be=v.addVertex(L.x,L.y,S,q,0,0,...c);v.addQuad(Y,G,X,be)}else{let Y=v.addVertex(L.x,y,P,q,0,0,...c),G=v.addVertex(L.x,y,S,q,0,0,...c),X=v.addVertex(L.x,L.y,S,q,0,0,...c),be=v.addVertex(L.x,L.y,P,q,0,0,...c);v.addQuad(Y,G,X,be)}}let b=new le,T=[[-4.38,-3.01,1,1],[-4.38,3.01,1,-1],[4.38,-3.01,-1,1],[4.38,3.01,-1,-1]];for(let[W,z,L,q]of T)b.addBox(W+L*.22,.092,z+q*.06,.46,.112,.14,s),b.addBox(W+L*.06,.092,z+q*.22,.14,.112,.46,s);b.addBox(-3.15,.16,-3.02,.56,.16,.34,s),b.addBox(-3.28,.17,-3.28,.05,.05,.42,s),b.addBox(-3.02,.17,-3.28,.05,.05,.42,s),b.addBox(-3.15,.17,-3.47,.31,.05,.05,s),b.addBox(5.55,.138,.55,.48,.015,.22,s);let g=new le,C=[[0,.3,2.55],[.03,.31,2.84],[.1,.22,3.08],[.2,.075,3.35],[.34,.055,3.78],[.44,.055,4.18]],E=.115;for(let W=0;W<C.length-1;W++){let z=C[W],L=C[W+1],q=g.addVertex(z[0]-E,z[1],z[2],0,1,.2,...r),Y=g.addVertex(z[0]+E,z[1],z[2],0,1,.2,...r),G=g.addVertex(L[0]+E,L[1],L[2],0,1,.2,...r),X=g.addVertex(L[0]-E,L[1],L[2],0,1,.2,...r);g.addQuad(q,X,G,Y)}let M=C[C.length-1],V=g.addVertex(M[0]-E,M[1],M[2],0,1,0,...r),U=g.addVertex(M[0]+E,M[1],M[2],0,1,0,...r),_=g.addVertex(M[0]+.03,M[1],M[2]+.14,0,1,0,...r),H=g.addVertex(M[0]-E+.04,M[1],M[2]+.25,0,1,0,...r),D=g.addVertex(M[0]+E+.04,M[1],M[2]+.25,0,1,0,...r);g.addTri(V,H,_),g.addTri(_,D,U);let j=-6.15,J=-2.25;g.addCylinder(j,.04,J,.96,.94,.08,28,u,!0,!1,.1),g.addCylinder(j,.12,J,.64,.7,.26,28,r,!1,!1,.2),g.addHollowTube(j,.38,J,.7,.6,.8,28,d,[.35,.24,.17],.2),g.addCylinder(j,.96,J,.61,.61,.04,28,[.12,.07,.04],!0,!1,.95);for(let W=0;W<10;W++){let z=W/10*Math.PI-Math.PI*.5,L=(W+1)/10*Math.PI-Math.PI*.5,q=j-.68-Math.cos(z)*.36,Y=.66+Math.sin(z)*.32,G=j-.68-Math.cos(L)*.36,X=.66+Math.sin(L)*.32;g.addBox((q+G)*.5,(Y+X)*.5,J,.12,.12,.14,d,.2)}return g.addHollowTube(5.85,.04,-2.35,.56,.32,.3,24,f,u,.75),g.addHollowTube(5.72,.34,-2.25,.48,.27,.26,24,p,u,.75),g.addBox(6.05,.052,2.25,1.95,.022,2.75,[.985,.968,.93],.1),{desk:l.upload(t),mat:h.upload(t),cover:m.upload(t),pageBlock:v.upload(t),brass:b.upload(t),props:g.upload(t)}}function Ht(t){let e=new le,a=new le,n=[.16,.1,.07],o=[.96,.92,.83],c=[.91,.659,.161];return a.addCylinder(0,0,0,.012,.068,.28,12,c,!1,!0),a.addCylinder(0,.28,0,.068,.088,.2,12,c,!0,!1),e.addCylinder(0,.48,0,.088,.115,.44,14,n),a.addCylinder(0,.92,0,.12,.12,.08,14,c),e.addCylinder(0,1,0,.122,.112,1.45,8,n),e.addCylinder(0,2.45,0,.112,.095,.3,8,o),a.addCylinder(0,2.75,0,.095,.065,.12,12,c),a.addBox(.125,2.25,0,.032,.88,.048,c),{body:e.upload(t),brass:a.upload(t)}}function zt(t,e=36,a=24){let n=[],o=[];for(let f=0;f<=a;f++){let p=f/a;for(let u=0;u<=e;u++){let l=u/e;n.push(l,p)}}let c=e+1;for(let f=0;f<a;f++)for(let p=0;p<e;p++){let u=f*c+p,l=u+1,h=(f+1)*c+p,m=h+1;o.push(u,h,m,u,m,l)}let s=t.createVertexArray();t.bindVertexArray(s);let r=t.createBuffer();t.bindBuffer(t.ARRAY_BUFFER,r),t.bufferData(t.ARRAY_BUFFER,new Float32Array(n),t.STATIC_DRAW),t.enableVertexAttribArray(0),t.vertexAttribPointer(0,2,t.FLOAT,!1,8,0);let d=t.createBuffer();return t.bindBuffer(t.ELEMENT_ARRAY_BUFFER,d),t.bufferData(t.ELEMENT_ARRAY_BUFFER,new Uint16Array(o),t.STATIC_DRAW),t.bindVertexArray(null),{vao:s,count:o.length}}function Ot(t){let e=[.995,.99,.976],a=[.984,.955,.895],n=[.898,.573,.22],o=[.64,.405,.235],c=[.38,.235,.14],s=[.105,.082,.068],r=[.91,.659,.161],d=[.851,.325,.22],f=[.18,.62,.42],p=[.145,.537,.741],u=[];{let l=new ae;l.addDieCutDisc(.94,.036,28,e,0,.03,5),l.addDome(0,.036,.06,.66,.16,.6,n,1),l.addTriRelief([-.58,-.22],[-.18,-.45],[-.48,-.78],[-.42,-.5],.036,.16,n,1),l.addTriRelief([.18,-.45],[.58,-.22],[.48,-.78],[.42,-.5],.036,.16,n,1),l.addDome(-.26,.08,.22,.28,.1,.24,a,1,5,12),l.addDome(.26,.08,.22,.28,.1,.24,a,1,5,12),l.addDome(0,.1,.25,.26,.12,.22,a,1,5,12),l.addDome(0,.19,.18,.09,.06,.07,s,1,4,10),l.addDome(-.24,.16,-.04,.075,.05,.075,s,1,4,10),l.addDome(.24,.16,-.04,.075,.05,.075,s,1,4,10),l.addDome(-.21,.17,-.18,.06,.04,.04,a,1,3,8),l.addDome(.21,.17,-.18,.06,.04,.04,a,1,3,8),l.addDome(0,.14,-.34,.34,.1,.22,f,1,5,12),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.94,.036,28,e,0),l.addDome(0,.036,.3,.76,.09,.44,[.78,.56,.34],1),l.addDome(0,.065,.3,.64,.08,.34,p,1),l.addDome(-.04,.06,.02,.48,.17,.4,o,1),l.addDome(.24,.09,.06,.26,.15,.24,[.52,.32,.18],1),l.addDome(-.32,.14,-.24,.11,.08,.09,[.48,.29,.16],1,4,10),l.addDome(-.08,.17,-.34,.2,.15,.18,r,1,5,12),l.addDome(.05,.27,-.38,.09,.05,.05,f,1,3,8),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.95,.036,28,e,0),l.addDome(0,.036,0,.78,.07,.78,[.12,.36,.54],1),l.addRing(0,.045,0,.72,.095,r,2,24,8),l.addDome(0,.07,.06,.48,.16,.44,n,1),l.addTriRelief([-.44,-.14],[-.14,-.34],[-.38,-.58],[-.32,-.38],.07,.14,n,1),l.addTriRelief([.14,-.34],[.44,-.14],[.38,-.58],[.32,-.38],.07,.14,n,1),l.addDome(0,.15,.18,.22,.09,.16,a,1,4,10),l.addDome(0,.21,.14,.07,.05,.06,d,1,4,8),l.addDome(-.18,.18,0,.07,.05,.07,s,1,4,8),l.addDome(.18,.18,0,.07,.05,.07,s,1,4,8),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.95,.036,28,e,0,.04,4),l.addDome(0,.036,.26,.76,.06,.44,[.24,.56,.36],1),l.addTriRelief([-.62,.32],[.42,.32],[-.1,-.62],[-.1,-.12],.05,.22,f,1),l.addDome(-.1,.08,.22,.26,.15,.22,o,1,5,12),l.addDome(-.1,.16,.3,.16,.08,.12,a,1,4,10),l.addDome(-.1,.21,.28,.06,.04,.05,s,1,3,8),l.addTriRelief([.34,.44],[.68,.44],[.51,.08],[.51,.3],.06,.18,d,1),l.addDome(.51,.08,.36,.1,.12,.1,r,1,4,10),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.93,.036,28,e,0),l.addDome(0,.036,.1,.62,.16,.64,c,1),l.addDome(0,.09,.28,.4,.11,.34,a,1,5,12),l.addDome(-.22,.14,-.08,.18,.07,.18,a,1,4,12),l.addDome(.22,.14,-.08,.18,.07,.18,a,1,4,12),l.addRing(-.22,.16,-.08,.18,.038,r,2,16,6),l.addRing(.22,.16,-.08,.18,.038,r,2,16,6),l.addDome(-.22,.18,-.08,.075,.05,.075,s,1,4,8),l.addDome(.22,.18,-.08,.075,.05,.075,s,1,4,8),l.addTriRelief([-.09,.02],[.09,.02],[0,.22],[0,.09],.15,.1,n,1),l.addTriRelief([-.52,-.45],[.52,-.45],[0,-.78],[0,-.52],.12,.09,s,1),l.addTriRelief([-.52,-.45],[.52,-.45],[0,-.18],[0,-.4],.12,.09,s,1),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.92,.055,32,d,3,.075,7),l.addRing(0,.055,0,.64,.11,[.78,.26,.17],3,24,8),l.addDome(0,.04,0,.56,.035,.56,[.72,.22,.15],3,4,16);for(let h=0;h<5;h++){let m=h/5*Math.PI*2-Math.PI*.5,v=m-.36,x=m+.36;l.addTriRelief([Math.cos(v)*.16,Math.sin(v)*.16],[Math.cos(x)*.16,Math.sin(x)*.16],[Math.cos(m)*.46,Math.sin(m)*.46],[Math.cos(m)*.22,Math.sin(m)*.22],.065,.11,[.9,.48,.24],3)}u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.92,.036,28,e,0,.06,5);let h=.78,m=.34;for(let v=0;v<5;v++){let x=v/5*Math.PI*2-Math.PI*.5,P=x-Math.PI/5,S=x+Math.PI/5,y=[Math.cos(x)*h,Math.sin(x)*h],b=[Math.cos(P)*m,Math.sin(P)*m],T=[Math.cos(S)*m,Math.sin(S)*m];l.addTriRelief(b,y,[0,0],[Math.cos(x-.15)*.18,Math.sin(x-.15)*.18],.036,.19,r,2),l.addTriRelief(y,T,[0,0],[Math.cos(x+.15)*.18,Math.sin(x+.15)*.18],.036,.19,r,2)}u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.93,.036,28,e,0),l.addDome(0,.036,0,.78,.06,.78,d,1,4,20),l.addRing(.56,.07,0,.18,.055,a,1,12,6),l.addRing(0,.07,0,.52,.075,a,1,22,8),l.addDome(0,.07,0,.49,.065,.49,[.58,.34,.16],1,4,18),l.addDome(-.11,.12,-.06,.15,.05,.15,a,1,4,10),l.addDome(.11,.12,-.06,.15,.05,.15,a,1,4,10),l.addTriRelief([-.23,-.02],[.23,-.02],[0,.26],[0,.08],.12,.05,a,1),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.93,.036,28,e,0),l.addRing(0,.04,0,.68,.085,d,1,22,6),l.addDome(0,.036,0,.64,.05,.64,[.26,.17,.11],1,3,16);for(let h=0;h<8;h++){let m=h/8*Math.PI*2,v=m-.34,x=m+.34;l.addTriRelief([Math.cos(v)*.22,Math.sin(v)*.22],[Math.cos(x)*.22,Math.sin(x)*.22],[Math.cos(m)*.68,Math.sin(m)*.68],[Math.cos(m)*.42,Math.sin(m)*.42],.06,.13,f,1)}for(let h=0;h<6;h++){let m=h/6*Math.PI*2+.25,v=m-.42,x=m+.42;l.addTriRelief([Math.cos(v)*.1,Math.sin(v)*.1],[Math.cos(x)*.1,Math.sin(x)*.1],[Math.cos(m)*.44,Math.sin(m)*.44],[Math.cos(m)*.25,Math.sin(m)*.25],.1,.14,[.28,.72,.48],1)}l.addDome(0,.14,0,.14,.1,.14,d,1,4,10),u.push(l.upload(t))}{let l=new ae;l.addDieCutDisc(.94,.036,28,e,0,.04,4),l.addDome(0,.036,0,.72,.04,.72,[.88,.94,.97],1,3,18),l.addTriRelief([-.24,0],[.24,0],[0,-.28],[0,-.06],.055,.16,n,1),l.addTriRelief([-.24,0],[.24,0],[0,.28],[0,.06],.055,.16,n,1),l.addTriRelief([-.16,-.14],[-.14,.16],[-.78,-.32],[-.42,-.12],.06,.19,r,2),l.addTriRelief([.14,.16],[.16,-.14],[.78,-.26],[.42,-.1],.06,.19,r,2),l.addTriRelief([-.08,-.18],[.08,-.18],[-.18,-.72],[-.08,-.45],.06,.15,d,1),l.addTriRelief([-.08,.18],[.08,.18],[.18,.72],[.08,.45],.06,.15,d,1),u.push(l.upload(t))}return u}function qt(t,e=28,a=64){let n=Ke(20270808),o=e+a,c=new Float32Array(o*4);for(let p=0;p<o;p++){let u=p*4;c[u+0]=n(),c[u+1]=n(),c[u+2]=n(),c[u+3]=p<e?0:1}let s=new Float32Array([-1,-1,1,-1,1,1,-1,-1,1,1,-1,1]),r=t.createVertexArray();t.bindVertexArray(r);let d=t.createBuffer();t.bindBuffer(t.ARRAY_BUFFER,d),t.bufferData(t.ARRAY_BUFFER,s,t.STATIC_DRAW),t.enableVertexAttribArray(0),t.vertexAttribPointer(0,2,t.FLOAT,!1,8,0);let f=t.createBuffer();return t.bindBuffer(t.ARRAY_BUFFER,f),t.bufferData(t.ARRAY_BUFFER,c,t.STATIC_DRAW),t.enableVertexAttribArray(1),t.vertexAttribPointer(1,4,t.FLOAT,!1,16,0),t.vertexAttribDivisor(1,1),t.bindVertexArray(null),{vao:r,instanceCount:o}}var Xe=class{constructor(e){this.gl=e,this.vao=e.createVertexArray(),this.vbo=e.createBuffer(),this.vertCount=0,e.bindVertexArray(this.vao),e.bindBuffer(e.ARRAY_BUFFER,this.vbo);let a=20;e.enableVertexAttribArray(0),e.vertexAttribPointer(0,2,e.FLOAT,!1,a,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,a,8),e.bindVertexArray(null)}rebuild(e){let a=[],n=4.1/5.6;for(let o of e){let c=o.points;if(!c||c.length<2)continue;let s=o.width||.0068,r=o.colorIdx||0;for(let d=0;d<c.length-1;d++){let f=c[d],p=c[d+1],u=p.px-f.px,l=(p.py-f.py)/n,h=Math.hypot(u,l);if(h<1e-5)continue;let m=-l/h,v=u/h*n,x=d/Math.max(1,c.length-1),P=(d+1)/Math.max(1,c.length-1),S=s*(.45+.55*Math.sin(k(x,.05,.95)*Math.PI)),y=s*(.45+.55*Math.sin(k(P,.05,.95)*Math.PI)),b=f.px+m*S,T=f.py+v*S,g=f.px-m*S,C=f.py-v*S,E=p.px+m*y,M=p.py+v*y,V=p.px-m*y,U=p.py-v*y,_=f.t,H=p.t;a.push(b,T,_,r,-1,g,C,_,r,1,E,M,H,r,-1,g,C,_,r,1,V,U,H,r,1,E,M,H,r,-1)}}this.vertCount=a.length/5,this.vertCount>0&&(this.gl.bindBuffer(this.gl.ARRAY_BUFFER,this.vbo),this.gl.bufferData(this.gl.ARRAY_BUFFER,new Float32Array(a),this.gl.DYNAMIC_DRAW))}};var Qe=class{constructor(){this.ctx=null,this.master=null,this.analyser=null,this.roomSend=null,this.paperNoiseBuf=null,this.crackleNoiseBuf=null,this.nibGain=null,this.nibToothFilter=null,this.nibCrispFilter=null,this.vol=.8,this.bgmEnabled=!0,this.bgmStep=0,this.bgmTimer=.25}init(){if(this.ctx){this.ctx.state==="suspended"&&this.ctx.resume().catch(()=>{});return}let e=window.AudioContext||window.webkitAudioContext;if(!e)return;try{this.ctx=new e}catch{return}let a=this.ctx.createDynamicsCompressor();a.threshold.value=-12,a.knee.value=14,a.ratio.value=6,a.attack.value=.004,a.release.value=.16,this.master=this.ctx.createGain(),this.master.gain.value=this.vol,this.analyser=this.ctx.createAnalyser(),this.analyser.fftSize=512,this.master.connect(a),a.connect(this.analyser),this.analyser.connect(this.ctx.destination),this.roomSend=this.ctx.createGain(),this.roomSend.gain.value=.22;let n=this.ctx.createDelay(.5);n.delayTime.value=.14;let o=this.ctx.createGain();o.gain.value=.24;let c=this.ctx.createBiquadFilter();c.type="lowpass",c.frequency.value=2400,this.roomSend.connect(n),n.connect(c),c.connect(o),o.connect(n),c.connect(this.master);let s=this.ctx.sampleRate;this.paperNoiseBuf=this.ctx.createBuffer(1,s*2,s);let r=this.paperNoiseBuf.getChannelData(0),d=0,f=0,p=0;for(let v=0;v<r.length;v++){let x=Math.random()*2-1;d=.996*d+x*.032,f=.982*f+x*.042,p=.94*p+x*.065,r[v]=(d+f+p+x*.22)*.85}this.crackleNoiseBuf=this.ctx.createBuffer(1,Math.floor(s*1.5),s);let u=this.crackleNoiseBuf.getChannelData(0),l=0;for(let v=0;v<u.length;v++)Math.random()<.085?l=(Math.random()*2-1)*(.55+Math.random()*.45):l*=.92,u[v]=l+(Math.random()*2-1)*.18;let h=this.ctx.createBufferSource();h.buffer=this.paperNoiseBuf,h.loop=!0,this.nibToothFilter=this.ctx.createBiquadFilter(),this.nibToothFilter.type="bandpass",this.nibToothFilter.frequency.value=1750,this.nibToothFilter.Q.value=2.4,this.nibCrispFilter=this.ctx.createBiquadFilter(),this.nibCrispFilter.type="bandpass",this.nibCrispFilter.frequency.value=4100,this.nibCrispFilter.Q.value=3.2;let m=this.ctx.createGain();m.gain.value=.55,this.nibGain=this.ctx.createGain(),this.nibGain.gain.value=0,h.connect(this.nibToothFilter),h.connect(this.nibCrispFilter),this.nibToothFilter.connect(this.nibGain),this.nibCrispFilter.connect(m),m.connect(this.nibGain),this.nibGain.connect(this.master),h.start()}setVolume(e){this.vol=Math.max(0,Math.min(1,e)),this.master&&this.ctx&&this.master.gain.setTargetAtTime(this.vol,this.ctx.currentTime,.03)}setBgmEnabled(e){this.bgmEnabled=!!e}update(e,a=!1,n=0){if(!this.ctx||this.ctx.state!=="running")return;let o=this.ctx.currentTime;if(this.nibGain)if(a&&n>.005){let c=Math.min(1.8,n),s=Math.min(.24,.045+c*.14);this.nibGain.gain.setTargetAtTime(s,o,.018),this.nibToothFilter.frequency.setTargetAtTime(1450+c*920,o,.025),this.nibCrispFilter.frequency.setTargetAtTime(3600+c*1450,o,.025)}else this.nibGain.gain.setTargetAtTime(0,o,.025);if(this.bgmEnabled&&(this.bgmTimer-=e,this.bgmTimer<=0)){let c=[[174.61,261.63,329.63,392,523.25],[164.81,246.94,293.66,392,493.88],[146.83,220,261.63,329.63,440],[130.81,196,246.94,293.66,392]],s=Math.floor(this.bgmStep/4)%c.length,r=this.bgmStep%4,d=c[s];r===0?(this._pluckNylon(d[0],.095,1.35,o),this._pluckKalimba(d[2],.065,.95,o+.03)):r===1?this._pluckKalimba(d[3],.06,.85,o):r===2?(this._pluckNylon(d[1],.07,1.05,o),this._pluckKalimba(d[4],.068,1.05,o+.04)):this._pluckKalimba(d[2+s%2],.052,.8,o),this.bgmStep++,this.bgmTimer=r%2===0?.48:.42}}_pluckKalimba(e,a,n,o){if(!this.ctx)return;let c=this.ctx.createOscillator(),s=this.ctx.createOscillator(),r=this.ctx.createGain(),d=this.ctx.createGain();c.type="sine",c.frequency.setValueAtTime(e,o),s.type="triangle",s.frequency.setValueAtTime(e*6.18,o),d.gain.setValueAtTime(a*.35,o),d.gain.exponentialRampToValueAtTime(1e-4,o+.042),r.gain.setValueAtTime(1e-4,o),r.gain.linearRampToValueAtTime(a,o+.006),r.gain.exponentialRampToValueAtTime(2e-4,o+n),c.connect(r),s.connect(d),d.connect(r),r.connect(this.master),r.connect(this.roomSend),c.start(o),s.start(o),c.stop(o+n+.04),s.stop(o+.06)}_pluckNylon(e,a,n,o){if(!this.ctx)return;let c=this.ctx.createOscillator(),s=this.ctx.createBiquadFilter(),r=this.ctx.createGain();c.type="triangle",c.frequency.setValueAtTime(e,o),s.type="lowpass",s.frequency.setValueAtTime(e*4.5,o),s.frequency.exponentialRampToValueAtTime(e*1.4,o+n*.75),r.gain.setValueAtTime(1e-4,o),r.gain.linearRampToValueAtTime(a,o+.012),r.gain.exponentialRampToValueAtTime(2e-4,o+n),c.connect(s),s.connect(r),r.connect(this.master),r.connect(this.roomSend),c.start(o),c.stop(o+n+.05)}playPageTurn(e=1){if(this.init(),!this.ctx||!this.paperNoiseBuf)return;let a=this.ctx.currentTime,n=this.ctx.createBufferSource();n.buffer=this.paperNoiseBuf,n.playbackRate.value=e>=0?1.04:.94;let o=this.ctx.createBiquadFilter();o.type="bandpass",o.Q.value=1.35,o.frequency.setValueAtTime(820,a),o.frequency.exponentialRampToValueAtTime(2650,a+.16),o.frequency.exponentialRampToValueAtTime(640,a+.42);let c=this.ctx.createGain();c.gain.setValueAtTime(.001,a),c.gain.linearRampToValueAtTime(.28,a+.09),c.gain.exponentialRampToValueAtTime(.001,a+.44),n.connect(o),o.connect(c),c.connect(this.master),c.connect(this.roomSend),n.start(a),n.stop(a+.46);let s=this.ctx.createOscillator(),r=this.ctx.createGain(),d=a+.33;s.type="sine",s.frequency.setValueAtTime(108,d),s.frequency.exponentialRampToValueAtTime(44,d+.13),r.gain.setValueAtTime(.001,d),r.gain.linearRampToValueAtTime(.22,d+.012),r.gain.exponentialRampToValueAtTime(5e-4,d+.15),s.connect(r),r.connect(this.master),s.start(d),s.stop(d+.17)}playStickerPeel(){if(this.init(),!this.ctx||!this.crackleNoiseBuf)return;let e=this.ctx.currentTime,a=this.ctx.createBufferSource();a.buffer=this.crackleNoiseBuf;let n=this.ctx.createBiquadFilter();n.type="bandpass",n.Q.value=3.6,n.frequency.setValueAtTime(680,e),n.frequency.exponentialRampToValueAtTime(3850,e+.21);let o=this.ctx.createGain();o.gain.setValueAtTime(.001,e),o.gain.linearRampToValueAtTime(.26,e+.035),o.gain.exponentialRampToValueAtTime(.001,e+.23),a.connect(n),n.connect(o),o.connect(this.master),a.start(e),a.stop(e+.25)}playStickerStick(e=!1){if(e){this.playWaxStamp();return}if(this.init(),!this.ctx||!this.paperNoiseBuf)return;let a=this.ctx.currentTime,n=this.ctx.createOscillator(),o=this.ctx.createGain();n.type="sine",n.frequency.setValueAtTime(168,a),n.frequency.exponentialRampToValueAtTime(56,a+.095),o.gain.setValueAtTime(.001,a),o.gain.linearRampToValueAtTime(.32,a+.008),o.gain.exponentialRampToValueAtTime(5e-4,a+.11),n.connect(o),o.connect(this.master),n.start(a),n.stop(a+.12);let c=this.ctx.createBufferSource();c.buffer=this.paperNoiseBuf;let s=this.ctx.createBiquadFilter();s.type="bandpass",s.frequency.setValueAtTime(1320,a),s.frequency.linearRampToValueAtTime(920,a+.11),s.Q.value=1.6;let r=this.ctx.createGain();r.gain.setValueAtTime(.18,a),r.gain.exponentialRampToValueAtTime(.001,a+.12),c.connect(s),s.connect(r),r.connect(this.master),c.start(a),c.stop(a+.13)}playWaxStamp(){if(this.init(),!this.ctx||!this.paperNoiseBuf)return;let e=this.ctx.currentTime,a=this.ctx.createOscillator(),n=this.ctx.createGain();a.type="triangle",a.frequency.setValueAtTime(124,e),a.frequency.exponentialRampToValueAtTime(38,e+.16),n.gain.setValueAtTime(.38,e),n.gain.exponentialRampToValueAtTime(8e-4,e+.18),a.connect(n),n.connect(this.master),a.start(e),a.stop(e+.2),[1860,2790].forEach((r,d)=>{let f=this.ctx.createOscillator(),p=this.ctx.createGain();f.type="sine",f.frequency.setValueAtTime(r,e),p.gain.setValueAtTime(d===0?.085:.045,e),p.gain.exponentialRampToValueAtTime(2e-4,e+.22),f.connect(p),p.connect(this.master),p.connect(this.roomSend),f.start(e),f.stop(e+.24)});let o=this.ctx.createBufferSource();o.buffer=this.paperNoiseBuf;let c=this.ctx.createBiquadFilter();c.type="bandpass",c.frequency.setValueAtTime(760,e),c.frequency.exponentialRampToValueAtTime(340,e+.14),c.Q.value=2.8;let s=this.ctx.createGain();s.gain.setValueAtTime(.2,e),s.gain.exponentialRampToValueAtTime(.001,e+.15),o.connect(c),c.connect(s),s.connect(this.master),o.start(e),o.stop(e+.16)}playNibPreview(){if(this.init(),!this.ctx||!this.paperNoiseBuf)return;let e=this.ctx.currentTime,a=[{delay:0,dur:.11,f0:1650,f1:2450},{delay:.14,dur:.19,f0:1950,f1:3100},{delay:.36,dur:.09,f0:2200,f1:1700}];for(let n of a){let o=e+n.delay,c=this.ctx.createBufferSource();c.buffer=this.paperNoiseBuf;let s=this.ctx.createBiquadFilter();s.type="bandpass",s.Q.value=2.6,s.frequency.setValueAtTime(n.f0,o),s.frequency.linearRampToValueAtTime(n.f1,o+n.dur);let r=this.ctx.createGain();r.gain.setValueAtTime(.001,o),r.gain.linearRampToValueAtTime(.22,o+.02),r.gain.exponentialRampToValueAtTime(.001,o+n.dur),c.connect(s),s.connect(r),r.connect(this.master),c.start(o),c.stop(o+n.dur+.02)}}playKalimbaChordPreview(){if(this.init(),!this.ctx)return;let e=this.ctx.currentTime,a=[174.61,261.63,329.63,392,523.25];this._pluckNylon(a[0],.13,1.4,e),a.slice(1).forEach((n,o)=>{this._pluckKalimba(n,.095,1.1,e+.055*(o+1))})}};function Kt(t,e,a){let n=t.createShader(e);if(t.shaderSource(n,a),t.compileShader(n),!t.getShaderParameter(n,t.COMPILE_STATUS)){let o=t.getShaderInfoLog(n);throw t.deleteShader(n),new Error(`Shader compile error: ${o}`)}return n}function Le(t,e,a,n){let o=t.createProgram(),c=Kt(t,t.VERTEX_SHADER,e),s=Kt(t,t.FRAGMENT_SHADER,a);if(t.attachShader(o,c),t.attachShader(o,s),t.linkProgram(o),!t.getProgramParameter(o,t.LINK_STATUS))throw new Error(`Program link error: ${t.getProgramInfoLog(o)}`);t.deleteShader(c),t.deleteShader(s);let r={};for(let d of n)r[d]=t.getUniformLocation(o,d);return{prog:o,u:r}}var Ge=document.getElementById("planner-app"),N=document.getElementById("pl-canvas"),l0=document.getElementById("pl-hud"),d0=document.getElementById("pl-overlay"),Yt=document.getElementById("pl-perf"),Xt=document.getElementById("pl-spread-badge"),jt=document.getElementById("pl-spread-name"),Qt=document.getElementById("pl-counts"),Ue=document.getElementById("pl-toast-feed"),tt=document.getElementById("pl-banner"),G0=document.getElementById("pl-banner-title"),H0=document.getElementById("pl-banner-sub"),dt=document.getElementById("pl-live-tip"),z0=document.getElementById("pl-tray-sticker"),O0=document.getElementById("pl-tray-pen"),q0=document.getElementById("pl-tray-turn"),u0=document.getElementById("mode-btn-sticker"),f0=document.getElementById("mode-btn-pen"),p0=document.getElementById("mode-btn-turn"),K0=document.getElementById("pl-btn-open"),Y0=document.getElementById("pl-btn-sample-flip"),X0=document.getElementById("pl-btn-studio"),m0=document.getElementById("pl-studio"),at=document.getElementById("pl-scope"),pe=at?at.getContext("2d"):null,$t=document.getElementById("pl-title"),Zt=Array.from(document.querySelectorAll(".pl-stk-chip")),Jt=Array.from(document.querySelectorAll(".pl-ink-chip")),e0=Array.from(document.querySelectorAll(".pl-nib-chip")),h0=Array.from(document.querySelectorAll(".pl-tab-btn")),v0=Array.from(document.querySelectorAll(".pl-cam-chip, .cam-pill")),i=N.getContext("webgl2",{antialias:!1,alpha:!1,powerPreference:"high-performance"});if(!i)throw $t&&($t.textContent="\u5F53\u524D\u6D4F\u89C8\u5668\u672A\u542F\u7528 WebGL2"),new Error("WebGL2 unavailable");var t0=i.getExtension("WEBGL_debug_renderer_info"),j0=t0?String(i.getParameter(t0.UNMASKED_RENDERER_WEBGL)):"",x0=/SwiftShader|llvmpipe|Software/i.test(j0),a0=!!i.getExtension("EXT_color_buffer_float"),Se=Le(i,wt,kt,["uProj","uView","uModel","uCamPos","uSunDir","uTime","uMatType"]),oe=Le(i,Ft,Bt,["uProj","uView","uTurnProgress","uSpineLift","uPageSide","uSheetFace","uCamPos","uSunDir","uTime","uSpreadIdx","uHoverUV"]),B=Le(i,Dt,Vt,["uProj","uView","uModel","uPlacementMode","uPageSide","uStickerUV","uStickerRot","uStickerScale","uTurnProgress","uSpineLift","uSheetFace","uPeelAmount","uCamPos","uSunDir","uTime","uHighlight"]),de=Le(i,Lt,It,["uProj","uView","uPageSide","uTurnProgress","uSpineLift","uSheetFace","uCamPos","uSunDir","uTime"]),Re=Le(i,_t,Nt,["uProj","uView","uCamRight","uCamUp","uTime"]),ut=Le(i,Ut,Wt,["uSceneTex","uTexel"]),Q0=i.createVertexArray(),Ce=Gt(i),o0=Ht(i),n0=zt(i,36,24),ht=Ot(i),i0=qt(i,28,64),$0=[{stickerId:0,x:5.62,z:1.55,rot:.12},{stickerId:1,x:6.46,z:1.62,rot:-.15},{stickerId:8,x:5.64,z:2.75,rot:-.08},{stickerId:9,x:6.44,z:2.82,rot:.18}],Z0=Array.from({length:ee.length*2},()=>new Xe(i));function g0(t,e){return Z0[t*2+e]}var Be=null,Te=null,We=null,me=0,he=0,vt=x0?"low":"high";function yt(){let t=vt==="low"?.75:vt==="med"?1:Math.min(window.devicePixelRatio||1,1.75),e=x0?Math.min(t,.75):t,a=Math.max(2,Math.floor((Ge.clientWidth||800)*e)),n=Math.max(2,Math.floor((Ge.clientHeight||446)*e));if((N.width!==a||N.height!==n)&&(N.width=a,N.height=n),Be&&me===a&&he===n)return;me=a,he=n,Te&&i.deleteTexture(Te),We&&i.deleteRenderbuffer(We),Be&&i.deleteFramebuffer(Be),Be=i.createFramebuffer(),i.bindFramebuffer(i.FRAMEBUFFER,Be),Te=i.createTexture(),i.bindTexture(i.TEXTURE_2D,Te),a0?i.texImage2D(i.TEXTURE_2D,0,i.RGBA16F,me,he,0,i.RGBA,i.HALF_FLOAT,null):i.texImage2D(i.TEXTURE_2D,0,i.RGBA8,me,he,0,i.RGBA,i.UNSIGNED_BYTE,null),i.texParameteri(i.TEXTURE_2D,i.TEXTURE_MIN_FILTER,i.LINEAR),i.texParameteri(i.TEXTURE_2D,i.TEXTURE_MAG_FILTER,i.LINEAR),i.texParameteri(i.TEXTURE_2D,i.TEXTURE_WRAP_S,i.CLAMP_TO_EDGE),i.texParameteri(i.TEXTURE_2D,i.TEXTURE_WRAP_T,i.CLAMP_TO_EDGE),i.framebufferTexture2D(i.FRAMEBUFFER,i.COLOR_ATTACHMENT0,i.TEXTURE_2D,Te,0),We=i.createRenderbuffer(),i.bindRenderbuffer(i.RENDERBUFFER,We),i.renderbufferStorage(i.RENDERBUFFER,i.DEPTH_COMPONENT24,me,he),i.framebufferRenderbuffer(i.FRAMEBUFFER,i.DEPTH_ATTACHMENT,i.RENDERBUFFER,We),i.checkFramebufferStatus(i.FRAMEBUFFER)!==i.FRAMEBUFFER_COMPLETE&&a0&&(i.bindTexture(i.TEXTURE_2D,Te),i.texImage2D(i.TEXTURE_2D,0,i.RGBA8,me,he,0,i.RGBA,i.UNSIGNED_BYTE,null)),i.bindFramebuffer(i.FRAMEBUFFER,null)}var I=new Qe,re=Ke(20270520),ie=!0,O="sticker",w=0,rt=0,ve=-.06,b0=0,St=1,y0=[.0045,.0072,.0115],A={active:!1,baseSpread:0,p:0,targetP:0,dragging:!1,dragStartX:0,dragStartP:0},Z=[{name:"\u4FEF\u89C6\u4E66\u684C",yaw:0,pitch:1.07,dist:10.5,tx:0,ty:.24,tz:.22},{name:"\u5FAE\u8DDD\u7279\u5199",yaw:-.1,pitch:.88,dist:7,tx:.1,ty:.36,tz:.2},{name:"\u659C\u5411\u6696\u9633",yaw:.34,pitch:.82,dist:9.7,tx:0,ty:.28,tz:.14}],De=0,R={yaw:Z[0].yaw,pitch:Z[0].pitch,dist:Z[0].dist,targetYaw:Z[0].yaw,targetPitch:Z[0].pitch,targetDist:Z[0].dist,tx:Z[0].tx,ty:Z[0].ty,tz:Z[0].tz,orbitDragging:!1,lastX:0,lastY:0},fe=[],Je=1,ce=[],ue=null,Ae=0,K={x:5.55,y:.24,z:1.55,rx:-Math.PI*.49,ry:0,rz:.04},F={ndcX:0,ndcY:0,inside:!1,altKey:!1,hoverHit:null,hoveredSticker:null},Pe=Q.create(),$=Q.create(),r0=Q.create(),S0=Q.create(),ne=Q.create(),He=st.normalize(-.56,.76,.32);function J0(){fe.push({uid:Je++,spread:0,side:0,px:.78,py:.24,stickerId:0,rot:-.09,scale:.94,peel:0,targetPeel:0,removing:!1},{uid:Je++,spread:0,side:0,px:.78,py:.77,stickerId:7,rot:.08,scale:.92,peel:0,targetPeel:0,removing:!1},{uid:Je++,spread:0,side:1,px:.79,py:.82,stickerId:5,rot:-.06,scale:.96,peel:0,targetPeel:0,removing:!1});let t=[.176,.202,.302];for(let a of t)ce.push({spread:0,side:0,colorIdx:0,width:.0058,points:[{px:.236,py:a-.002,t:-10},{px:.244,py:a+.007,t:-10},{px:.255,py:a-.007,t:-10},{px:.266,py:a-.016,t:-10}]});let e=[];for(let a=0;a<=16;a++){let n=a/16;e.push({px:.3+n*.4,py:.618+Math.sin(n*Math.PI*2)*.009,t:-10})}ce.push({spread:0,side:1,colorIdx:1,width:.0068,points:e}),Ve(0,0),Ve(0,1),xe()}function Ve(t,e){let a=ce.filter(n=>n.spread===t&&n.side===e);g0(t,e).rebuild(a)}var et=0;function xt(t,e){tt&&(G0.textContent=t,H0.textContent=e,tt.classList.add("show"),et=2.1)}function Ie(t,e=""){if(!Ue)return;let a=document.createElement("div");for(a.className=`pl-toast${e?` ${e}`:""}`,a.textContent=t,Ue.appendChild(a);Ue.children.length>3;)Ue.removeChild(Ue.firstChild);setTimeout(()=>{a.parentNode&&a.parentNode.removeChild(a)},2400)}function xe(){let t=ee[w];Xt&&(Xt.textContent=`${t.code}/06`),jt&&(jt.textContent=t.title),Qt&&(Qt.textContent=`\u8D34\u7EB8 ${fe.length} \xB7 \u58A8\u8FF9 ${ce.length}`),h0.forEach((e,a)=>{e.classList.toggle("active",a===w)})}function se(t){if(O=t,u0.classList.toggle("active",O==="sticker"),f0.classList.toggle("active",O==="pen"),p0.classList.toggle("active",O==="turn"),z0.classList.toggle("active",O==="sticker"),O0.classList.toggle("active",O==="pen"),q0.classList.toggle("active",O==="turn"),N.classList.remove("pen-cursor","grab-cursor","grabbing-cursor"),O==="pen")N.classList.add("pen-cursor"),dt.textContent="\u6309\u4F4F\u5DE6\u952E\u4E66\u5199\u7ACB\u4F53\u6E7F\u58A8 \xB7 \u53F3\u952E\u73AF\u89C6 \xB7 [Z] \u64A4\u9500";else if(O==="turn")N.classList.add("grab-cursor"),dt.textContent="\u5DE6\u952E\u6A2A\u62D6\u4E66\u9875\u771F\u5B9E\u5377\u66F2\u7FFB\u9875 \xB7 \u53F3\u952E\u73AF\u89C6 \xB7 \u6EDA\u8F6E\u7F29\u653E";else{let e=Ne[rt];dt.textContent=`\u5F53\u524D\uFF1A${e.name} \xB7 \u5DE6\u952E\u8D34\u4E0B \xB7 Alt/\u53F3\u952E\u63ED\u8D77`}}function Pt(t){De=(t%Z.length+Z.length)%Z.length;let e=Z[De];R.targetYaw=e.yaw,R.targetPitch=e.pitch,R.targetDist=e.dist,R.tx=e.tx,R.ty=e.ty,R.tz=e.tz,v0.forEach(a=>{a.classList.toggle("active",Number(a.dataset.cam)===De)}),Ie(`\u5207\u6362\u89C6\u89D2 \xB7 ${e.name}`)}function ge(t=1){let e;if(t===-1?e=w-1:t===1||t===void 0?e=w+1:e=Number(t),e=k(e,0,ee.length-1),e===w&&!A.active)return;let a=w;w=e,e>a?(A.active=!0,A.baseSpread=e-1,A.p=a===e-1&&A.active?A.p:.04,A.targetP=1,I.playPageTurn(1)):e<a&&(A.active=!0,A.baseSpread=e,A.p=a===e+1&&A.active?A.p:.96,A.targetP=0,I.playPageTurn(-1)),xe();let n=ee[w];xt(n.title,n.sub)}function P0(t,e,a,n,o,c=ve){let s=k(a,.11,.89),r=k(n,.11,.89),d=Ne[o],f={uid:Je++,spread:t,side:e,px:s,py:r,stickerId:o,rot:c,scale:d.isWax?.98:.94,peel:.78,targetPeel:0,removing:!1};return fe.push(f),I.playStickerStick(d.isWax),xe(),Ie(`${d.isWax?"\u706B\u6F06\u76D6\u5370":"\u8D34\u597D 3D \u8D34\u7EB8"} \xB7 ${d.name}`,d.isWax?"wax":"matcha"),f}function c0(t){if(!t||t.removing)return;t.removing=!0,t.targetPeel=1.05,I.playStickerPeel();let e=Ne[t.stickerId];Ie(`\u63ED\u8D77\u8D34\u7EB8 \xB7 ${e.name}`)}function ot(t,e,a,n,o=.095){for(let c=fe.length-1;c>=0;c--){let s=fe[c];if(s.removing||s.spread!==t||s.side!==e)continue;let r=s.px-a,d=(s.py-n)*(5.6/4.1);if(Math.hypot(r,d)<=o)return s}return null}function Tt(){let t=Math.floor(re()*Ne.length),e=re()<.5?0:1,a=.2+re()*.6,n=.2+re()*.62;for(let c=0;c<6&&ot(w,e,a,n,.14);c++)a=.18+re()*.64,n=.18+re()*.66;let o=(re()-.5)*.34;P0(w,e,a,n,t,o)}function T0(t){let e=re()<.45?0:1,a=Math.floor(re()*ct.length),n=.24+re()*.52,o=.24+re()*.56,c=ce.length%3,s=[];if(c===0)for(let d=0;d<=10;d++){let f=d/10*Math.PI*2-Math.PI*.5,p=d%2===0?.055:.024;s.push({px:k(n+Math.cos(f)*p,.08,.92),py:k(o+Math.sin(f)*p*(4.1/5.6),.08,.92),t:t+d*.015})}else if(c===1)for(let d=0;d<=20;d++){let f=d/20*Math.PI*2,p=16*Math.pow(Math.sin(f),3)*.0032,u=-(13*Math.cos(f)-5*Math.cos(2*f)-2*Math.cos(3*f)-Math.cos(4*f))*.0026;s.push({px:k(n+p,.08,.92),py:k(o+u,.08,.92),t:t+d*.012})}else s.push({px:k(n-.045,.08,.92),py:k(o,.08,.92),t},{px:k(n-.015,.08,.92),py:k(o+.032,.08,.92),t:t+.04},{px:k(n+.055,.08,.92),py:k(o-.038,.08,.92),t:t+.09},{px:k(n+.095,.08,.92),py:k(o-.052,.08,.92),t:t+.13});ce.push({spread:w,side:e,colorIdx:a,width:y0[St],points:s}),Ve(w,e),I.playNibPreview(),xe(),Ie(`\u94A2\u7B14\u901F\u5199 \xB7 ${ct[a].name}`)}function A0(){for(let t=ce.length-1;t>=0;t--)if(ce[t].spread===w){let e=ce.splice(t,1)[0];Ve(e.spread,e.side),xe(),Ie("\u5DF2\u64A4\u9500\u4E0A\u4E00\u7B14\u94A2\u7B14\u5B57\u8FF9");return}}function At(){ie=!1,d0.classList.add("hidden"),l0.classList.add("visible"),I.init(),se(O),N.focus()}function E0(t){ie=typeof t=="boolean"?t:!ie,d0.classList.toggle("hidden",!ie),l0.classList.toggle("visible",!ie)}function M0(t,e){let a=N.getBoundingClientRect();a.width<2||a.height<2||(F.ndcX=(t-a.left)/a.width*2-1,F.ndcY=1-(e-a.top)/a.height*2,F.inside=!0)}N.addEventListener("contextmenu",t=>t.preventDefault());N.addEventListener("pointermove",t=>{if(F.altKey=t.altKey,M0(t.clientX,t.clientY),R.orbitDragging){let e=t.clientX-R.lastX,a=t.clientY-R.lastY;R.lastX=t.clientX,R.lastY=t.clientY,R.targetYaw=k(R.targetYaw-e*.0055,-.92,.92),R.targetPitch=k(R.targetPitch+a*.0055,.44,1.38);return}if(A.dragging){let e=t.clientX-A.dragStartX;A.p=k(A.dragStartP-e/250,.005,.995),A.targetP=A.p;return}if(ue&&F.hoverHit){let e=F.hoverHit;if(e.side===ue.side){let a=ue.points,n=a[a.length-1],o=Math.hypot(e.px-n.px,e.py-n.py);if(o>.0045){let c=performance.now()*.001;a.push({px:e.px,py:e.py,t:c}),Ae=k(o*34,.05,1.8),Ve(ue.spread,ue.side)}}}});N.addEventListener("pointerdown",t=>{if(ie)return;if(I.init(),F.altKey=t.altKey,M0(t.clientX,t.clientY),k0(),N.setPointerCapture(t.pointerId),t.button===2||t.button===1){if(t.button===2&&F.hoverHit&&!A.active){let o=ot(w,F.hoverHit.side,F.hoverHit.px,F.hoverHit.py);if(o){c0(o);return}}R.orbitDragging=!0,R.lastX=t.clientX,R.lastY=t.clientY,N.classList.add("grabbing-cursor");return}if(t.button!==0)return;let e=F.hoverHit,a=e&&e.side===1&&e.px>.84&&(e.py>.8||e.py<.16),n=e&&e.side===0&&e.px<.16&&(e.py>.8||e.py<.16);if(O==="turn"||a||n){if(e&&e.side===1&&w<ee.length-1){A.active=!0,A.dragging=!0,A.baseSpread=w,A.p=.05,A.targetP=.05,A.dragStartX=t.clientX,A.dragStartP=.05,I.playStickerPeel(),N.classList.add("grabbing-cursor");return}if(e&&e.side===0&&w>0){A.active=!0,A.dragging=!0,A.baseSpread=w-1,A.p=.95,A.targetP=.95,A.dragStartX=t.clientX,A.dragStartP=.95,I.playStickerPeel(),N.classList.add("grabbing-cursor");return}if(O==="turn"){R.orbitDragging=!0,R.lastX=t.clientX,R.lastY=t.clientY,N.classList.add("grabbing-cursor");return}}if(!(!e||A.active)){if(O==="sticker"){let o=ot(w,e.side,e.px,e.py);t.altKey&&o?c0(o):P0(w,e.side,e.px,e.py,rt,ve)}else if(O==="pen"){let o=performance.now()*.001;ue={spread:w,side:e.side,colorIdx:b0,width:y0[St],points:[{px:e.px,py:e.py,t:o},{px:k(e.px+.002,.01,.99),py:k(e.py+.002,.01,.99),t:o}]},ce.push(ue),Ae=.35,Ve(w,e.side),xe()}}});function R0(){if(R.orbitDragging=!1,N.classList.remove("grabbing-cursor"),A.dragging){A.dragging=!1;let t=A.dragStartP<.5;t&&A.p>.24?(w=A.baseSpread+1,A.targetP=1,I.playPageTurn(1),xe(),xt(ee[w].title,ee[w].sub)):!t&&A.p<.76?(w=A.baseSpread,A.targetP=0,I.playPageTurn(-1),xe(),xt(ee[w].title,ee[w].sub)):A.targetP=t?0:1}ue=null,Ae=0}N.addEventListener("pointerup",R0);N.addEventListener("pointercancel",R0);N.addEventListener("pointerleave",()=>{F.inside=!1});N.addEventListener("wheel",t=>{ie||(t.preventDefault(),R.targetDist=k(R.targetDist+Math.sign(t.deltaY)*.65,5.2,14.5))},{passive:!1});window.addEventListener("keydown",t=>{if(F.altKey=t.altKey,t.key==="Escape"){E0();return}if(ie)return;let e=t.key.toLowerCase();e==="1"?se("sticker"):e==="2"?se("pen"):e==="3"?se("turn"):e==="r"?(ve+=.28,ve>Math.PI&&(ve-=Math.PI*2),Ie("\u5DF2\u5FAE\u8C03\u8D34\u7EB8\u89D2\u5EA6")):e==="z"?A0():e==="c"?Pt(De+1):e==="d"||t.key==="ArrowRight"?ge(1):(e==="a"||t.key==="ArrowLeft")&&ge(-1)});window.addEventListener("keyup",t=>{F.altKey=t.altKey});K0.addEventListener("click",()=>{At()});Y0.addEventListener("click",()=>{At(),Tt(),setTimeout(()=>{ge(w<ee.length-1?1:-1)},320)});X0.addEventListener("click",()=>{I.init(),m0.classList.toggle("open")});document.querySelectorAll(".pl-sfx-trigger").forEach(t=>{t.addEventListener("click",()=>{I.init();let e=t.dataset.s;e==="kalimba"?I.playKalimbaChordPreview():e==="page"?I.playPageTurn(1):e==="peel"?I.playStickerPeel():e==="stick"?I.playStickerStick(!1):e==="nib"?I.playNibPreview():e==="wax"&&I.playWaxStamp()})});u0.addEventListener("click",()=>se("sticker"));f0.addEventListener("click",()=>se("pen"));p0.addEventListener("click",()=>se("turn"));Zt.forEach(t=>{t.addEventListener("click",()=>{rt=Number(t.dataset.stk),Zt.forEach(e=>e.classList.toggle("active",e===t)),I.playStickerPeel(),se("sticker")})});document.getElementById("btn-rot-stk").addEventListener("click",()=>{ve+=.32,ve>Math.PI&&(ve-=Math.PI*2)});Jt.forEach(t=>{t.addEventListener("click",()=>{b0=Number(t.dataset.ink),Jt.forEach(e=>e.classList.toggle("active",e===t)),se("pen")})});e0.forEach(t=>{t.addEventListener("click",()=>{St=Number(t.dataset.nib),e0.forEach(e=>e.classList.toggle("active",e===t)),se("pen")})});document.getElementById("btn-undo-ink").addEventListener("click",()=>A0());document.getElementById("btn-sample-ink").addEventListener("click",()=>{T0(performance.now()*.001)});document.getElementById("btn-prev").addEventListener("click",()=>ge(-1));document.getElementById("btn-next").addEventListener("click",()=>ge(1));document.getElementById("tray-prev-btn").addEventListener("click",()=>ge(-1));document.getElementById("tray-next-btn").addEventListener("click",()=>ge(1));document.getElementById("btn-rand-stk").addEventListener("click",()=>Tt());h0.forEach(t=>{t.addEventListener("click",()=>{ge(Number(t.dataset.sp))})});document.getElementById("btn-cam").addEventListener("click",()=>Pt(De+1));document.getElementById("btn-pause").addEventListener("click",()=>E0(!0));document.getElementById("btn-fs").addEventListener("click",()=>{document.fullscreenElement?document.exitFullscreen?.().catch(()=>{}):Ge.requestFullscreen?.().catch(()=>{})});var nt=document.getElementById("btn-tall"),it=document.getElementById("menu-btn-tall");function C0(){let t=Ge.classList.toggle("tall");nt&&(nt.textContent=t?"\u6536\u8D77":"\u5927\u5C4F"),it&&(it.textContent=t?"\u6536\u8D77\u5927\u5C4F\u89C6\u91CE":"\u5C55\u5F00\u5927\u5C4F\u89C6\u91CE"),yt()}nt&&nt.addEventListener("click",C0);it&&it.addEventListener("click",C0);v0.forEach(t=>{t.addEventListener("click",()=>Pt(Number(t.dataset.cam)))});document.querySelectorAll(".q-pill").forEach(t=>{t.addEventListener("click",()=>{vt=t.dataset.q,document.querySelectorAll(".q-pill").forEach(e=>e.classList.toggle("active",e===t)),yt()})});var ft=document.getElementById("pl-bgm-toggle");ft.addEventListener("click",()=>{let t=!I.bgmEnabled;I.setBgmEnabled(t),ft.classList.toggle("active",t),ft.textContent=t?"\u5F00\u542F":"\u9759\u97F3"});var s0=document.getElementById("pl-vol");s0.addEventListener("input",()=>{I.setVolume(Number(s0.value)/100)});var w0=!0;typeof IntersectionObserver<"u"&&new IntersectionObserver(e=>{for(let a of e)w0=a.isIntersecting},{threshold:.02}).observe(Ge);function k0(){if(!F.inside||A.active){F.hoverHit=null,F.hoveredSticker=null;return}let{orig:t,dir:e}=Q.unprojectRay(S0,F.ndcX,F.ndcY),a=Ct(t,e);F.hoverHit=a,a&&O==="sticker"?F.hoveredSticker=ot(w,a.side,a.px,a.py):F.hoveredSticker=null}function ea(t){if(et>0&&(et-=t,et<=0&&tt&&tt.classList.remove("show")),R.yaw=te(R.yaw,R.targetYaw,10,t),R.pitch=te(R.pitch,R.targetPitch,10,t),R.dist=te(R.dist,R.targetDist,10,t),A.active&&!A.dragging){let r=A.targetP-A.p,d=r*Math.min(1,t*7.5)+Math.sign(r)*Math.min(Math.abs(r),t*.42);A.p+=d,Math.abs(A.targetP-A.p)<.005&&(A.p=A.targetP,A.active=!1)}for(let r=fe.length-1;r>=0;r--){let d=fe[r],f=F.altKey&&F.hoveredSticker===d,p=d.removing?1.05:f?.42:d.targetPeel;d.peel=te(d.peel,p,d.removing?13:11,t),d.removing&&d.peel>=.96&&(fe.splice(r,1),xe())}let e=5.55,a=.24,n=1.65,o=-Math.PI*.49,c=0,s=.04;if(!ie&&O==="pen"&&F.hoverHit&&!A.active){let r=F.hoverHit;e=r.x,a=r.y+(ue?.006:.11),n=r.z,o=.44,c=.12,s=-.52-Math.min(.12,Ae*.06)}K.x=te(K.x,e,16,t),K.y=te(K.y,a,16,t),K.z=te(K.z,n,16,t),K.rx=te(K.rx,o,14,t),K.ry=te(K.ry,c,14,t),K.rz=te(K.rz,s,14,t),Ae=te(Ae,0,9,t),I.update(t,!!ue,Ae)}function ye(t,e,a){i.uniform1i(Se.u.uMatType,e),i.uniformMatrix4fv(Se.u.uModel,!1,a),i.bindVertexArray(t.vao),i.drawElements(i.TRIANGLES,t.count,t.indexType,0)}function we(t,e,a,n,o,c,s){i.cullFace(o>0?i.BACK:i.FRONT),i.useProgram(oe.prog),i.uniformMatrix4fv(oe.u.uProj,!1,Pe),i.uniformMatrix4fv(oe.u.uView,!1,$),i.uniform1f(oe.u.uTurnProgress,a),i.uniform1f(oe.u.uSpineLift,n),i.uniform1i(oe.u.uPageSide,e),i.uniform1f(oe.u.uSheetFace,o),i.uniform3fv(oe.u.uCamPos,c),i.uniform3fv(oe.u.uSunDir,He),i.uniform1f(oe.u.uTime,s),i.uniform1i(oe.u.uSpreadIdx,t);let r=!ie&&!A.active&&F.hoverHit&&F.hoverHit.side===e&&t===w,d=O==="sticker"?0:O==="pen"?1:2;i.uniform4f(oe.u.uHoverUV,r?F.hoverHit.px:-1,r?F.hoverHit.py:-1,r?1:0,d),i.bindVertexArray(n0.vao),i.drawElements(i.TRIANGLES,n0.count,i.UNSIGNED_SHORT,0)}function ke(t,e,a,n,o,c,s){let r=g0(t,e);r.vertCount<=0||(i.useProgram(de.prog),i.uniformMatrix4fv(de.u.uProj,!1,Pe),i.uniformMatrix4fv(de.u.uView,!1,$),i.uniform1i(de.u.uPageSide,e),i.uniform1f(de.u.uTurnProgress,a),i.uniform1f(de.u.uSpineLift,n),i.uniform1f(de.u.uSheetFace,o),i.uniform3fv(de.u.uCamPos,c),i.uniform3fv(de.u.uSunDir,He),i.uniform1f(de.u.uTime,s),i.bindVertexArray(r.vao),i.drawArrays(i.TRIANGLES,0,r.vertCount))}function Fe(t,e,a,n,o,c,s){i.useProgram(B.prog),i.uniformMatrix4fv(B.u.uProj,!1,Pe),i.uniformMatrix4fv(B.u.uView,!1,$),i.uniform1i(B.u.uPlacementMode,0),i.uniform1i(B.u.uPageSide,e),i.uniform1f(B.u.uTurnProgress,a),i.uniform1f(B.u.uSpineLift,n),i.uniform1f(B.u.uSheetFace,o),i.uniform3fv(B.u.uCamPos,c),i.uniform3fv(B.u.uSunDir,He),i.uniform1f(B.u.uTime,s);for(let r of fe){if(r.spread!==t||r.side!==e)continue;let d=ht[r.stickerId],f=F.hoveredSticker===r;i.uniform2f(B.u.uStickerUV,r.px,r.py),i.uniform1f(B.u.uStickerRot,r.rot),i.uniform1f(B.u.uStickerScale,r.scale),i.uniform1f(B.u.uPeelAmount,k(r.peel,0,1)),i.uniform1f(B.u.uHighlight,f?1:0),i.bindVertexArray(d.vao),i.drawElements(i.TRIANGLES,d.count,i.UNSIGNED_SHORT,0)}}var gt=0;function ta(t){yt();let e=me/Math.max(1,he);Q.perspective(Pe,39*Math.PI/180,e,.25,65);let a=Math.cos(R.pitch),n=Math.sin(R.pitch),o=[R.tx+Math.sin(R.yaw)*a*R.dist,R.ty+n*R.dist,R.tz+Math.cos(R.yaw)*a*R.dist];Q.lookAt($,o,[R.tx,R.ty,R.tz],[0,1,0]),Q.multiply(r0,Pe,$),Q.invert(S0,r0),k0(),i.bindFramebuffer(i.FRAMEBUFFER,Be),i.viewport(0,0,me,he),i.clearColor(.11,.075,.05,1),i.clear(i.COLOR_BUFFER_BIT|i.DEPTH_BUFFER_BIT),i.enable(i.DEPTH_TEST),i.depthFunc(i.LEQUAL),i.enable(i.CULL_FACE),i.cullFace(i.BACK),i.useProgram(Se.prog),i.uniformMatrix4fv(Se.u.uProj,!1,Pe),i.uniformMatrix4fv(Se.u.uView,!1,$),i.uniform3fv(Se.u.uCamPos,o),i.uniform3fv(Se.u.uSunDir,He),i.uniform1f(Se.u.uTime,t),Q.identity(ne),ye(Ce.desk,0,ne),ye(Ce.mat,1,ne),ye(Ce.cover,2,ne),ye(Ce.pageBlock,3,ne),ye(Ce.brass,4,ne),ye(Ce.props,5,ne),Q.composeTRS(ne,K.x,K.y,K.z,K.rx,K.ry,K.rz,1,1,1),ye(o0.body,5,ne),ye(o0.brass,4,ne),i.useProgram(B.prog),i.uniformMatrix4fv(B.u.uProj,!1,Pe),i.uniformMatrix4fv(B.u.uView,!1,$),i.uniform1i(B.u.uPlacementMode,1),i.uniform3fv(B.u.uCamPos,o),i.uniform3fv(B.u.uSunDir,He),i.uniform1f(B.u.uTime,t),i.uniform1f(B.u.uHighlight,0);for(let s of $0){Q.composeTRS(ne,s.x,.066,s.z,0,s.rot,0,.36,.36,.36),i.uniformMatrix4fv(B.u.uModel,!1,ne);let r=ht[s.stickerId];i.bindVertexArray(r.vao),i.drawElements(i.TRIANGLES,r.count,i.UNSIGNED_SHORT,0)}if(A.active){let s=A.baseSpread,r=A.p;we(s,0,1,0,-1,o,t),we(s+1,1,0,0,1,o,t),we(s,1,r,.008,1,o,t),we(s+1,0,r,.008,-1,o,t),i.cullFace(i.BACK),Fe(s,0,1,0,-1,o,t),Fe(s+1,1,0,0,1,o,t),r<.92&&Fe(s,1,r,.008,1,o,t),r>.08&&Fe(s+1,0,r,.008,-1,o,t),i.disable(i.CULL_FACE),i.enable(i.BLEND),i.blendFunc(i.SRC_ALPHA,i.ONE_MINUS_SRC_ALPHA),i.depthMask(!1),ke(s,0,1,0,-1,o,t),ke(s+1,1,0,0,1,o,t),r<.96&&ke(s,1,r,.008,1,o,t),r>.04&&ke(s+1,0,r,.008,-1,o,t),i.depthMask(!0),i.disable(i.BLEND)}else{if(we(w,0,1,0,-1,o,t),we(w,1,0,0,1,o,t),i.cullFace(i.BACK),Fe(w,0,1,0,-1,o,t),Fe(w,1,0,0,1,o,t),!ie&&O==="sticker"&&F.hoverHit&&!F.altKey){let s=F.hoverHit,r=ht[rt],d=.56+.09*Math.sin(t*4.2);i.uniform1i(B.u.uPageSide,s.side),i.uniform1f(B.u.uTurnProgress,s.side===0?1:0),i.uniform1f(B.u.uSpineLift,.024),i.uniform1f(B.u.uSheetFace,s.side===0?-1:1),i.uniform2f(B.u.uStickerUV,k(s.px,.11,.89),k(s.py,.11,.89)),i.uniform1f(B.u.uStickerRot,ve),i.uniform1f(B.u.uStickerScale,.96),i.uniform1f(B.u.uPeelAmount,d),i.uniform1f(B.u.uHighlight,.55),i.bindVertexArray(r.vao),i.drawElements(i.TRIANGLES,r.count,i.UNSIGNED_SHORT,0)}i.disable(i.CULL_FACE),i.enable(i.BLEND),i.blendFunc(i.SRC_ALPHA,i.ONE_MINUS_SRC_ALPHA),i.depthMask(!1),ke(w,0,1,0,-1,o,t),ke(w,1,0,0,1,o,t),i.depthMask(!0),i.disable(i.BLEND)}i.disable(i.CULL_FACE),i.enable(i.BLEND),i.blendFunc(i.SRC_ALPHA,i.ONE_MINUS_SRC_ALPHA),i.depthMask(!1),i.useProgram(Re.prog),i.uniformMatrix4fv(Re.u.uProj,!1,Pe),i.uniformMatrix4fv(Re.u.uView,!1,$),i.uniform3f(Re.u.uCamRight,$[0],$[4],$[8]),i.uniform3f(Re.u.uCamUp,$[1],$[5],$[9]),i.uniform1f(Re.u.uTime,t),i.bindVertexArray(i0.vao),i.drawArraysInstanced(i.TRIANGLES,0,6,i0.instanceCount),i.depthMask(!0),i.disable(i.BLEND),i.bindFramebuffer(i.FRAMEBUFFER,null),i.viewport(0,0,N.width,N.height),i.disable(i.DEPTH_TEST),i.useProgram(ut.prog),i.activeTexture(i.TEXTURE0),i.bindTexture(i.TEXTURE_2D,Te),i.uniform1i(ut.u.uSceneTex,0),i.uniform2f(ut.u.uTexel,1/me,1/he),i.bindVertexArray(Q0),i.drawArrays(i.TRIANGLES,0,3);let c=i.getError();c!==i.NO_ERROR&&gt===0&&(gt=c)}var $e=new Uint8Array(256);function aa(){if(!pe||!m0.classList.contains("open"))return;let t=at.width,e=at.height;if(pe.fillStyle="#120d09",pe.fillRect(0,0,t,e),!!I.analyser){I.analyser.getByteTimeDomainData($e),pe.strokeStyle="#e8a829",pe.lineWidth=2,pe.beginPath();for(let a=0;a<$e.length;a++){let n=a/($e.length-1)*t,o=$e[a]/255*e;a===0?pe.moveTo(n,o):pe.lineTo(n,o)}pe.stroke()}}J0();se("sticker");var pt=performance.now(),mt=0,Ze=0,bt=60;function F0(t){if(requestAnimationFrame(F0),!w0){pt=t;return}let e=Math.min(.05,Math.max(.001,(t-pt)*.001));pt=t;let a=t*.001;mt++,Ze+=e,Ze>=.5&&(bt=Math.round(mt/Ze),mt=0,Ze=0,Yt&&(Yt.textContent=`${bt} FPS \xB7 ${Z[De].name} \xB7 120g \u68C9\u6D46\u7EB8`)),ea(e),ta(a),aa()}requestAnimationFrame(F0);window.__PLANNER3D__={getState(){return{mode:ie?"menu":O,fps:bt,glErr:gt,spreadIndex:w,spreadTitle:ee[w].title,turnProgress:Number((A.active?A.p:0).toFixed(4)),stickersCount:fe.length,inkStrokesCount:ce.length}},openPlanner(){return At(),this.getState()},turnPage(t=1){return ge(t),this.getState()},placeRandomSticker(){return Tt(),this.getState()},addSampleInk(){return T0(performance.now()*.001),this.getState()}};</script>
+</body>
+</html>

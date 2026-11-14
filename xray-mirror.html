@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>X 光解剖魔镜 X-RAY ANATOMY MIRROR — 零外部素材 WebGL2 实时骨骼脑神经心脉透视雕塑</title>
+  <meta name="description" content="致敬 Fable 5.2 X-Ray Mirror 的零外部素材 WebGL2 实时解剖透视魔镜：温润雪花石膏胸像在 3D 荧光透视环下实时剥离，显露可张合 34° 下颌骨与 28 颗牙齿、沟回大脑金色突触风暴、搏动四腔心脏与条纹肌群。" />
+  <style>*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:0;background:transparent;font-family:system-ui,-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,sans-serif;-webkit-font-smoothing:antialiased;user-select:none}body.standalone-body{background:#070e14;overflow:hidden}#xray-app{position:relative;width:100%;height:446px;overflow:hidden;background:#081017;color:#f2eadc;border:1px solid rgba(34,211,238,.28)}#xray-app.tall{height:720px}#xray-app.standalone{height:100vh;border:none}#xr-canvas{display:block;width:100%;height:100%;outline:none;cursor:crosshair}#xr-hud{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity .28s ease}#xr-hud.visible{opacity:1}#xr-top-left{position:absolute;top:8px;left:10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:280px}#xr-perf{padding:3px 8px;background:#081017e0;border:1px solid rgba(34,211,238,.3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#22d3ee;white-space:nowrap}#xr-vitals{padding:3px 8px;background:#081017e0;border:1px solid rgba(245,184,46,.3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f5b82e;white-space:nowrap}#xr-status-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;background:#081017e6;border:1px solid rgba(34,211,238,.32);font-size:12px;white-space:nowrap}#xr-mode-badge{padding:1px 6px;background:#22d3ee;color:#081017;font-weight:700;font-size:12px}#xr-mode-badge.full{background:#f5b82e;color:#081017}#xr-mode-hint{color:#f2eadc;font-weight:600;font-size:12px}#xr-top-right{position:absolute;top:8px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:5px;max-width:495px}#xr-quick-bar{display:flex;gap:4px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}.xr-mini-btn{padding:4px 8px;background:#081017e0;border:1px solid rgba(34,211,238,.3);color:#f2eadc;font-size:12px;font-family:inherit;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}.xr-mini-btn:hover,.xr-mini-btn.active{background:#102a36f2;border-color:#22d3ee;color:#22d3ee}#xr-pose-bar{display:flex;gap:4px;pointer-events:auto}.xr-pose-btn{padding:3px 7px;background:#081017db;border:1px solid rgba(242,234,220,.24);color:#d8cec0;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}.xr-pose-btn:hover,.xr-pose-btn.active{background:#122e3aeb;border-color:#22d3ee;color:#fff}.xr-pose-btn.coral{border-color:#ef444473;color:#fca5a5}.xr-pose-btn.coral:hover,.xr-pose-btn.coral.active{background:#7f1d1db8;border-color:#ef4444;color:#fff}.xr-pose-btn.gold{border-color:#f5b82e73;color:#fde68a}.xr-pose-btn.gold:hover,.xr-pose-btn.gold.active{background:#6e4a0cc7;border-color:#f5b82e;color:#fff}#xr-toast-feed{display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:245px}.xr-toast{padding:4px 9px;background:#081017e6;border-right:3px solid #22d3ee;font-size:12px;text-align:right;color:#f2eadc;animation:xrToastIn .2s ease-out}.xr-toast.gold{border-right-color:#f5b82e}.xr-toast.coral{border-right-color:#ef4444}@keyframes xrToastIn{0%{opacity:0;transform:translate(8px)}to{opacity:1;transform:translate(0)}}#xr-banner{position:absolute;top:26%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:340px;padding:6px 15px;background:#081017eb;border-top:1px solid rgba(34,211,238,.62);border-bottom:1px solid rgba(245,184,46,.62);opacity:0;transition:opacity .25s ease}#xr-banner.show{opacity:1}#xr-banner-title{font-size:15px;font-weight:700;letter-spacing:.8px;color:#f5b82e}#xr-banner-sub{margin-top:2px;font-size:12px;color:#d8cec0}#xr-vital-card{position:absolute;left:10px;bottom:8px;width:170px;padding:6px 9px;background:#081017e0;border:1px solid rgba(34,211,238,.28);display:flex;flex-direction:column;gap:4px}.vital-card-top{display:flex;justify-content:space-between;align-items:baseline}#xr-bpm-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700;color:#ef4444}.vital-unit{font-size:12px;color:#d8cec0}#xr-ecg{width:100%;height:26px;background:#050b10;border:1px solid rgba(34,211,238,.18);display:block}.xr-meter-row{display:flex;align-items:center;gap:6px;font-size:12px;color:#d8cec0}.xr-meter-lbl{width:50px;flex-shrink:0}.xr-meter-track{flex:1;height:6px;background:#f2eadc24}#xr-jaw-fill{width:0%;height:100%;background:#22d3ee;transition:width .06s linear}#xr-spark-fill{width:35%;height:100%;background:#f5b82e;transition:width .08s linear}#xr-bottom-center{position:absolute;bottom:8px;left:50%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;max-width:416px}#xr-layer-bar{display:flex;gap:4px;pointer-events:auto}.xr-tool-btn{padding:4px 7px;background:#081017e6;border:1px solid rgba(34,211,238,.28);color:#f2eadc;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}.xr-tool-btn:hover{border-color:#22d3ee}.xr-tool-btn.active-cyan{background:#22d3ee;border-color:#67e8f9;color:#081017;font-weight:700}.xr-tool-btn.active-ivory{background:#f2eadc;border-color:#fff;color:#081017;font-weight:700}.xr-tool-btn.active-gold{background:#f5b82e;border-color:#fde68a;color:#081017;font-weight:700}.xr-tool-btn.active-terra{background:#d95b38;border-color:#fb923c;color:#081017;font-weight:700}#xr-controls-tip{padding:3px 9px;background:#081017d6;border:1px solid rgba(34,211,238,.2);font-size:12px;color:#d8cec0;white-space:nowrap}#xr-diag-card{position:absolute;right:10px;bottom:8px;width:170px;padding:6px 9px;background:#081017e0;border:1px solid rgba(34,211,238,.28);text-align:right;display:flex;flex-direction:column;gap:2px}#xr-layer-lbl{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#22d3ee;white-space:nowrap}#xr-organ-title{font-size:13px;font-weight:700;color:#f5b82e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#xr-organ-sub{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#d8cec0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#xr-touch{display:none;position:absolute;inset:0;pointer-events:none;z-index:6}@media(pointer:coarse){#xr-touch.active{display:block}#xr-bottom-center{display:none}}.xr-t-actions{position:absolute;right:14px;bottom:92px;display:flex;gap:6px;pointer-events:auto}.xr-t-btn{padding:9px 11px;background:#081017e0;border:1px solid rgba(34,211,238,.55);color:#f2eadc;font-size:12px;font-weight:700}.xr-t-btn.gold{background:#f5b82e;border-color:#fde68a;color:#081017}.xr-t-btn.cyan{background:#22d3ee;border-color:#67e8f9;color:#081017}#xr-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(180deg,#070e1494,#070e14db);overflow-y:auto}#xr-overlay.hidden{display:none}.xr-placard{width:min(760px,100%);max-height:100%;overflow-y:auto;padding:14px 20px;background:#081017e8;border:1px solid rgba(34,211,238,.34);backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:9px}.xr-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1.5px;color:#22d3ee}.xr-placard h1{font-size:clamp(21px,2.8vw,29px);font-weight:800;letter-spacing:1.5px;color:#f2eadc;margin-top:2px}.xr-desc{font-size:13px;line-height:1.48;color:#d8cec0;margin-top:3px}.xr-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.xr-btn-primary{padding:8px 16px;background:#22d3ee;border:1px solid #67e8f9;color:#081017;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;font-family:inherit;transition:background .15s ease,transform .12s ease}.xr-btn-primary:hover{background:#5eead4;transform:translateY(-1px)}.xr-btn-gold{padding:8px 14px;background:#f5b82e29;border:1px solid #f5b82e;color:#fde68a;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s ease,color .15s ease}.xr-btn-gold:hover{background:#f5b82e57;color:#fff}.xr-btn-secondary{padding:7px 12px;background:#0e1c26e6;border:1px solid rgba(34,211,238,.3);color:#f2eadc;font-size:12px;text-decoration:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;transition:background .15s ease,border-color .15s ease}.xr-btn-secondary:hover{background:#142c3af2;border-color:#22d3ee}#xr-studio{display:none;flex-direction:column;gap:7px;padding:9px 12px;background:#050b10eb;border:1px solid rgba(34,211,238,.28)}#xr-studio.open{display:flex}.xr-studio-head{display:flex;justify-content:space-between;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#22d3ee}#xr-scope{width:100%;height:52px;background:#04090d;border:1px solid rgba(34,211,238,.2)}.xr-studio-btns{display:flex;flex-wrap:wrap;gap:6px}.xr-sfx-trigger{padding:5px 10px;background:#0e1c26eb;border:1px solid rgba(34,211,238,.26);color:#f2eadc;font-size:12px;cursor:pointer;font-family:inherit}.xr-sfx-trigger:hover{border-color:#f5b82e;background:#162c3af5}.xr-settings{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:2px}.xr-set-group{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#d8cec0}.xr-pill{padding:3px 9px;background:#0e1c26d9;border:1px solid rgba(34,211,238,.24);color:#d8cec0;font-size:12px;cursor:pointer;font-family:inherit}.xr-pill.active{background:#22d3ee;border-color:#67e8f9;color:#081017;font-weight:700}.xr-set-group input[type=range]{width:82px;accent-color:#22d3ee;cursor:pointer}.xr-keys-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px 14px;padding-top:6px;border-top:1px solid rgba(34,211,238,.16);font-size:12px;color:#d8cec0}.xr-keys-grid>div{display:flex;justify-content:space-between;align-items:center;gap:8px}kbd{padding:1px 5px;background:#122430eb;border:1px solid rgba(34,211,238,.34);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#22d3ee}@media(max-width:680px){.xr-keys-grid{grid-template-columns:1fr}#xr-pose-bar{display:none}}</style>
+</head>
+<body class="standalone-body">
+  <div id="xray-app" class="standalone">
+    <canvas id="xr-canvas" tabindex="0"></canvas>
+
+    <section id="xr-hud" aria-label="X光解剖魔镜实时医学遥测界面">
+      <div id="xr-top-left">
+        <div id="xr-perf">60 FPS · 复合透视 · 镜径 0.56</div>
+        <div id="xr-vitals">72 BPM · 下颌 0.0° · 视角 0°</div>
+        <div id="xr-status-pill">
+          <span id="xr-mode-badge">透视环</span>
+          <span id="xr-mode-hint">扫掠光标实时剥离解剖层</span>
+        </div>
+      </div>
+
+      <div id="xr-top-right">
+        <div id="xr-quick-bar">
+          <button id="btn-fullxray" class="xr-mini-btn" type="button">全屏透视 [X]</button>
+          <button id="btn-autoscan" class="xr-mini-btn" type="button">巡航 [V]</button>
+          <button id="btn-webcam" class="xr-mini-btn" type="button">摄像头 [W]</button>
+          <a href="./tactile-planner.html" class="xr-mini-btn">⇄ 立体手帐</a><a href="./index.html" class="xr-mini-btn">⌂ 十二作大厅</a>
+          <button id="btn-fs" class="xr-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="xr-mini-btn" type="button">菜单 [P]</button>
+        </div>
+
+        <div id="xr-pose-bar" aria-label="解剖视角与生理激发栏">
+          <button class="xr-pose-btn active" data-yaw="0" type="button">正视</button>
+          <button class="xr-pose-btn" data-yaw="68" type="button">侧颅</button>
+          <button class="xr-pose-btn" data-yaw="180" type="button">背脊 180°</button>
+          <button id="btn-adrenaline" class="xr-pose-btn coral" type="button">肾上腺素 [E]</button>
+          <button id="btn-storm" class="xr-pose-btn gold" type="button">神经风暴 [N]</button>
+        </div>
+
+        <div id="xr-toast-feed"></div>
+      </div>
+
+      <div id="xr-banner">
+        <div id="xr-banner-title"></div>
+        <div id="xr-banner-sub"></div>
+      </div>
+
+      <div id="xr-vital-card">
+        <div class="vital-card-top">
+          <span id="xr-bpm-val">72</span>
+          <span id="xr-rhythm-lbl" class="vital-unit">BPM · 窦性心律</span>
+        </div>
+        <canvas id="xr-ecg" width="150" height="26"></canvas>
+        <div class="xr-meter-row">
+          <span class="xr-meter-lbl">下颌张角</span>
+          <div class="xr-meter-track"><div id="xr-jaw-fill"></div></div>
+        </div>
+        <div class="xr-meter-row">
+          <span class="xr-meter-lbl">皮层电位</span>
+          <div class="xr-meter-track"><div id="xr-spark-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="xr-bottom-center">
+        <div id="xr-layer-bar">
+          <button id="layer-1" class="xr-tool-btn active-cyan" type="button">[1] 复合透视</button>
+          <button id="layer-2" class="xr-tool-btn" type="button">[2] 骨骼</button>
+          <button id="layer-3" class="xr-tool-btn" type="button">[3] 脑心</button>
+          <button id="layer-4" class="xr-tool-btn" type="button">[4] 肌群</button>
+          <button id="btn-jaw" class="xr-tool-btn" type="button">[Space] 张口</button>
+        </div>
+        <div id="xr-controls-tip">移动扫掠 X 光环 · 右键/AD 旋转 180° · 滚轮缩放镜环</div>
+      </div>
+
+      <div id="xr-diag-card">
+        <span id="xr-layer-lbl">COMPOSITE X-RAY</span>
+        <strong id="xr-organ-title">额叶皮层 · 额骨颅盖</strong>
+        <span id="xr-organ-sub">突触火花 128 · 胸廓呼吸同步</span>
+      </div>
+    </section>
+
+    <div id="xr-touch">
+      <div class="xr-t-actions">
+        <button id="xr-tb-jaw" class="xr-t-btn gold" type="button">张口发声</button>
+        <button id="xr-tb-storm" class="xr-t-btn cyan" type="button">神经风暴</button>
+        <button id="xr-tb-layer" class="xr-t-btn" type="button">切换解剖层</button>
+      </div>
+    </div>
+
+    <main id="xr-overlay">
+      <div class="xr-placard">
+        <header>
+          <div id="xr-kicker" class="xr-kicker">REAL-TIME FLUOROSCOPY RIG // 零外部素材 WebGL2 实时骨骼·脑神经·心脉·肌群透视魔镜</div>
+          <h1 id="xr-title">X 光解剖魔镜 · X-RAY ANATOMY MIRROR</h1>
+          <p id="xr-desc" class="xr-desc">
+            温润博物馆级雪花石膏人像静立眼前，挪动 3D 黄铜荧光透视环即可实时剥离表层肌肤：内藏随呼吸起伏的 16 根胸廓肋弓、搏动四腔心脏与颈总动脉、布满沟回与金色动作电位的大脑皮层，以及可随指令或摄像头张合 34° 并触发元音合唱共振的颞下颌关节与 28 颗上下齿列！
+          </p>
+        </header>
+
+        <div class="xr-actions">
+          <button id="xr-btn-start" class="xr-btn-primary" type="button">启动 X 光解剖魔镜 · 实时透视</button>
+          <button id="xr-btn-fullmode" class="xr-btn-gold" type="button">全屏全身 X 光透视</button>
+          <button id="xr-btn-studio" class="xr-btn-secondary" type="button">生物声学与心电合成台</button>
+          <a href="./tactile-planner.html" class="xr-btn-secondary">⇄ 立体手帐</a><a href="./index.html" class="xr-btn-secondary">⌂ 十二作典藏大厅</a>
+        </div>
+
+        <section id="xr-studio" aria-label="纯代码生物声学与医学监护合成台">
+          <div class="xr-studio-head">
+            <span>BIO-ACOUSTIC &amp; FLUOROSCOPY SYNTH · 零采样心音·元音共振峰·突触钟琴合成</span>
+            <span>DIAGNOSTIC AUDIO</span>
+          </div>
+          <canvas id="xr-scope" width="560" height="52"></canvas>
+          <div class="xr-studio-btns">
+            <button class="xr-sfx-trigger" data-s="heart" type="button">心室搏动 Lub-Dub</button>
+            <button class="xr-sfx-trigger" data-s="vocal" type="button">张口元音共振合唱</button>
+            <button class="xr-sfx-trigger" data-s="storm" type="button">皮层突触电位风暴</button>
+            <button class="xr-sfx-trigger" data-s="xray" type="button">X 光透视环电磁扫掠</button>
+            <button class="xr-sfx-trigger" data-s="bone" type="button">颞下颌骨关节咬合</button>
+            <button class="xr-sfx-trigger" data-s="ecg" type="button">ECG 监护 R 波信标</button>
+          </div>
+        </section>
+
+        <div class="xr-settings">
+          <div class="xr-set-group">
+            <span>解剖层</span>
+            <button class="xr-pill ly-pill active" data-l="1" type="button">复合透视</button>
+            <button class="xr-pill ly-pill" data-l="2" type="button">骨骼层</button>
+            <button class="xr-pill ly-pill" data-l="3" type="button">脑心层</button>
+            <button class="xr-pill ly-pill" data-l="4" type="button">肌群层</button>
+          </div>
+          <div class="xr-set-group">
+            <label for="xr-jaw-range">张口测试</label>
+            <input id="xr-jaw-range" type="range" min="0" max="100" value="0" />
+            <span id="xr-jaw-lbl">0°</span>
+          </div>
+          <div class="xr-set-group">
+            <span>画质</span>
+            <button class="xr-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="xr-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="xr-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="xr-set-group">
+            <label for="xr-vol">音量</label>
+            <input id="xr-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="xr-keys-grid">
+          <div><span>扫掠 3D 透视魔镜 / 缩放镜径</span><span><kbd>鼠标移动</kbd> / <kbd>滚轮</kbd></span></div>
+          <div><span>四重解剖剥离层切换</span><span><kbd>1</kbd> 复合 <kbd>2</kbd> 骨 <kbd>3</kbd> 脑心 <kbd>4</kbd> 肌</span></div>
+          <div><span>张口发声（联动下颌骨+元音合唱）</span><span><kbd>Space</kbd> / <kbd>左键按住</kbd></span></div>
+          <div><span>360° 旋转雕像观察颈椎与小脑</span><span><kbd>A D</kbd> / <kbd>右键拖拽</kbd></span></div>
+          <div><span>皮层神经元风暴 / 肾上腺素加速</span><span><kbd>N</kbd> 突触风暴 / <kbd>E</kbd> 心率飙升</span></div>
+          <div><span>切换全屏透视 / 本地摄像头镜像</span><span><kbd>X</kbd> 全透视 / <kbd>W</kbd> 摄像头</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">var D=Math.PI*2,je=Math.PI/180,Dt=180/Math.PI,q0=34;function w(e,t,o){return e<t?t:e>o?o:e}function g(e,t,o){return e+(t-e)*o}function k(e,t,o,a){return g(e,t,1-Math.exp(-o*a))}function A(e,t,o){let a=w((o-e)/(t-e),0,1);return a*a*(3-2*a)}function kt(e=5201337){let t=e>>>0;return function(){t=t+1831565813>>>0;let a=Math.imul(t^t>>>15,1|t);return a=a+Math.imul(a^a>>>7,61|a)^a,((a^a>>>14)>>>0)/4294967296}}function ne(e,t,o){let a=Math.imul(e,374761393)+Math.imul(t,668265263)+Math.imul(o,1274126177);return a=(a^a>>>13)>>>0,a=Math.imul(a,1274126177)>>>0,((a^a>>>16)>>>0)/4294967295}function ct(e,t,o){let a=Math.floor(e),s=Math.floor(t),h=Math.floor(o),c=e-a,n=t-s,r=o-h,i=c*c*(3-2*c),u=n*n*(3-2*n),m=r*r*(3-2*r),d=ne(a,s,h),f=ne(a+1,s,h),p=ne(a,s+1,h),v=ne(a+1,s+1,h),y=ne(a,s,h+1),b=ne(a+1,s,h+1),M=ne(a,s+1,h+1),x=ne(a+1,s+1,h+1),E=d+(f-d)*i,T=p+(v-p)*i,P=y+(b-y)*i,C=M+(x-M)*i,L=E+(T-E)*u,F=P+(C-P)*u;return L+(F-L)*m}function Gt(e,t,o){let a=e*5.2+(ct(e*3.1+4.2,t*3.1,o*3.1)-.5)*1.45,s=t*5.2+(ct(e*3.1,t*3.1+8.7,o*3.1)-.5)*1.45,h=o*5.2+(ct(e*3.1,t*3.1,o*3.1+13.1)-.5)*1.45,c=Math.sin(a*2.4+Math.cos(s*2.1+h*1.9)*1.5),n=Math.sin(s*2.7-Math.cos(h*2.3-a*1.6)*1.4),r=.55*Math.abs(c)+.45*Math.abs(n);return Math.pow(w(r,0,1.2),.58)}var O={add(e,t,o=[0,0,0]){return o[0]=e[0]+t[0],o[1]=e[1]+t[1],o[2]=e[2]+t[2],o},sub(e,t,o=[0,0,0]){return o[0]=e[0]-t[0],o[1]=e[1]-t[1],o[2]=e[2]-t[2],o},scale(e,t,o=[0,0,0]){return o[0]=e[0]*t,o[1]=e[1]*t,o[2]=e[2]*t,o},dot(e,t){return e[0]*t[0]+e[1]*t[1]+e[2]*t[2]},cross(e,t,o=[0,0,0]){let a=e[0],s=e[1],h=e[2],c=t[0],n=t[1],r=t[2];return o[0]=s*r-h*n,o[1]=h*c-a*r,o[2]=a*n-s*c,o},len(e,t,o){return Math.hypot(e,t,o)},normalize(e,t,o,a=[0,0,0]){let s=Math.hypot(e,t,o);if(s<1e-8)return a[0]=0,a[1]=1,a[2]=0,a;let h=1/s;return a[0]=e*h,a[1]=t*h,a[2]=o*h,a}},z={create(){let e=new Float32Array(16);return e[0]=1,e[5]=1,e[10]=1,e[15]=1,e},identity(e){return e.fill(0),e[0]=1,e[5]=1,e[10]=1,e[15]=1,e},perspective(e,t,o,a,s=new Float32Array(16)){let h=1/Math.tan(e*.5),c=1/(o-a);return s.fill(0),s[0]=h/t,s[5]=h,s[10]=(a+o)*c,s[11]=-1,s[14]=2*a*o*c,s},lookAt(e,t,o,a=new Float32Array(16)){let s=e[0]-t[0],h=e[1]-t[1],c=e[2]-t[2],n=Math.hypot(s,h,c)||1;s/=n,h/=n,c/=n;let r=o[1]*c-o[2]*h,i=o[2]*s-o[0]*c,u=o[0]*h-o[1]*s,m=Math.hypot(r,i,u)||1;r/=m,i/=m,u/=m;let d=h*u-c*i,f=c*r-s*u,p=s*i-h*r;return a[0]=r,a[1]=d,a[2]=s,a[3]=0,a[4]=i,a[5]=f,a[6]=h,a[7]=0,a[8]=u,a[9]=p,a[10]=c,a[11]=0,a[12]=-(r*e[0]+i*e[1]+u*e[2]),a[13]=-(d*e[0]+f*e[1]+p*e[2]),a[14]=-(s*e[0]+h*e[1]+c*e[2]),a[15]=1,a},multiply(e,t,o=new Float32Array(16)){let a=e[0],s=e[1],h=e[2],c=e[3],n=e[4],r=e[5],i=e[6],u=e[7],m=e[8],d=e[9],f=e[10],p=e[11],v=e[12],y=e[13],b=e[14],M=e[15];for(let x=0;x<4;x++){let E=t[x*4],T=t[x*4+1],P=t[x*4+2],C=t[x*4+3];o[x*4]=a*E+n*T+m*P+v*C,o[x*4+1]=s*E+r*T+d*P+y*C,o[x*4+2]=h*E+i*T+f*P+b*C,o[x*4+3]=c*E+u*T+p*P+M*C}return o},invert(e,t=new Float32Array(16)){let o=e[0],a=e[1],s=e[2],h=e[3],c=e[4],n=e[5],r=e[6],i=e[7],u=e[8],m=e[9],d=e[10],f=e[11],p=e[12],v=e[13],y=e[14],b=e[15],M=o*n-a*c,x=o*r-s*c,E=o*i-h*c,T=a*r-s*n,P=a*i-h*n,C=s*i-h*r,L=u*v-m*p,F=u*y-d*p,_=u*b-f*p,I=m*y-d*v,N=m*b-f*v,W=d*b-f*y,S=M*W-x*N+E*I+T*_-P*F+C*L;return Math.abs(S)<1e-10?z.identity(t):(S=1/S,t[0]=(n*W-r*N+i*I)*S,t[1]=(s*N-a*W-h*I)*S,t[2]=(v*C-y*P+b*T)*S,t[3]=(d*P-m*C-f*T)*S,t[4]=(r*_-c*W-i*F)*S,t[5]=(o*W-s*_+h*F)*S,t[6]=(y*E-p*C-b*x)*S,t[7]=(u*C-d*E+f*x)*S,t[8]=(c*N-n*_+i*L)*S,t[9]=(a*_-o*N-h*L)*S,t[10]=(p*P-v*E+b*M)*S,t[11]=(m*E-u*P-f*M)*S,t[12]=(n*F-c*I-r*L)*S,t[13]=(o*I-a*F+s*L)*S,t[14]=(v*x-p*T-y*M)*S,t[15]=(u*T-m*x+d*M)*S,t)},fromRotationY(e,t=new Float32Array(16)){let o=Math.cos(e),a=Math.sin(e);return z.identity(t),t[0]=o,t[2]=-a,t[8]=a,t[10]=o,t},fromPivotEulerYXZ(e,t,o,a,s=new Float32Array(16)){let h=Math.cos(t),c=Math.sin(t),n=Math.cos(o),r=Math.sin(o),i=Math.cos(a),u=Math.sin(a),m=h*i+c*r*u,d=i*c*r-h*u,f=n*c,p=n*u,v=n*i,y=-r,b=h*r*u-i*c,M=h*i*r+c*u,x=h*n,E=e[0],T=e[1],P=e[2];return s[0]=m,s[1]=p,s[2]=b,s[3]=0,s[4]=d,s[5]=v,s[6]=M,s[7]=0,s[8]=f,s[9]=y,s[10]=x,s[11]=0,s[12]=E-(m*E+d*T+f*P),s[13]=T-(p*E+v*T+y*P),s[14]=P-(b*E+M*T+x*P),s[15]=1,s},fromPosNormalScale(e,t,o,a=new Float32Array(16)){let s=t[0],h=t[1],c=t[2],n=Math.abs(h)>.92?1:0,r=Math.abs(h)>.92?0:1,i=r*c,u=-n*c,m=n*h-r*s,d=Math.hypot(i,u,m)||1;i/=d,u/=d,m/=d;let f=h*m-c*u,p=c*i-s*m,v=s*u-h*i;return a[0]=i*o,a[1]=u*o,a[2]=m*o,a[3]=0,a[4]=f*o,a[5]=p*o,a[6]=v*o,a[7]=0,a[8]=s*o,a[9]=h*o,a[10]=c*o,a[11]=0,a[12]=e[0],a[13]=e[1],a[14]=e[2],a[15]=1,a},transformPoint(e,t,o,a,s=[0,0,0]){return s[0]=e[0]*t+e[4]*o+e[8]*a+e[12],s[1]=e[1]*t+e[5]*o+e[9]*a+e[13],s[2]=e[2]*t+e[6]*o+e[10]*a+e[14],s},projectToScreen(e,t,o,a,s,h){let c=e[0]*t+e[4]*o+e[8]*a+e[12],n=e[1]*t+e[5]*o+e[9]*a+e[13],r=e[3]*t+e[7]*o+e[11]*a+e[15];if(r<=.05)return null;let i=c/r,u=n/r;return{x:(i*.5+.5)*s,y:(.5-u*.5)*h,ndcX:i,ndcY:u}},unprojectRay(e,t,o,a,s=[0,0,-1]){let h=e[0]*t+e[4]*o+e[8]*.5+e[12],c=e[1]*t+e[5]*o+e[9]*.5+e[13],n=e[2]*t+e[6]*o+e[10]*.5+e[14],r=e[3]*t+e[7]*o+e[11]*.5+e[15],i=Math.abs(r)>1e-7?1/r:1,u=h*i-a[0],m=c*i-a[1],d=n*i-a[2];return O.normalize(u,m,d,s)}};function Ve(e){let t=w(e,0,1),o=t*q0,a=o*je,s=.045*A(.15,1,t),h=-.022*A(.15,1,t);return{open:t,angleDeg:o,angleRad:a,glideY:h,glideZ:s}}function zt(e){let t=(e%1+1)%1,o=Math.exp(-Math.pow((t-.18)/.068,2)),a=.28*Math.exp(-Math.pow((t-.34)/.065,2)),s=.22*Math.exp(-Math.pow((t-.91)/.045,2)),h=w(o+a,0,1.15),c=.16*Math.exp(-Math.pow((t-.05)/.025,2)),n=-.18*Math.exp(-Math.pow((t-.115)/.008,2)),r=1*Math.exp(-Math.pow((t-.132)/.009,2)),i=-.26*Math.exp(-Math.pow((t-.15)/.009,2)),u=.28*Math.exp(-Math.pow((t-.33)/.042,2)),m=c+n+r+i+u;return{systole:h,atrialKick:s,ecgMv:m}}function jt(e){let t=(e%1+1)%1;if(t<.42){let a=t/.42;return .5-.5*Math.cos(a*Math.PI)}let o=(t-.42)/.58;return .5+.5*Math.cos(o*Math.PI)}function Vt(e,t,o,a,s=[0,0,0]){let h=O.dot(t,a);if(Math.abs(h)<1e-5)return s[0]=o[0],s[1]=o[1],s[2]=o[2],!1;let c=o[0]-e[0],n=o[1]-e[1],r=o[2]-e[2],i=(c*a[0]+n*a[1]+r*a[2])/h;return s[0]=e[0]+t[0]*i,s[1]=e[1]+t[1]*i,s[2]=e[2]+t[2]*i,i>0}function _t(e,t,o,a,s){let c=Math.cos(a)<-.35;return t>.72?c?{title:"\u9876\u6795\u53F6\u76AE\u5C42 \xB7 \u4EBA\u5B57\u7F1D",sub:"PARIETAL-OCCIPITAL CORTEX"}:{title:"\u989D\u53F6\u76AE\u5C42 \xB7 \u989D\u9AA8\u9885\u76D6",sub:"FRONTAL CORTEX & CRANIUM"}:t>.44?c?{title:"\u5C0F\u8111\u534A\u7403 \xB7 \u6795\u9AA8\u5927\u5B54",sub:"CEREBELLUM & FORAMEN MAGNUM"}:Math.abs(e)>.48?{title:"\u989E\u808C\u6247\u675F \xB7 \u98A7\u5F13\u989E\u53F6",sub:"TEMPORALIS & TEMPORAL LOBE"}:Math.abs(e)>.16?{title:"\u773C\u7403\u6676\u72B6\u4F53 \xB7 \u89C6\u795E\u7ECF\u4EA4\u53C9",sub:"ORBIT, GLOBE & OPTIC NERVE"}:{title:"\u7B5B\u9AA8\u9F3B\u8154 \xB7 \u89C6\u4EA4\u53C9\u675F",sub:"NASAL APERTURE & CHIASM"}:t>-.05?c?{title:"\u5EF6\u9AD3\u8111\u5E72 \xB7 \u5BF0\u67A2\u690E C1-C2",sub:"BRAINSTEM & ATLAS-AXIS"}:s>.25&&Math.abs(e)<.42?{title:"\u4E0B\u988C\u9AA8\u5F20\u5F00 \xB7 \u4E0A\u4E0B\u9F7F\u5217",sub:"TMJ ARTICULATION & ARCADE"}:Math.abs(e)>.36?{title:"\u54AC\u808C\u808C\u675F \xB7 \u989E\u4E0B\u988C\u5173\u8282",sub:"MASSETER & TMJ CONDYLE"}:{title:"\u4E0A\u4E0B\u988C\u9F7F\u5F13 \xB7 \u988F\u9686\u7A81",sub:"MAXILLA & MANDIBLE TEETH"}:t>-.56?c?{title:"\u9888\u690E\u68D8\u7A81 C3-C7 \xB7 \u659C\u65B9\u808C",sub:"CERVICAL SPINE & TRAPEZIUS"}:{title:"\u9888\u603B\u52A8\u8109 \xB7 \u80F8\u9501\u4E73\u7A81\u808C",sub:"CAROTID, JUGULAR & SCM"}:t>-.82?Math.abs(e)>.45?{title:"\u9501\u9AA8\u80A9\u5CF0 \xB7 \u4E09\u89D2\u808C\u524D\u675F",sub:"CLAVICLE & DELTOID BUNDLE"}:{title:"\u80F8\u9AA8\u67C4 \xB7 \u4E3B\u52A8\u8109\u5F13\u5206\u652F",sub:"MANUBRIUM & AORTIC ARCH"}:c?{title:"\u80F8\u690E T1-T8 \xB7 \u540E\u808B\u9AA8\u5F13",sub:"THORACIC SPINE & POST. RIBS"}:e>-.08&&e<.56?{title:"\u640F\u52A8\u56DB\u8154\u5FC3 \xB7 \u5DE6\u5FC3\u5BA4\u5FC3\u5C16",sub:"4-CHAMBER HEART & CORONARY"}:{title:"\u80F8\u5ED3\u808B\u5F13 \xB7 \u80F8\u5927\u808C\u6247\u675F",sub:"THORACIC RIBCAGE & PECTORALIS"}}var Ot=`#version 300 es
+precision highp float;
+precision highp int;
+
+out vec2 vUv;
+
+void main() {
+  vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  vUv = p;
+  gl_Position = vec4(p * 2.0 - 1.0, 0.9999, 1.0);
+}`,Ut=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUv;
+uniform vec2 uRes;
+uniform float uTime;
+uniform float uFullScanMix;
+uniform float uNeuralStorm;
+out vec4 fragColor;
+
+void main() {
+  vec2 aspectUv = (vUv - 0.5) * vec2(uRes.x / max(uRes.y, 1.0), 1.0);
+  float rad = length(aspectUv);
+
+  // Diagnostic Dark Slate Base (#081017 -> #0d1b26 center aura, zero purple)
+  vec3 col = mix(vec3(0.048, 0.098, 0.138), vec3(0.020, 0.041, 0.062), smoothstep(0.08, 0.95, rad));
+
+  // Subtle Fluoroscopy Millimeter Calibration Grid
+  vec2 gridPx = vUv * uRes;
+  vec2 gMajor = abs(fract(gridPx / 64.0 - 0.5) - 0.5) / (1.0 / 64.0);
+  vec2 gMinor = abs(fract(gridPx / 16.0 - 0.5) - 0.5) / (1.0 / 16.0);
+  float lineMaj = 1.0 - smoothstep(0.0, 1.25, min(gMajor.x, gMajor.y));
+  float lineMin = 1.0 - smoothstep(0.0, 1.15, min(gMinor.x, gMinor.y));
+  float gridFade = (1.0 - smoothstep(0.18, 0.85, rad)) * (0.45 + 0.35 * uFullScanMix);
+
+  col += vec3(0.045, 0.21, 0.26) * lineMaj * 0.28 * gridFade;
+  col += vec3(0.035, 0.14, 0.18) * lineMin * 0.10 * gridFade;
+
+  // Center Studio Key & Rim Backlight Halo behind Bust
+  float studioGlow = exp(-rad * rad * 3.4);
+  vec3 haloTint = mix(vec3(0.06, 0.18, 0.23), vec3(0.10, 0.28, 0.34), uFullScanMix);
+  haloTint += vec3(0.16, 0.11, 0.02) * uNeuralStorm * studioGlow;
+  col += haloTint * studioGlow * 0.65;
+
+  // Travelling Diagnostic Vertical Sweep Line
+  float sweepY = fract(uTime * 0.09);
+  float sweep = exp(-abs(vUv.y - sweepY) * 55.0) * 0.035;
+  col += vec3(0.13, 0.82, 0.93) * sweep;
+
+  fragColor = vec4(col, 1.0);
+}`,Ht=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec4 aAnat;
+// aAnat.x = headWeight [0..1]
+// aAnat.y = jawWeight [0..1]
+// aAnat.z = integer organId + fractional coord [0..0.99]
+// aAnat.w = morphCode:
+//   [0.00..0.98]: ribcage breath weight
+//   [1.00..1.98]: upper eyelid blink weight (w - 1.0)
+//   [2.00..2.98]: eyeball tracking (2.2 = subject Left +X, 2.8 = subject Right -X)
+//   [3.00..3.98]: muscle flex outward bulge (w - 3.0)
+//   [4.00..5.00]: 4-chamber heart systolic contraction (w - 4.0)
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uMatBust;
+uniform vec3 uNeckAngles; // (yaw, pitch, roll) in radians
+uniform vec3 uJawKin;     // (angleRad, glideY, glideZ)
+uniform vec2 uEyeAngles;  // (yaw, pitch) in radians
+uniform float uBreath;
+uniform float uBlink;
+uniform float uHeartPulse;
+uniform float uMuscleFlex;
+
+out vec3 vWorldPos;
+out vec3 vWorldNorm;
+out vec3 vLocalPos;
+out vec4 vAnat;
+
+mat3 rotX(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(1.0, 0.0, 0.0,  0.0, c, s,  0.0, -s, c);
+}
+
+mat3 rotY(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(c, 0.0, -s,  0.0, 1.0, 0.0,  s, 0.0, c);
+}
+
+mat3 rotZ(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(c, s, 0.0,  -s, c, 0.0,  0.0, 0.0, 1.0);
+}
+
+void main() {
+  vec3 pos = aPos;
+  vec3 nrm = normalize(aNorm);
+  float headW = aAnat.x;
+  float jawW = aAnat.y;
+  float morph = aAnat.w;
+
+  // 1. Local Physiological Morphs (Respiration, Eyelid Blink, Eye Tracking, Muscle Bulge, Heartbeat)
+  if (morph > 0.001 && morph < 0.99) {
+    float bw = morph * uBreath;
+    pos.x *= (1.0 + 0.042 * bw);
+    pos.z += (pos.z >= 0.0 ? 0.052 : -0.018) * bw;
+    pos.y += 0.024 * bw;
+  } else if (morph >= 1.0 && morph < 1.99) {
+    float blinkW = (morph - 1.0) * uBlink;
+    pos.y -= 0.082 * blinkW;
+    pos.z += 0.018 * blinkW;
+  } else if (morph >= 2.0 && morph < 2.99) {
+    vec3 eyePivot = (morph < 2.5) ? vec3(0.30, 0.58, 0.57) : vec3(-0.30, 0.58, 0.57);
+    mat3 mEye = rotY(uEyeAngles.x) * rotX(uEyeAngles.y);
+    pos = eyePivot + mEye * (pos - eyePivot);
+    nrm = mEye * nrm;
+  } else if (morph >= 3.0 && morph < 3.99) {
+    float bulgeW = (morph - 3.0) * uMuscleFlex;
+    pos += nrm * (0.042 * bulgeW);
+  } else if (morph >= 4.0) {
+    float hw = clamp(morph - 4.0, 0.0, 1.0);
+    vec3 heartPivot = vec3(0.19, -0.96, 0.15);
+    vec3 rel = pos - heartPivot;
+    // Ventricular systolic squeeze & slight torsional wring
+    float squeeze = 1.0 - 0.145 * uHeartPulse * hw;
+    float expandTop = 1.0 + 0.075 * uHeartPulse * (1.0 - hw);
+    float scaleFactor = mix(expandTop, squeeze, smoothstep(-0.08, 0.18, -rel.y));
+    mat3 wring = rotY(0.11 * uHeartPulse * hw);
+    rel = wring * (rel * vec3(scaleFactor, 1.0 - 0.08 * uHeartPulse * hw, scaleFactor));
+    pos = heartPivot + rel;
+    nrm = wring * nrm;
+  }
+
+  // 2. TMJ Mandible Jaw Hinge (0..34 deg) + Anterior Condylar Glide
+  if (jawW > 0.001) {
+    vec3 tmjPivot = vec3(0.0, 0.34, 0.08);
+    // Positive X rotation swings +Z chin downward (-Y) and slightly backward (-Z)
+    mat3 mJaw = rotX(uJawKin.x * jawW);
+    pos = tmjPivot + mJaw * (pos - tmjPivot);
+    pos.y += uJawKin.y * jawW;
+    pos.z += uJawKin.z * jawW;
+    nrm = mJaw * nrm;
+  }
+
+  // 3. Articulated Cervical Spine & Cranium Rotation
+  if (headW > 0.001) {
+    vec3 neckPivot = vec3(0.0, -0.26, -0.06);
+    vec3 ang = uNeckAngles * headW;
+    mat3 mNeck = rotY(ang.x) * rotX(ang.y) * rotZ(ang.z);
+    pos = neckPivot + mNeck * (pos - neckPivot);
+    nrm = mNeck * nrm;
+  }
+
+  // 4. Bust World Rotation
+  vec4 wp = uMatBust * vec4(pos, 1.0);
+  vWorldPos = wp.xyz;
+  vWorldNorm = normalize(mat3(uMatBust) * nrm);
+  vLocalPos = aPos;
+  vAnat = aAnat;
+  gl_Position = uProj * uView * wp;
+}`,Xt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vWorldNorm;
+in vec3 vLocalPos;
+in vec4 vAnat;
+
+uniform vec3 uCamPos;
+uniform vec3 uLensPos;
+uniform vec3 uLensAxis;
+uniform float uLensRadius;
+uniform float uFullScanMix;
+uniform int uPassType;
+// uPassType:
+//   0 = Outer Museum Alabaster Bust + Pedestal (discards INSIDE scanner ring!)
+//   1 = Myology Striated Muscle Layer
+//   2 = Osteology Solid Bone & Enamel Teeth Layer
+//   3 = Neuro-Cardiac Folded Cortex, Nerves, Eyes, Vessels & 4-Chamber Heart
+//   4 = Radiograph X-Ray Bone Pass (Composite Mode 1 translucent/additive bone + crisp teeth)
+//   5 = Translucent Cyan Ghost Skull & Ribcage Rim (Neuro-Cardiac Mode 3)
+//   6 = Faint Myology Grazing Ghost Contour (Composite Mode 1)
+
+uniform float uTime;
+uniform float uHeartPulse;
+uniform float uNeuralStorm;
+uniform float uMuscleFlex;
+uniform float uJawOpen;
+
+out vec4 fragColor;
+
+float hash31(vec3 p) {
+  p = fract(p * vec3(127.1, 311.7, 74.7));
+  p += dot(p, p.yzx + 19.19);
+  return fract((p.x + p.y) * p.z);
+}
+
+float vnoise3(vec3 p) {
+  vec3 i = floor(p);
+  vec3 f = fract(p);
+  vec3 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(
+      mix(hash31(i), hash31(i + vec3(1, 0, 0)), u.x),
+      mix(hash31(i + vec3(0, 1, 0)), hash31(i + vec3(1, 1, 0)), u.x),
+      u.y
+    ),
+    mix(
+      mix(hash31(i + vec3(0, 0, 1)), hash31(i + vec3(1, 0, 1)), u.x),
+      mix(hash31(i + vec3(0, 1, 1)), hash31(i + vec3(1, 1, 1)), u.x),
+      u.y
+    ),
+    u.z
+  );
+}
+
+void main() {
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 N = normalize(vWorldNorm);
+  if (!gl_FrontFacing) N = -N;
+
+  float organId = floor(vAnat.z + 0.0001);
+  float subCoord = fract(vAnat.z);
+
+  // Exact 3D Ray-Plane Intersection against Physical Fluoroscopy Scanner Ring
+  vec3 rayDir = -V;
+  float denom = dot(rayDir, uLensAxis);
+  float safeDenom = abs(denom) > 0.0002 ? denom : -0.0002;
+  float tPlane = dot(uLensPos - uCamPos, uLensAxis) / safeDenom;
+  vec3 hitPlane = uCamPos + rayDir * tPlane;
+  float lensDist = length(hitPlane - uLensPos);
+  float effR = mix(uLensRadius, 9.2, uFullScanMix * uFullScanMix);
+  float normR = lensDist / max(effR, 0.05);
+
+  vec3 keyDir = normalize(vec3(0.45, 0.62, 0.72));
+  vec3 fillDir = normalize(vec3(-0.65, 0.15, 0.45));
+  vec3 rimDir = normalize(vec3(0.0, 0.45, -0.88));
+  float ndl = max(dot(N, keyDir), 0.0);
+  float fill = max(dot(N, fillDir), 0.0);
+  float backRim = max(dot(N, rimDir), 0.0);
+  float ndv = clamp(abs(dot(N, V)), 0.0, 1.0);
+  float fresnel = pow(1.0 - ndv, 2.0);
+
+  // =========================================================================
+  // PASS 0: OUTER MUSEUM ALABASTER-WARM-SKIN BUST & DIAGNOSTIC PEDESTAL
+  // =========================================================================
+  if (uPassType == 0) {
+    bool isPedestal = (organId > 3.5);
+    if (!isPedestal && normR < 0.985) {
+      discard;
+    }
+
+    vec3 col;
+    if (isPedestal) {
+      // Brushed Dark Slate & Synaptic Brass Diagnostic Plinth
+      float brassBand = smoothstep(0.72, 0.78, subCoord);
+      vec3 slate = vec3(0.065, 0.105, 0.138);
+      vec3 brass = vec3(0.82, 0.61, 0.22);
+      vec3 baseAlbedo = mix(slate, brass, brassBand);
+      vec3 H = normalize(keyDir + V);
+      float spec = pow(max(dot(N, H), 0.0), mix(28.0, 64.0, brassBand));
+      col = baseAlbedo * (0.26 + 0.72 * ndl + 0.22 * fill) + vec3(0.95, 0.80, 0.45) * spec * (0.25 + 0.55 * brassBand);
+      col += vec3(0.13, 0.83, 0.93) * fresnel * 0.16;
+      fragColor = vec4(col, 1.0);
+      return;
+    }
+
+    // Subtle sculpted stone micro-grain
+    float grain = vnoise3(vLocalPos * 26.0) * 0.035;
+
+    if (organId > 2.5 && organId < 3.5) {
+      // Sculpted Outer Eyeballs with Live Cursor-Tracking Iris & Corneal Specular!
+      vec3 eyeCenter = (vAnat.w < 2.5) ? vec3(0.30, 0.58, 0.57) : vec3(-0.30, 0.58, 0.57);
+      vec3 localEyeDir = normalize(vLocalPos - eyeCenter);
+      float forwardAng = acos(clamp(localEyeDir.z, -1.0, 1.0));
+      float scleraMix = smoothstep(0.42, 0.48, forwardAng);
+      float pupilMix = 1.0 - smoothstep(0.16, 0.20, forwardAng);
+
+      // Warm Amber-Teal Diagnostic Iris (zero purple)
+      float irisSpoke = 0.5 + 0.5 * sin(atan(localEyeDir.y, localEyeDir.x) * 22.0);
+      vec3 irisCol = mix(vec3(0.16, 0.36, 0.40), vec3(0.62, 0.46, 0.22), irisSpoke * 0.65);
+      vec3 eyeAlbedo = mix(irisCol, vec3(0.89, 0.87, 0.83), scleraMix);
+      eyeAlbedo = mix(eyeAlbedo, vec3(0.03, 0.05, 0.07), pupilMix);
+
+      vec3 H = normalize(keyDir + V);
+      float wetSpec = pow(max(dot(N, H), 0.0), 96.0) * 0.95;
+      col = eyeAlbedo * (0.35 + 0.68 * ndl + 0.22 * fill) + vec3(1.0, 0.98, 0.94) * wetSpec;
+    } else if (organId > 1.5 && organId < 2.5) {
+      // Recessed Oral Cavity Interior (visible when mouth opens!)
+      col = vec3(0.16, 0.07, 0.06) * (0.35 + 0.45 * ndl);
+    } else {
+      // Classical Museum Alabaster-Warm-Skin Bust (#d8cec0 + gallery chiaroscuro sculpting)
+      vec3 alabaster = vec3(0.76, 0.71, 0.65) + grain;
+      float lipWeight = (organId > 0.5 && organId < 1.5) ? subCoord : 0.0;
+      vec3 warmLip = vec3(0.72, 0.45, 0.36);
+      vec3 albedo = mix(alabaster, warmLip, lipWeight * 0.72);
+
+      // Dramatic gallery key light from upper-right-front + cool slate shadow fill
+      vec3 studioKey = normalize(vec3(0.58, 0.62, 0.52));
+      float keyDiff = pow(clamp(dot(N, studioKey) * 0.82 + 0.18, 0.0, 1.0), 1.25);
+      vec3 shadowAmb = vec3(0.09, 0.13, 0.16);
+      vec3 sssTint = vec3(0.78, 0.48, 0.32) * pow(1.0 - ndv, 2.6) * 0.16;
+      vec3 H = normalize(studioKey + V);
+      float spec = pow(max(dot(N, H), 0.0), 38.0) * 0.20;
+
+      col = albedo * (shadowAmb + vec3(0.88, 0.85, 0.80) * keyDiff + vec3(0.10, 0.16, 0.19) * fill)
+          + sssTint + vec3(1.0, 0.95, 0.86) * spec;
+      col += vec3(0.133, 0.827, 0.933) * (fresnel * 0.20 + backRim * 0.14);
+    }
+
+    // Glowing Golden-Cyan Holographic Peel Cross-Section Rim right around Scanner Ring!
+    if (uFullScanMix < 0.98 && normR < 1.075) {
+      float edgeBand = 1.0 - smoothstep(0.985, 1.075, normR);
+      float hotCore = 1.0 - smoothstep(0.985, 1.016, normR);
+      float scanTicks = 0.7 + 0.3 * sin(vWorldPos.y * 90.0 - uTime * 8.0);
+      vec3 rimGlow = mix(vec3(0.133, 0.827, 0.933), vec3(0.961, 0.722, 0.180), hotCore);
+      col = mix(col, rimGlow * 1.45 * scanTicks, edgeBand * 0.92);
+    }
+
+    fragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // =========================================================================
+  // PASSES 1..6: INTERNAL ARTICULATED ANATOMY (CLIPPED TO 3D SCANNER APERTURE)
+  // =========================================================================
+  if (normR > 1.002) {
+    discard;
+  }
+
+  float scanline = 0.94 + 0.06 * sin(vWorldPos.y * 110.0 - uTime * 5.0);
+  float apertureEdge = (uFullScanMix < 0.98) ? smoothstep(0.90, 1.0, normR) : 0.0;
+
+  // --- PASS 1: MYOLOGY (Striated Terracotta-Crimson Muscle Fibers + Pearlescent Tendons) ---
+  if (uPassType == 1) {
+    // subCoord [0..1] runs longitudinally from origin tendon (0) -> muscle belly (0.5) -> insertion tendon (1)
+    float tendonMask = smoothstep(0.16, 0.02, subCoord) + smoothstep(0.84, 0.98, subCoord);
+    tendonMask = clamp(tendonMask, 0.0, 1.0);
+
+    // Directional transverse/longitudinal fiber striation
+    float crossCoord = (vLocalPos.x * 34.0 + vLocalPos.y * 19.0 + vLocalPos.z * 27.0);
+    float fiberWave = sin(crossCoord * 2.6 + vnoise3(vLocalPos * 18.0) * 4.5);
+    float fiberBand = 0.5 + 0.5 * fiberWave;
+
+    // Flexion brightens crimson arterial oxygenation in masseter/SCM/pectoralis
+    float flexBoost = uMuscleFlex * ((organId < 1.5 || organId > 3.5) ? 1.0 : 0.65);
+    vec3 muscleDark = vec3(0.42, 0.11, 0.07);
+    vec3 muscleRich = mix(vec3(0.851, 0.357, 0.220), vec3(0.95, 0.32, 0.18), flexBoost);
+    vec3 bellyCol = mix(muscleDark, muscleRich, 0.35 + 0.65 * fiberBand);
+
+    // Pearlescent warm ivory aponeurosis & tendon sheath
+    vec3 tendonCol = vec3(0.88, 0.82, 0.73) * (0.88 + 0.12 * fiberBand);
+    vec3 albedo = mix(bellyCol, tendonCol, tendonMask * 0.82);
+
+    // Perturb lighting slightly with fiber striations + wet fascia sheen
+    vec3 N_fib = normalize(N + vec3(fiberWave * 0.09, fiberWave * 0.05, 0.0));
+    float diffM = clamp((dot(N_fib, keyDir) + 0.20) / 1.20, 0.0, 1.0);
+    vec3 H = normalize(keyDir + V);
+    float wetFascia = pow(max(dot(N_fib, H), 0.0), 42.0) * (0.30 + 0.25 * flexBoost);
+
+    vec3 col = albedo * (0.20 + 0.76 * diffM + 0.16 * fill) + vec3(1.0, 0.88, 0.76) * wetFascia;
+    col += vec3(0.133, 0.827, 0.933) * fresnel * 0.26;
+    col = col * scanline + vec3(0.133, 0.827, 0.933) * apertureEdge * 0.35;
+    fragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // --- PASS 2: OSTEOLOGY (High-Detail Ivory Bone, Enamel Teeth & Radiograph Cyan Fresnel) ---
+  if (uPassType == 2) {
+    float bonePorosity = vnoise3(vLocalPos * 32.0);
+    // Cranial suture lines on upper skull dome
+    float sutureNoise = abs(sin(vLocalPos.x * 14.0 + bonePorosity * 3.2) * cos(vLocalPos.z * 11.0 + bonePorosity * 2.5));
+    float sutureDark = (organId < 0.5 && vLocalPos.y > 0.55) ? (1.0 - smoothstep(0.0, 0.045, sutureNoise)) * 0.32 : 0.0;
+
+    vec3 boneIvory = vec3(0.92, 0.88, 0.81) * (0.88 + 0.12 * bonePorosity) * (1.0 - sutureDark);
+    vec3 trabecular = vec3(0.46, 0.41, 0.34);
+    vec3 albedo = mix(trabecular, boneIvory, 0.30 + 0.70 * ndv);
+
+    float specPow = 28.0;
+    float specAmt = 0.20;
+    if (organId > 0.5 && organId < 1.5) {
+      // Gleaming Dental Enamel Crowns (28 Upper & Lower Teeth!)
+      albedo = vec3(0.97, 0.95, 0.90);
+      specPow = 76.0;
+      specAmt = 0.55;
+    } else if ((organId > 1.5 && organId < 2.5 && subCoord > 0.70) || (organId > 2.5 && subCoord > 0.76)) {
+      // Intervertebral Fibrocartilage Discs & Costal Cartilage (translucent cyan-ivory)
+      albedo = vec3(0.56, 0.78, 0.83);
+      specPow = 48.0;
+      specAmt = 0.34;
+    }
+
+    vec3 H = normalize(keyDir + V);
+    float spec = pow(max(dot(N, H), 0.0), specPow) * specAmt;
+    vec3 col = albedo * (0.18 + 0.76 * ndl + 0.18 * fill) + vec3(1.0, 0.98, 0.92) * spec;
+    // Signature Medical Fluoroscopy Cyan Rim
+    col += vec3(0.133, 0.827, 0.933) * fresnel * 0.52;
+    col = col * scanline + vec3(0.133, 0.827, 0.933) * apertureEdge * 0.38;
+    fragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // --- PASS 3: NEURO-CARDIAC (Folded Cerebral Cortex, Golden Synapses, Eyes/Nerves & 4-Chamber Heart) ---
+  if (uPassType == 3) {
+    vec3 col = vec3(0.1);
+    vec3 H = normalize(keyDir + V);
+
+    if (organId < 2.5) {
+      // Organ 1: Cerebral Cortex Hemispheres | Organ 2: Cerebellum Folia
+      float fineFold = 0.5 + 0.5 * sin(
+        (organId < 1.5 ? 28.0 : 56.0) * vLocalPos.y +
+        vnoise3(vLocalPos * (organId < 1.5 ? 16.0 : 26.0)) * 5.8
+      );
+      float gyrus = clamp(mix(subCoord, fineFold, 0.42), 0.0, 1.0);
+      float sulcusAO = smoothstep(0.16, 0.74, gyrus);
+
+      // High-Contrast Deep Sulci Fissures & Warm Cortical Gyri + Cyan Rim (zero purple!)
+      vec3 sulcusCol = vec3(0.08, 0.06, 0.05);
+      vec3 gyrusCol = mix(vec3(0.58, 0.44, 0.37), vec3(0.26, 0.62, 0.70), 0.25);
+      vec3 tissue = mix(sulcusCol, gyrusCol, sulcusAO);
+
+      // Traveling Golden Action-Potential Neural Lightning Waves across Gyri!
+      float waveSpeed = 3.0 + 4.8 * uNeuralStorm;
+      float apWave1 = sin(vLocalPos.z * 10.5 - vLocalPos.y * 6.5 - uTime * waveSpeed + vnoise3(vLocalPos * 7.5) * 4.6);
+      float apWave2 = sin(vLocalPos.x * 12.0 + vLocalPos.y * 9.0 + uTime * (waveSpeed * 1.22));
+      float synapseFire = pow(max(0.0, apWave1 * 0.58 + apWave2 * 0.42), mix(6.0, 2.2, uNeuralStorm));
+      synapseFire *= smoothstep(0.35, 0.82, gyrus);
+
+      float spec = pow(max(dot(N, H), 0.0), 46.0) * 0.30 * sulcusAO;
+      col = tissue * (0.22 + 0.72 * ndl + 0.16 * fill) + vec3(1.0, 0.92, 0.76) * spec;
+      col += vec3(0.133, 0.827, 0.933) * fresnel * 0.46;
+      // Blazing Synaptic Gold (#f5b82e) cortical action potentials!
+      col += vec3(0.98, 0.74, 0.16) * synapseFire * (1.65 + 2.4 * uNeuralStorm);
+    } else if (organId < 3.5) {
+      // Organ 3: Brainstem, Spinal Cord & Optic Nerve Tracts
+      float impulse = pow(max(0.0, sin(subCoord * 18.0 - uTime * (5.5 + 5.0 * uNeuralStorm))), 5.0);
+      vec3 nerveBase = vec3(0.68, 0.84, 0.88);
+      col = nerveBase * (0.30 + 0.65 * ndl) + vec3(0.133, 0.827, 0.933) * fresnel * 0.65;
+      col += vec3(0.961, 0.722, 0.180) * impulse * (1.1 + 1.5 * uNeuralStorm);
+    } else if (organId < 4.5) {
+      // Organ 4: Diagnostic Fluoroscopy Tracking Eyeballs
+      vec3 eyeCenter = (vAnat.w < 2.5) ? vec3(0.30, 0.58, 0.57) : vec3(-0.30, 0.58, 0.57);
+      vec3 localDir = normalize(vLocalPos - eyeCenter);
+      float ang = acos(clamp(localDir.z, -1.0, 1.0));
+      float irisRing = (1.0 - smoothstep(0.42, 0.48, ang)) * smoothstep(0.14, 0.19, ang);
+      float pupil = 1.0 - smoothstep(0.14, 0.18, ang);
+      col = vec3(0.08, 0.32, 0.40) * (0.35 + 0.65 * ndl);
+      col += vec3(0.133, 0.827, 0.933) * (fresnel * 0.95 + irisRing * 0.85);
+      col += vec3(0.961, 0.722, 0.180) * irisRing * 0.45;
+      col = mix(col, vec3(0.02, 0.06, 0.09), pupil * 0.85);
+    } else if (organId < 5.5) {
+      // Organ 5: Arterial Heart Chambers (LV/LA), Aortic Arch, Coronary & Carotid Arteries!
+      // Strictly warm Arterial Coral-Vermilion (#ef4444 / #f97316, ZERO magenta!)
+      float pulseWave = pow(max(0.0, sin(subCoord * 14.0 - uTime * 7.5)), 4.0);
+      float beatGlow = 0.45 + 0.85 * uHeartPulse + 0.45 * pulseWave;
+      vec3 artBase = vec3(0.82, 0.19, 0.14);
+      vec3 artGlow = vec3(0.98, 0.38, 0.18);
+      float spec = pow(max(dot(N, H), 0.0), 48.0) * 0.45;
+      col = artBase * (0.28 + 0.68 * ndl) + artGlow * beatGlow * 0.62 + vec3(1.0, 0.86, 0.68) * spec;
+      col += vec3(0.961, 0.722, 0.180) * fresnel * (0.35 + 0.45 * uHeartPulse);
+    } else {
+      // Organ 6: Venous Heart Chambers (RV/RA), Vena Cava, Pulmonary Trunk & Jugular Veins!
+      float venWave = pow(max(0.0, sin(subCoord * 12.0 + uTime * 5.2)), 4.0);
+      vec3 venBase = vec3(0.08, 0.44, 0.56);
+      vec3 venGlow = vec3(0.133, 0.827, 0.933);
+      float spec = pow(max(dot(N, H), 0.0), 44.0) * 0.38;
+      col = venBase * (0.30 + 0.65 * ndl) + venGlow * (0.32 + 0.35 * venWave + 0.55 * fresnel) + vec3(0.85, 0.97, 1.0) * spec;
+    }
+
+    col = col * scanline + vec3(0.133, 0.827, 0.933) * apertureEdge * 0.35;
+    fragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // --- PASS 4: COMPOSITE MEDICAL FLUOROSCOPY X-RAY BONE (Mode 1 Signature Radiograph!) ---
+  if (uPassType == 4) {
+    float isTooth = (organId > 0.5 && organId < 1.5) ? 1.0 : 0.0;
+    float xrayRim = pow(1.0 - ndv, 1.65);
+    float boneTex = 0.88 + 0.12 * vnoise3(vLocalPos * 28.0);
+
+    vec3 cyanXray = vec3(0.16, 0.84, 0.95);
+    vec3 ivoryPeak = vec3(0.95, 0.96, 0.92);
+    vec3 radCol = mix(cyanXray * 0.68, ivoryPeak, clamp(xrayRim * 1.15 + isTooth * 0.65, 0.0, 1.0)) * boneTex;
+
+    // Teeth & grazing bone edges have crisp high radiographic density; flat skull dome transmits brain & heart!
+    float alpha = clamp(0.12 + 0.76 * xrayRim + isTooth * 0.62, 0.0, 0.95);
+    radCol = radCol * scanline + vec3(0.961, 0.722, 0.180) * apertureEdge * 0.30;
+    fragColor = vec4(radCol, alpha);
+    return;
+  }
+
+  // --- PASS 5: GHOST CRANIUM & RIBCAGE SILHOUETTE (Mode 3 Neuro-Cardiac Frame) ---
+  if (uPassType == 5) {
+    float ghostRim = pow(1.0 - ndv, 2.35);
+    float isTooth = (organId > 0.5 && organId < 1.5) ? 0.25 : 0.0;
+    vec3 ghostCol = mix(vec3(0.133, 0.827, 0.933), vec3(0.85, 0.96, 0.98), ghostRim);
+    float alpha = clamp(ghostRim * 0.46 + isTooth, 0.0, 0.62);
+    fragColor = vec4(ghostCol * scanline, alpha);
+    return;
+  }
+
+  // --- PASS 6: SUBTLE MYOLOGY GRAZING CONTOUR (Composite Mode 1 Soft-Tissue Halo) ---
+  float muscRim = pow(1.0 - ndv, 2.6);
+  vec3 muscGhost = mix(vec3(0.851, 0.357, 0.220), vec3(0.961, 0.722, 0.180), uMuscleFlex * 0.5);
+  fragColor = vec4(muscGhost, muscRim * (0.20 + 0.18 * uMuscleFlex));
+}`,Yt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec4 aMeta;
+// aMeta.x = material (0=brushed brass, 1=glowing cyan emitter, 2=laser reticle/tick, 3=glass lens film)
+// aMeta.y = polar angle [0..1]
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
+out vec3 vWorldPos;
+out vec3 vWorldNorm;
+out vec4 vMeta;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  vWorldNorm = normalize(mat3(uModel) * aNorm);
+  vMeta = aMeta;
+  gl_Position = uProj * uView * wp;
+}`,qt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vWorldNorm;
+in vec4 vMeta;
+
+uniform vec3 uCamPos;
+uniform float uTime;
+uniform float uFade;
+uniform float uNeuralStorm;
+
+out vec4 fragColor;
+
+void main() {
+  if (uFade <= 0.01) discard;
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 N = normalize(vWorldNorm);
+  vec3 L = normalize(vec3(0.4, 0.7, 0.6));
+  float ndl = max(dot(N, L), 0.0);
+  vec3 H = normalize(L + V);
+  float spec = pow(max(dot(N, H), 0.0), 64.0);
+  float matId = vMeta.x;
+  float ang01 = vMeta.y;
+
+  vec3 col;
+  float alpha = uFade;
+
+  if (matId < 0.5) {
+    // Brushed Synaptic Brass Gimbal Housing (#d49a35)
+    float tick = step(0.86, fract(ang01 * 36.0));
+    vec3 brass = mix(vec3(0.76, 0.55, 0.20), vec3(0.96, 0.78, 0.36), tick * 0.5);
+    col = brass * (0.30 + 0.72 * ndl) + vec3(1.0, 0.92, 0.68) * spec * 0.75;
+  } else if (matId < 1.5) {
+    // Active Medical Fluoroscopy Cyan Emitter Bezel (#22d3ee)
+    float sweep = 0.68 + 0.32 * sin(ang01 * 6.2831853 * 2.0 - uTime * 4.2);
+    col = mix(vec3(0.133, 0.827, 0.933), vec3(0.961, 0.722, 0.180), uNeuralStorm * 0.45) * (1.15 * sweep);
+  } else if (matId < 2.5) {
+    // Precision Calibration Ticks & Cardinal Laser Crosshairs
+    col = vec3(0.961, 0.722, 0.180) * 1.35;
+    alpha *= 0.92;
+  } else {
+    // Subtle Holographic Aperture Bevel Sheen
+    float rim = smoothstep(0.65, 1.0, vMeta.z);
+    col = vec3(0.133, 0.827, 0.933) * 0.9;
+    alpha *= rim * 0.16;
+  }
+
+  fragColor = vec4(col, alpha);
+}`,Kt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec2 aQuad;
+layout(location = 1) in vec4 iPosSize; // xyz: Bust-space pos, w: radius
+layout(location = 2) in vec4 iColKind; // rgb: color, w: headWeight [0..1]
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uMatBust;
+uniform vec3 uNeckAngles;
+uniform vec3 uCamRight;
+uniform vec3 uCamUp;
+
+out vec2 vQuad;
+out vec3 vWorldPos;
+out vec3 vColor;
+
+mat3 rotX(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(1.0, 0.0, 0.0,  0.0, c, s,  0.0, -s, c);
+}
+mat3 rotY(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(c, 0.0, -s,  0.0, 1.0, 0.0,  s, 0.0, c);
+}
+mat3 rotZ(float a) {
+  float c = cos(a), s = sin(a);
+  return mat3(c, s, 0.0,  -s, c, 0.0,  0.0, 0.0, 1.0);
+}
+
+void main() {
+  vec3 pos = iPosSize.xyz;
+  float headW = iColKind.w;
+  if (headW > 0.001) {
+    vec3 neckPivot = vec3(0.0, -0.26, -0.06);
+    vec3 ang = uNeckAngles * headW;
+    mat3 mNeck = rotY(ang.x) * rotX(ang.y) * rotZ(ang.z);
+    pos = neckPivot + mNeck * (pos - neckPivot);
+  }
+  vec3 centerWorld = (uMatBust * vec4(pos, 1.0)).xyz;
+  vec3 billPos = centerWorld + (uCamRight * aQuad.x + uCamUp * aQuad.y) * iPosSize.w;
+  vQuad = aQuad;
+  vWorldPos = billPos;
+  vColor = iColKind.rgb;
+  gl_Position = uProj * uView * vec4(billPos, 1.0);
+}`,Jt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vQuad;
+in vec3 vWorldPos;
+in vec3 vColor;
+
+uniform vec3 uCamPos;
+uniform vec3 uLensPos;
+uniform vec3 uLensAxis;
+uniform float uLensRadius;
+uniform float uFullScanMix;
+
+out vec4 fragColor;
+
+void main() {
+  float r2 = dot(vQuad, vQuad);
+  if (r2 > 1.0) discard;
+
+  // Clip particles cleanly to the 3D X-Ray Scanner Aperture!
+  vec3 rayDir = normalize(vWorldPos - uCamPos);
+  float denom = dot(rayDir, uLensAxis);
+  float safeDenom = abs(denom) > 0.0002 ? denom : -0.0002;
+  float tPlane = dot(uLensPos - uCamPos, uLensAxis) / safeDenom;
+  vec3 hitPlane = uCamPos + rayDir * tPlane;
+  float effR = mix(uLensRadius, 9.2, uFullScanMix * uFullScanMix);
+  if (length(hitPlane - uLensPos) > effR) discard;
+
+  float core = exp(-r2 * 4.2);
+  fragColor = vec4(vColor * (1.25 * core), core);
+}`,Zt=`#version 300 es
+precision highp float;
+precision highp int;
+
+out vec2 vUv;
+
+void main() {
+  vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  vUv = p;
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`,$t=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUv;
+uniform sampler2D uTex;
+uniform vec2 uRes;
+uniform float uPulseVig;
+uniform float uStormFlash;
+
+out vec4 fragColor;
+
+vec3 acesFilm(vec3 x) {
+  const float a = 2.51;
+  const float b = 0.03;
+  const float c = 2.43;
+  const float d = 0.59;
+  const float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+void main() {
+  vec2 px = 1.0 / max(uRes, vec2(1.0));
+  vec3 col = texture(uTex, vUv).rgb;
+
+  // Soft 4-tap highlight glow for X-Ray cyan rims & golden synapses
+  vec3 b0 = max(texture(uTex, vUv + vec2( 1.6,  1.6) * px).rgb - 0.72, 0.0);
+  vec3 b1 = max(texture(uTex, vUv + vec2(-1.6,  1.6) * px).rgb - 0.72, 0.0);
+  vec3 b2 = max(texture(uTex, vUv + vec2( 1.6, -1.6) * px).rgb - 0.72, 0.0);
+  vec3 b3 = max(texture(uTex, vUv + vec2(-1.6, -1.6) * px).rgb - 0.72, 0.0);
+  col += (b0 + b1 + b2 + b3) * 0.24;
+
+  // Subtle diagnostic edge vignette + adrenaline cardiac warmth (zero purple)
+  vec2 d = vUv - 0.5;
+  float r2 = dot(d, d);
+  col *= (1.0 - 0.30 * r2);
+  col += vec3(0.14, 0.03, 0.01) * (r2 * uPulseVig * 0.65);
+  col += vec3(0.12, 0.09, 0.02) * uStormFlash;
+
+  col = acesFilm(col * 1.06);
+  col = pow(col, vec3(1.0 / 2.2));
+  fragColor = vec4(col, 1.0);
+}`;var ve=class{constructor(){this.verts=[],this.indices=[],this.groupStartVert=0,this.groupStartIdx=0}get vertCount(){return this.verts.length/10|0}beginGroup(){this.groupStartVert=this.vertCount,this.groupStartIdx=this.indices.length}pushVert(t,o,a,s,h,c,n,r,i,u){let m=this.vertCount;return this.verts.push(t,o,a,s,h,c,n,r,i,u),m}pushTri(t,o,a){this.indices.push(t,o,a)}pushQuad(t,o,a,s){this.indices.push(t,o,a,t,a,s)}endGroupSmoothNormals(){let t=this.groupStartVert,o=this.vertCount,a=o-t;if(a<=0)return;let s=new Float32Array(a),h=new Float32Array(a),c=new Float32Array(a);for(let n=this.groupStartIdx;n<this.indices.length;n+=3){let r=this.indices[n],i=this.indices[n+1],u=this.indices[n+2],m=r*10,d=i*10,f=u*10,p=this.verts[d]-this.verts[m],v=this.verts[d+1]-this.verts[m+1],y=this.verts[d+2]-this.verts[m+2],b=this.verts[f]-this.verts[m],M=this.verts[f+1]-this.verts[m+1],x=this.verts[f+2]-this.verts[m+2],E=v*x-y*M,T=y*b-p*x,P=p*M-v*b;r>=t&&r<o&&(s[r-t]+=E,h[r-t]+=T,c[r-t]+=P),i>=t&&i<o&&(s[i-t]+=E,h[i-t]+=T,c[i-t]+=P),u>=t&&u<o&&(s[u-t]+=E,h[u-t]+=T,c[u-t]+=P)}for(let n=0;n<a;n++){let r=(t+n)*10,i=s[n],u=h[n],m=c[n],d=Math.hypot(i,u,m);d>1e-8?(this.verts[r+3]=i/d,this.verts[r+4]=u/d,this.verts[r+5]=m/d):(this.verts[r+3]=0,this.verts[r+4]=1,this.verts[r+5]=0)}}addGrid(t,o,a,s){this.beginGroup();let h=a?t:t+1,c=this.vertCount;for(let n=0;n<=o;n++){let r=n/o;for(let i=0;i<h;i++){let u=i/t,m=s(u,r);this.pushVert(m.x,m.y,m.z,0,1,0,m.headW??0,m.jawW??0,m.organTag??0,m.morph??0)}}for(let n=0;n<o;n++)for(let r=0;r<t;r++){let i=r,u=a?(r+1)%t:r+1,m=c+n*h+i,d=c+n*h+u,f=c+(n+1)*h+u,p=c+(n+1)*h+i;this.pushQuad(m,p,f,d)}this.endGroupSmoothNormals()}addSweptTube(t,o,a,s=!0){let h=t.length;if(h<2)return;this.beginGroup();let c=[];for(let u=0;u<h;u++){let m=t[Math.max(0,u-1)],d=t[Math.min(h-1,u+1)];c.push(O.normalize(d[0]-m[0],d[1]-m[1],d[2]-m[2]))}let n=Math.abs(c[0][1])<.9?[0,1,0]:[1,0,0],r=O.cross(c[0],n);O.normalize(r[0],r[1],r[2],r),n=O.cross(r,c[0]),O.normalize(n[0],n[1],n[2],n);let i=this.vertCount;for(let u=0;u<h;u++){let m=u/(h-1),d=c[u];if(u>0){let y=O.dot(d,n);n=O.normalize(n[0]-d[0]*y,n[1]-d[1]*y,n[2]-d[2]*y),r=O.cross(d,n),O.normalize(r[0],r[1],r[2],r)}let f=a(m,t[u]),p=f.rx??f.r??.05,v=f.ry??f.r??.05;for(let y=0;y<o;y++){let b=y/o*D,M=Math.cos(b)*p,x=Math.sin(b)*v,E=t[u][0]+r[0]*M+n[0]*x,T=t[u][1]+r[1]*M+n[1]*x,P=t[u][2]+r[2]*M+n[2]*x;this.pushVert(E,T,P,0,1,0,f.headW??0,f.jawW??0,f.organTag??0,f.morph??0)}}for(let u=0;u<h-1;u++)for(let m=0;m<o;m++){let d=(m+1)%o,f=i+u*o+m,p=i+u*o+d,v=i+(u+1)*o+d,y=i+(u+1)*o+m;this.pushQuad(f,p,v,y)}if(s){let u=a(0,t[0]),m=this.pushVert(t[0][0],t[0][1],t[0][2],0,1,0,u.headW??0,u.jawW??0,u.organTag??0,u.morph??0);for(let v=0;v<o;v++){let y=(v+1)%o;this.pushTri(m,i+y,i+v)}let d=a(1,t[h-1]),f=i+(h-1)*o,p=this.pushVert(t[h-1][0],t[h-1][1],t[h-1][2],0,1,0,d.headW??0,d.jawW??0,d.organTag??0,d.morph??0);for(let v=0;v<o;v++){let y=(v+1)%o;this.pushTri(p,f+v,f+y)}}this.endGroupSmoothNormals()}addEllipsoid(t,o,a,s,h,c,n,r,i){this.addGrid(n,r,!0,(u,m)=>{let d=m*Math.PI,f=u*D,p=Math.sin(d),v=p*Math.sin(f),y=Math.cos(d),b=p*Math.cos(f),M={x:t+v*s,y:o+y*h,z:a+b*c,nx:v,ny:y,nz:b,headW:1,jawW:0,organTag:0,morph:0};return i&&i(M,u,m),M})}upload(t){let o=t.createVertexArray();t.bindVertexArray(o);let a=t.createBuffer();t.bindBuffer(t.ARRAY_BUFFER,a),t.bufferData(t.ARRAY_BUFFER,new Float32Array(this.verts),t.STATIC_DRAW);let s=t.createBuffer();t.bindBuffer(t.ELEMENT_ARRAY_BUFFER,s),t.bufferData(t.ELEMENT_ARRAY_BUFFER,new Uint32Array(this.indices),t.STATIC_DRAW);let h=40;return t.enableVertexAttribArray(0),t.vertexAttribPointer(0,3,t.FLOAT,!1,h,0),t.enableVertexAttribArray(1),t.vertexAttribPointer(1,3,t.FLOAT,!1,h,12),t.enableVertexAttribArray(2),t.vertexAttribPointer(2,4,t.FLOAT,!1,h,24),t.bindVertexArray(null),{vao:o,vbo:a,ebo:s,count:this.indices.length}}};function K0(e,t=1){let o=new ve,a=Math.round(76*t),s=Math.round(68*t);o.addGrid(a,s,!0,(h,c)=>{let n=(h-.5)*D,r=Math.sin(n),i=Math.cos(n),u=Math.abs(r),m=0,d=0,f=0,p=0,v=0,y=0,b=0;if(c<=.56){let M=c/.56,x=M*.88*Math.PI,E=Math.sin(x),T=Math.cos(x),C=.77*(1-.24*A(.52,.96,M)*(.4+.6*Math.max(0,i))),L=.72,F=.84*(1-.1*A(.6,1,M));m=r*E*C,d=.58+T*L,f=i*E*F,p=1;let _=Math.pow(u,3)*A(.22,.62,M)*(1-A(.65,.92,M));if(m*=1-.07*_,i<0){let I=Math.pow(-i,2)*Math.exp(-Math.pow((d-.62)/.34,2));f-=.07*I}if(i>.05){let I=A(.05,.45,i),N=Math.exp(-Math.pow((d-.705)/.055,2)),W=Math.exp(-Math.pow((Math.abs(m)-.24)/.22,2));f+=.068*N*W*I;for(let U0 of[-1,1]){let ae=(m-U0*.3)/.145,Pe=(d-.58)/.082,it=ae*ae+Pe*Pe;if(it<2.2){let H0=Math.exp(-it*1.45);f-=.195*H0;let X0=1-A(0,.58,Math.abs(Pe)),Y0=Math.exp(-Math.pow((Math.abs(Pe)-.64)/.22,2))*Math.exp(-ae*ae*.85);if(f+=.125*Y0,f-=.065*X0*Math.exp(-ae*ae*1.2),d>.582&&it<1.35){let Nt=w(Math.exp(-ae*ae*1.1)*Math.exp(-Math.pow((Pe-.45)/.48,2)),0,.96);Nt>.08&&(b=1+Nt)}}}let S=A(.73,.63,d)*(1-A(.33,.28,d)),fe=Qt(.062,.105,A(.62,.36,d)),pe=Math.exp(-Math.pow(m/fe,2)),nt=Qt(.09,.225,A(.68,.38,d));f+=nt*S*pe*I;let V0=Math.exp(-Math.pow((Math.abs(m)-.095)/.048,2))*Math.exp(-Math.pow((d-.365)/.042,2));f+=.068*V0*I;let Bt=Math.exp(-Math.pow((Math.abs(m)-.46)/.19,2))*Math.exp(-Math.pow((d-.44)/.13,2));f+=.062*Bt*I,m+=Math.sign(m)*.032*Bt*I;let Ft=Math.exp(-Math.pow(m/.205,2)),st=Math.exp(-Math.pow((d-.215)/.034,2))*Ft,rt=Math.exp(-Math.pow((d-.125)/.036,2))*Ft,Wt=Math.exp(-Math.pow((d-.17)/.02,2))*Math.exp(-Math.pow(m/.175,2)),_0=1-.22*Math.exp(-Math.pow(m/.04,2));f+=.082*st*_0*I,f+=.076*rt*I,Wt>.32&&I>.6?(f-=.24*A(.32,.92,Wt),y=2):st+rt>.26&&I>.5&&(y=1+w((st+rt)*.75,.05,.95));let O0=Math.exp(-Math.pow(m/.17,2))*Math.exp(-Math.pow((d-.01)/.085,2));f+=.088*O0*I}if(d<.34&&f>-.12){let I=A(-.12,.28,f),N=A(.174,.145,d);v=w(N*I,0,1)}}else{let M=(c-.56)/.44;d=g(-.04,-1.66,M);let x=A(.24,.68,M),E=1-.26*A(.74,1,M),T=g(.44,1.48,x)*E,P=g(.45,.72,x)*E;if(m=r*T,f=i*P-.06*(1-x),i>0){let C=Math.exp(-Math.pow(m/.14,2))*Math.exp(-Math.pow((d+.55)/.09,2));f-=.055*C*i;let L=Math.exp(-Math.pow((Math.abs(m)-.55)/.38,2))*Math.exp(-Math.pow((d+.53)/.065,2));f+=.042*L*i;let F=Math.exp(-Math.pow((Math.abs(m)-.46)/.36,2))*Math.exp(-Math.pow((d+.96)/.26,2));f+=.075*F*i}p=w(1-A(0,.36,M),0,1),M<.1&&f>.15&&(v=(1-M/.1)*A(.15,.4,f)*.65),M>.35&&M<.92&&(b=.65*Math.sin((M-.35)/.57*Math.PI))}return{x:m,y:d,z:f,headW:p,jawW:v,organTag:y,morph:b}});for(let h of[-1,1]){let c=[];for(let n=0;n<=12;n++){let r=n/12,i=g(-.35*Math.PI,1.22*Math.PI,r);c.push([h*(.75+.045*Math.sin(i)),.51+.165*Math.sin(i-.35),-.03-.095*Math.cos(i)])}o.addSweptTube(c,8,n=>({rx:.034*(1-.25*Math.abs(n-.5)),ry:.048,headW:1,jawW:0,organTag:0,morph:0}))}for(let h of[-1,1]){let c=h>0?2.2:2.8;o.addEllipsoid(h*.3,.58,.57,.13,.13,.132,22,16,n=>{let r=Math.max(0,n.nz);n.z+=.014*Math.pow(r,4),n.headW=1,n.jawW=0,n.organTag=3.2,n.morph=c})}return o.addGrid(48,12,!0,(h,c)=>{let n=h*D,r=.92,i=g(-1.64,-2.08,c),u=.2;c<.28?r=g(1.08,.64,c/.28):c<.45?(r=.68+.06*Math.sin((c-.28)/.17*Math.PI),u=.85):(r=g(.7,1.18,(c-.45)/.55),u=c>.86?.82:.25);let m=c<.28?g(.54,.82,c/.28):.86;return{x:Math.sin(n)*r,y:i,z:Math.cos(n)*r*m-.04,headW:0,jawW:0,organTag:4+u,morph:0}}),o.upload(e)}function Qt(e,t,o){return e+(t-e)*o}function J0(e){let t=new ve;for(let a of[-1,1]){for(let c=0;c<2;c++){let n=c*.075,r=[];for(let i=0;i<=8;i++){let u=i/8;r.push([a*g(.64,.56,u),g(.41,.03,u),g(.32-n,.22-n*.8,u)])}t.addSweptTube(r,10,i=>({rx:.048+.024*Math.sin(i*Math.PI),ry:.095+.032*Math.sin(i*Math.PI),headW:1,jawW:A(.08,.92,i),organTag:1+w(i,.02,.98),morph:3+.92*Math.sin(i*Math.PI)}))}for(let c=0;c<5;c++){let n=g(-.55,.72,c/4),r=[];for(let i=0;i<=7;i++){let u=i/7,m=1-u;r.push([a*(.69-.09*u+.03*Math.sin(u*Math.PI)),g(.86+.12*Math.cos(n)*m,.35,u),g(-.04+.34*Math.sin(n)*m,.24,u)])}t.addSweptTube(r,8,i=>({rx:.026+.015*Math.sin(i*Math.PI),ry:.068*(1-.42*i),headW:1,jawW:A(.65,1,i)*.75,organTag:2+w(i,.02,.98),morph:3+.45*Math.sin(i*Math.PI)}))}let s=[],h=18;for(let c=0;c<=h;c++){let n=c/h*D;s.push([a*(.3+.165*Math.cos(n)*a),.58+.118*Math.sin(n),.61-.05*Math.pow(Math.cos(n),2)])}t.addSweptTube(s,7,c=>({rx:.024,ry:.042,headW:1,jawW:0,organTag:3+.45+.25*Math.sin(c*D),morph:0}),!1);for(let c=0;c<2;c++){let n=[];for(let r=0;r<=6;r++){let i=r/6;n.push([a*g(.56,.22,i),g(.42-c*.08,.17-c*.02,i),g(.42,.71,i)+.03*Math.sin(i*Math.PI)])}t.addSweptTube(n,7,r=>({rx:.022,ry:.038,headW:1,jawW:A(.4,1,r)*.48,organTag:3+w(r,.02,.98),morph:0}))}for(let c=0;c<2;c++){let n=c===0?.08:.29,r=c===0?.43:.37,i=[];for(let u=0;u<=10;u++){let m=u/10,d=Math.sin(m*Math.PI)*.08;i.push([a*(g(.54,n,m)+d),g(.28,-.56,m),g(-.18,r,m)+d*.6])}t.addSweptTube(i,9,u=>({rx:.042+.018*Math.sin(u*Math.PI),ry:.062+.02*Math.sin(u*Math.PI),headW:1-u*.94,jawW:0,organTag:4+w(u,.02,.98),morph:3+.55*Math.sin(u*Math.PI)}))}for(let c=0;c<4;c++){let n=c/3,r=[];for(let i=0;i<=9;i++){let u=i/9;r.push([a*g(.14+n*.24,.16+n*.98,u),g(.32-n*.18,-.55-n*.42,u),g(-.36,-.44+n*.34,u)-.05*Math.sin(u*Math.PI)])}t.addSweptTube(r,8,i=>({rx:.044+.022*Math.sin(i*Math.PI),ry:.088,headW:(1-i)*(1-n*.45),jawW:0,organTag:5+w(i,.02,.98),morph:.35*i}))}for(let c=0;c<5;c++){let n=c/4,r=g(-.56,-1.3,n),i=n<.22?g(.46,.12,n/.22):.11,u=[];for(let m=0;m<=9;m++){let d=m/9,f=Math.sin(d*Math.PI)*(.16+.06*(1-n));u.push([a*g(i,1.18,d),g(r,-.82-n*.1,d),g(.45,.14,d)+f])}t.addSweptTube(u,9,m=>({rx:.052+.025*Math.sin(m*Math.PI),ry:.095*(1-.32*m),headW:0,jawW:0,organTag:5+w(m,.02,.98),morph:.72*Math.sin(m*Math.PI)}))}for(let c=0;c<3;c++){let n=(c-1)*.68,r=[];for(let i=0;i<=8;i++){let u=i/8,m=Math.sin(u*Math.PI)*.12;r.push([a*(g(1.02,1.38,u)+m),g(-.5,-1.28,u),Math.sin(n)*g(.22,.28,u)-.04])}t.addSweptTube(r,9,i=>({rx:.068+.032*Math.sin(i*Math.PI),ry:.115*(1-.25*i),headW:0,jawW:0,organTag:5+w(i,.02,.98),morph:3+.4*Math.sin(i*Math.PI)}))}}let o=[];for(let a=0;a<=20;a++){let s=a/20*D;o.push([.22*Math.cos(s),.17+.068*Math.sin(s),.73-.06*Math.pow(Math.cos(s),2)])}return t.addSweptTube(o,7,(a,s)=>({rx:.026,ry:.034,headW:1,jawW:A(.175,.155,s[1]),organTag:3.55,morph:0}),!1),t.upload(e)}function Z0(e,t=1){let o=new ve;o.addGrid(Math.round(64*t),Math.round(48*t),!0,(r,i)=>{let u=(r-.5)*D,m=g(.02,.78*Math.PI,i),d=Math.sin(m),f=Math.cos(m),p=Math.sin(u),v=Math.cos(u),y=1-.3*A(.55,1,i),b=p*d*.69*y,M=.63+f*.57,x=v*d*.75*(1-.12*A(.62,1,i)),E=Math.exp(-Math.pow((Math.abs(b)-.6)/.16,2))*Math.exp(-Math.pow((M-.6)/.18,2))*Math.exp(-Math.pow((x-.15)/.26,2));if(b-=Math.sign(b)*.085*E,v>.05){let T=A(.05,.4,v),P=Math.exp(-Math.pow((M-.7)/.048,2))*Math.exp(-Math.pow(b/.44,2));x+=.088*P*T;for(let N of[-1,1]){let W=(b-N*.285)/.138,S=(M-.575)/.108,fe=W*W+S*S;if(fe<2){let pe=Math.exp(-Math.pow((Math.sqrt(fe)-1.02)/.22,2)),nt=Math.exp(-fe*1.65);x+=.055*pe*T,x-=.25*nt*T}}let C=b/.085,L=(M-.41)/.105,F=C*C+L*L,_=Math.exp(-Math.pow(b/.065,2))*Math.exp(-Math.pow((M-.56)/.06,2));x+=.085*_*T,F<1.6&&(x-=.18*Math.exp(-F*1.7)*T);let I=Math.exp(-Math.pow(b/.25,2))*Math.exp(-Math.pow((M-.27)/.065,2));x+=.15*I*T}if(i>.82){let T=v>.1?.23:.27;M=g(M,T,A(.82,1,i))}return{x:b,y:M,z:x,headW:1,jawW:0,organTag:.2,morph:0}});for(let r of[-1,1]){let i=[[r*.29,.45,.59],[r*.52,.44,.48],[r*.67,.43,.26],[r*.65,.41,.04]];o.addSweptTube(i,8,u=>({rx:.032,ry:.052*(1-.3*u),headW:1,jawW:0,organTag:.25,morph:0}))}let a=[[-.59,.35,.08],[-.58,.22,.11],[-.54,.05,.16],[-.41,.01,.38],[-.24,-.01,.58],[0,-.02,.67],[.24,-.01,.58],[.41,.01,.38],[.54,.05,.16],[.58,.22,.11],[.59,.35,.08]];o.addSweptTube(a,10,r=>{let i=1-Math.abs(r-.5)*2;return{rx:g(.036,.052,i),ry:g(.055,.092,A(.1,.6,i)),headW:1,jawW:1,organTag:.35,morph:0}});for(let r of[-1,1])o.addSweptTube([[r*.53,.14,.21],[r*.56,.27,.24],[r*.57,.37,.23]],7,i=>({rx:.022*(1-.55*i),ry:.054*(1-.6*i),headW:1,jawW:1,organTag:.35,morph:0}));let s=[];for(let r=0;r<=10;r++){let i=g(-.44*Math.PI,.44*Math.PI,r/10);s.push([.26*Math.sin(i),.08,.34+.3*Math.cos(i)])}o.addSweptTube(s,8,()=>({rx:.036,ry:.045,headW:1,jawW:1,organTag:.35,morph:0}));let h=14;for(let r=0;r<2;r++){let i=r===1,u=i?1:0,m=i?.132:.198,d=i?.245:.26,f=i?.285:.305;for(let p=0;p<h;p++){let v=(p+.5)/h,y=g(-.43*Math.PI,.43*Math.PI,v),b=Math.abs(v-.5)*2,M=d*Math.sin(y),x=.345+f*Math.cos(y),E=b>.52,T=E?.025:g(.021,.017,b/.52),P=i?.034:.038,C=i?1:-1;o.addEllipsoid(M,m+C*P*.35,x,T,P,E?.025:.015,8,6,L=>{L.headW=1,L.jawW=u,L.organTag=1.2,L.morph=0})}}let c=15;for(let r=0;r<c;r++){let i=r/(c-1),u=g(.22,-1.52,i),m=r<7?-.14+.04*Math.sin(r/6*Math.PI):-.16-.16*Math.sin((r-6)/8*Math.PI*.75),d=r<7?w(1-r/7*.92,.05,.96):0,f=g(.82,1.25,i);o.addEllipsoid(0,u,m,.11*f,.042,.095*f,12,6,p=>{p.headW=d,p.jawW=0,p.organTag=2.2,p.morph=0}),r<c-1&&o.addEllipsoid(0,u-.058,m,.105*f,.019,.09*f,10,5,p=>{p.headW=d*.92,p.jawW=0,p.organTag=2.85,p.morph=0}),o.addSweptTube([[-.19*f,u,m-.05],[0,u-.01,m-.12],[.19*f,u,m-.05]],6,()=>({rx:.022,ry:.026,headW:d,jawW:0,organTag:2.25,morph:0})),o.addSweptTube([[0,u,m-.07],[0,u-.035*f,m-.23*f]],6,p=>({rx:.02*(1-.35*p),ry:.03*(1-.3*p),headW:d,jawW:0,organTag:2.3,morph:0}))}let n=[[0,-.56,.42],[0,-.72,.47],[0,-1.02,.49],[0,-1.28,.46],[0,-1.41,.43]];o.addSweptTube(n,8,r=>({rx:r<.25?g(.13,.09,r/.25):g(.085,.028,(r-.25)/.75),ry:.032,headW:0,jawW:0,organTag:3.2,morph:.75}));for(let r of[-1,1]){let i=[];for(let u=0;u<=10;u++){let m=u/10,d=Math.sin(m*D)*.065;i.push([r*g(.1,1.18,m),g(-.56,-.47,m)+.02*Math.sin(m*Math.PI),g(.44,.04,m)+d])}o.addSweptTube(i,8,u=>({rx:.034+.012*Math.abs(u-.5),ry:.028,headW:0,jawW:0,organTag:3.15,morph:.45*(1-.4*u)})),o.addSweptTube([[r*.36,-.68,-.38],[r*.78,-.58,-.32],[r*1.18,-.52,-.05]],7,u=>({rx:.035,ry:g(.075,.045,u),headW:0,jawW:0,organTag:3.2,morph:.3})),o.addEllipsoid(r*1.24,-.62,.02,.11,.11,.1,10,8,u=>{u.headW=0,u.jawW=0,u.organTag=3.1,u.morph=.25}),o.addSweptTube([[r*1.25,-.66,.02],[r*1.32,-1.48,0]],8,u=>({rx:g(.068,.052,u),ry:g(.068,.052,u),headW:0,jawW:0,organTag:3.1,morph:.2}));for(let u=0;u<8;u++){let m=u/7,d=g(-.58,-1.42,m),f=g(-.19,-.31,m),p=g(.58,1.02,Math.sin(g(.22,.88,m)*Math.PI)),v=d-g(.08,.18,m),y=u<6?.08:g(.14,.34,(u-5)/2),b=u<6?v:-1.28-(u-6)*.05,M=[],x=14;for(let E=0;E<=x;E++){let T=E/x,P=g(-.5*Math.PI,.48*Math.PI,T),C=T<.82?p*Math.cos((T-.42)*1.95):g(p*Math.cos(.4*1.95),y,(T-.82)/.18),L=g(f,.47,.5+.5*Math.sin(P)),F=g(d,b,A(.15,.95,T))-.05*Math.sin(T*Math.PI);M.push([r*Math.max(y,C),F,L])}o.addSweptTube(M,7,E=>({rx:.019,ry:.032,headW:0,jawW:0,organTag:3+(E>.78?.85:.25),morph:.88*Math.sin(E*Math.PI*.85+.15)}))}}return o.upload(e)}function $0(e,t=1){let o=new ve,a=Math.round(46*t),s=Math.round(36*t);for(let n of[-1,1]){o.addEllipsoid(n*.28,.83,-.06,.275,.29,.52,a,s,d=>{n>0&&d.x<.032?d.x=g(d.x,.032,.85):n<0&&d.x>-.032&&(d.x=g(d.x,-.032,.85));let f=A(.15,.55,Math.abs(d.x))*A(.72,.45,d.y)*A(-.2,.25,d.z);d.y-=.085*f,d.x+=n*.035*f;let p=Gt(d.x,d.y,d.z),v=(p-.5)*.042;d.x+=d.nx*v,d.y+=d.ny*v,d.z+=d.nz*v,d.headW=1,d.jawW=0,d.organTag=1+w(p,.02,.98),d.morph=0}),o.addEllipsoid(n*.2,.4,-.44,.2,.14,.19,24,18,d=>{let f=.5+.5*Math.sin(d.y*68+d.z*12),p=(f-.5)*.016;d.x+=d.nx*p,d.y+=d.ny*p,d.z+=d.nz*p,d.headW=1,d.jawW=0,d.organTag=2+w(f,.02,.98),d.morph=0});let r=n>0?2.2:2.8;o.addEllipsoid(n*.3,.58,.57,.124,.124,.126,20,14,d=>{d.headW=1,d.jawW=0,d.organTag=4.5,d.morph=r});let i=[[n*.3,.58,.45],[n*.21,.55,.25],[n*.08,.52,.08],[-n*.14,.5,-.12]];o.addSweptTube(i,7,d=>({rx:.022,ry:.022,headW:1,jawW:0,organTag:3+w(d,.02,.98),morph:0}));for(let d=0;d<6;d++){let f=g(.16,-.48,d/5),p=w(1-d/6*.9,.05,.95);o.addSweptTube([[0,f,-.16],[n*.22,f-.05,-.12],[n*.44,f-.14,-.04]],5,v=>({rx:.014*(1-.45*v),ry:.014*(1-.45*v),headW:p*(1-.35*v),jawW:0,organTag:3+w(v,.02,.98),morph:0}))}let u=[[n*.12,-.7,.18],[n*.19,-.44,.08],[n*.23,-.12,.02],[n*.24,.2,0],[n*.18,.46,.02]];o.addSweptTube(u,8,d=>({rx:.028*(1-.22*d),ry:.028*(1-.22*d),headW:A(.22,.92,d),jawW:0,organTag:5+w(d,.02,.98),morph:0}));let m=[[n*.25,.4,-.05],[n*.29,.12,-.02],[n*.27,-.2,.04],[n*.22,-.54,.14],[-.12,-.78,.16]];o.addSweptTube(m,8,d=>({rx:.031*(.8+.25*d),ry:.031*(.8+.25*d),headW:1-A(.08,.78,d),jawW:0,organTag:6+w(d,.02,.98),morph:0}))}let h=[[0,.54,-.05],[0,.4,-.1],[0,.24,-.15],[0,-.12,-.13],[0,-.48,-.17],[0,-.95,-.26],[0,-1.45,-.31]];o.addSweptTube(h,10,n=>{let r=Math.exp(-Math.pow((n-.14)/.09,2))*.048;return{rx:g(.068,.034,A(0,.45,n))+r,ry:g(.064,.032,A(0,.45,n))+r*.8,headW:w(1-A(.18,.55,n),0,1),jawW:0,organTag:3+w(n,.02,.98),morph:0}}),o.addEllipsoid(.24,-1.01,.18,.18,.25,.17,24,18,n=>{let r=A(-.82,-1.24,n.y);n.x+=.09*r,n.z+=.06*r;let i=1-.42*r;n.x=.24+(n.x-.24)*i,n.z=.18+(n.z-.18)*i,n.headW=0,n.jawW=0,n.organTag=5.35,n.morph=4.95}),o.addEllipsoid(.07,-1,.22,.15,.21,.14,20,16,n=>{n.headW=0,n.jawW=0,n.organTag=6.35,n.morph=4.88}),o.addEllipsoid(.25,-.8,.08,.12,.11,.11,14,10,n=>{n.headW=0,n.jawW=0,n.organTag=5.15,n.morph=4.35}),o.addEllipsoid(.02,-.82,.14,.125,.12,.12,14,10,n=>{n.headW=0,n.jawW=0,n.organTag=6.2,n.morph=4.35});let c=[[.18,-.86,.16],[.12,-.71,.2],[.15,-.63,.14],[.22,-.69,.01],[.18,-.92,-.1],[.12,-1.42,-.16]];return o.addSweptTube(c,10,n=>({rx:g(.068,.052,n),ry:g(.068,.052,n),headW:0,jawW:0,organTag:5+w(n,.02,.98),morph:4.55*(1-.5*n)})),o.addSweptTube([[-.08,-.58,.15],[-.02,-.78,.15],[.01,-.9,.15]],9,n=>({rx:.052,ry:.052,headW:0,jawW:0,organTag:6+w(n,.02,.98),morph:4.3})),o.addSweptTube([[.09,-.88,.24],[.16,-.73,.19],[.36,-.74,.08]],8,n=>({rx:g(.05,.036,n),ry:g(.05,.036,n),headW:0,jawW:0,organTag:6+w(n,.02,.98),morph:4.45})),o.addSweptTube([[.16,-.84,.26],[.19,-.98,.33],[.27,-1.14,.29],[.32,-1.23,.22]],6,n=>({rx:.016*(1-.35*n),ry:.016*(1-.35*n),headW:0,jawW:0,organTag:5+w(n,.02,.98),morph:4.95})),o.upload(e)}function Q0(e){let t=new ve,o=72;t.addGrid(o,10,!0,(a,s)=>{let h=a*D,c=s*D,i=1.048+Math.cos(c)*.028;return{x:Math.cos(h)*i,y:Math.sin(h)*i,z:Math.sin(c)*.024,headW:0,jawW:a,organTag:0,morph:0}}),t.addGrid(o,8,!0,(a,s)=>{let h=a*D,c=s*D,i=1.006+Math.cos(c)*.015;return{x:Math.cos(h)*i,y:Math.sin(h)*i,z:Math.sin(c)*.018+.006,headW:1,jawW:a,organTag:0,morph:0}});for(let a=0;a<4;a++){let s=a/4*D,h=Math.cos(s),c=Math.sin(s);t.addSweptTube([[h*.94,c*.94,.012],[h*1.11,c*1.11,.012]],6,n=>({rx:g(.006,.016,n),ry:.012,headW:2,jawW:a*.25,organTag:0,morph:0}))}return t.addGrid(o,2,!0,(a,s)=>{let h=a*D,c=g(.91,1,s);return{x:Math.cos(h)*c,y:Math.sin(h)*c,z:0,headW:3,jawW:a,organTag:s,morph:0}}),t.upload(e)}function e0(e,t=!1){let o=t?.82:1;return{outerMesh:K0(e,o),muscleMesh:J0(e),boneMesh:Z0(e,o),neuroMesh:$0(e,o),scannerRing:Q0(e)}}function t0(e,t=660){let o=kt(20260502),a=new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),s=new Float32Array(t*8),h=[];for(let u=0;u<t;u++){let m=u<180?0:u<280?1:2,d=o()<.5?-1:1,f=o()*D,p=Math.acos(2*o()-1)*.72,v=d*(.06+Math.abs(Math.sin(p)*Math.sin(f))*.5),y=.72+Math.cos(p)*.33,b=-.04+Math.sin(p)*Math.cos(f)*.5;h.push({kind:m,side:d,phase:o(),speed:.28+o()*.42,jitterX:(o()-.5)*.04,jitterZ:(o()-.5)*.04,bx:v,by:y,bz:b,theta:f,phi:p})}let c=e.createVertexArray();e.bindVertexArray(c);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,a,e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,2,e.FLOAT,!1,8,0);let r=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,r),e.bufferData(e.ARRAY_BUFFER,s.byteLength,e.DYNAMIC_DRAW),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,4,e.FLOAT,!1,32,0),e.vertexAttribDivisor(1,1),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,4,e.FLOAT,!1,32,16),e.vertexAttribDivisor(2,1),e.bindVertexArray(null);function i(u,m,d,f,p){let v=0,y=Math.round(g(420,t,w(p,0,1))),b=0;for(let M=0;M<y;M++){let x=h[M],E=0,T=0,P=0,C=.022,L=1,F=.8,_=.2,I=0;if(x.kind===0){x.phase=(x.phase+u*x.speed*f*(.65+1.45*d))%1;let W=x.phase;if(W<.25){let S=W/.25;E=g(.19,.14,S)+x.jitterX,T=g(-.96,-.64,S),P=g(.16,.18,S)+x.jitterZ,I=0}else{let S=(W-.25)/.75;E=x.side*g(.14,.22,Math.sin(S*Math.PI*.7))+x.jitterX,T=g(-.64,.56,S),P=g(.15,.02,S)+x.jitterZ,I=A(.2,.88,S)}C=.02+.01*d,L=.98,F=.34+.2*d,_=.16}else if(x.kind===1){x.phase=(x.phase+u*x.speed*.72*f)%1;let W=x.phase;E=g(x.side*.26,-.04,A(.55,1,W))+x.jitterX,T=g(.46,-.88,W),P=g(-.04,.15,W)+x.jitterZ,I=1-A(.08,.72,W),C=.019,L=.133,F=.827,_=.933}else{let W=1+3.2*p;x.phase=(x.phase+u*x.speed*1.45*W)%1;let S=Math.sin(x.phase*Math.PI),fe=.035*Math.sin(m*4+M);E=x.bx+Math.cos(m*2.3+M)*.025,T=x.by+fe,P=x.bz+Math.sin(m*2.1+M*1.7)*.035,I=1,C=(.016+.022*p)*(.45+.85*S);let pe=M%4===0?.25:.92;L=g(.2,.98,pe),F=g(.9,.76,pe),_=g(.96,.2,pe),S>.25&&v++}let N=b*8;s[N]=E,s[N+1]=T,s[N+2]=P,s[N+3]=C,s[N+4]=L,s[N+5]=F,s[N+6]=_,s[N+7]=I,b++}return e.bindBuffer(e.ARRAY_BUFFER,r),e.bufferSubData(e.ARRAY_BUFFER,0,s.subarray(0,b*8)),{drawCount:b,activeSparks:v}}return{vao:c,update:i}}var _e=class{constructor(){this.active=!1,this.video=null,this.stream=null,this.cvs=document.createElement("canvas"),this.cvs.width=48,this.cvs.height=36,this.ctx=this.cvs.getContext("2d",{willReadFrequently:!0}),this.prevLuma=new Float32Array(1728),this.yaw=0,this.pitch=0,this.jawOpen=0}async toggle(){if(this.active)return this.stop(),{ok:!0,active:!1};if(!navigator.mediaDevices||typeof navigator.mediaDevices.getUserMedia!="function")return{ok:!1,active:!1,reason:"unavailable"};try{let t=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:160},height:{ideal:120},facingMode:"user"},audio:!1}),o=document.createElement("video");return o.srcObject=t,o.muted=!0,o.playsInline=!0,await o.play(),this.stream=t,this.video=o,this.active=!0,{ok:!0,active:!0}}catch{return this.stop(),{ok:!1,active:!1,reason:"denied"}}}stop(){this.active=!1,this.stream&&(this.stream.getTracks().forEach(t=>t.stop()),this.stream=null),this.video=null}sample(){if(!this.active||!this.video||this.video.readyState<2||!this.ctx)return null;let t=48,o=36;this.ctx.save(),this.ctx.scale(-1,1),this.ctx.drawImage(this.video,-t,0,t,o),this.ctx.restore();let a=this.ctx.getImageData(0,0,t,o).data,s=0,h=0,c=0;for(let n=3;n<o-3;n++)for(let r=4;r<t-4;r++){let i=n*t+r,u=i*4,m=a[u],d=a[u+1],f=a[u+2],p=.299*m+.587*d+.114*f,v=Math.abs(p-this.prevLuma[i]);this.prevLuma[i]=p;let b=Math.max(0,m-f*.85)*.35+v*1.6;b>8&&(s+=b,h+=r*b,c+=n*b)}if(s>120){let n=h/s,r=c/s;this.yaw=w((n-24)/14*.55,-.58,.58),this.pitch=w((r-17)/11*.38,-.38,.38);let i=w(Math.round(n-4),4,t-9),u=w(Math.round(r-2),3,o-10),m=w(Math.round(r+5),6,o-4),d=1,f=255;for(let v=0;v<8;v++)d+=this.prevLuma[u*t+i+v],f=Math.min(f,this.prevLuma[m*t+i+v]);d/=8;let p=(d-f)/Math.max(d,40);this.jawOpen=w((p-.28)*2.4,0,1)}return{yaw:this.yaw,pitch:this.pitch,jawOpen:this.jawOpen}}};var Oe=class{constructor(){this.ctx=null,this.master=null,this.analyser=null,this.echoSend=null,this.noiseBuf=null,this.humGain=null,this.humFilter=null,this.vocalGain=null,this.formants=[],this.vol=.8,this.ecgMuted=!1}init(){if(this.ctx){this.ctx.state==="suspended"&&this.ctx.resume().catch(()=>{});return}let t=window.AudioContext||window.webkitAudioContext;if(!t)return;this.ctx=new t;let o=this.ctx.createDynamicsCompressor();o.threshold.value=-11,o.knee.value=12,o.ratio.value=7,o.attack.value=.004,o.release.value=.16,this.master=this.ctx.createGain(),this.master.gain.value=this.vol,this.analyser=this.ctx.createAnalyser(),this.analyser.fftSize=512,this.master.connect(o),o.connect(this.analyser),this.analyser.connect(this.ctx.destination),this.echoSend=this.ctx.createGain(),this.echoSend.gain.value=.26;let a=this.ctx.createDelay(1);a.delayTime.value=.24;let s=this.ctx.createGain();s.gain.value=.34;let h=this.ctx.createBiquadFilter();h.type="lowpass",h.frequency.value=2400,this.echoSend.connect(a),a.connect(h),h.connect(s),s.connect(a),h.connect(this.master);let c=Math.floor(this.ctx.sampleRate*1.5);this.noiseBuf=this.ctx.createBuffer(1,c,this.ctx.sampleRate);let n=this.noiseBuf.getChannelData(0),r=0,i=0,u=0;for(let f=0;f<c;f++){let p=Math.random()*2-1;r=.996*r+p*.032,i=.982*i+p*.038,u=.945*u+p*.055,n[f]=(r+i+u+p*.12)*.85}this.humFilter=this.ctx.createBiquadFilter(),this.humFilter.type="lowpass",this.humFilter.frequency.value=260,this.humFilter.Q.value=1.8,this.humGain=this.ctx.createGain(),this.humGain.gain.value=.025,[110,164.81,220].forEach((f,p)=>{let v=this.ctx.createOscillator();v.type=p===0?"sine":"triangle",v.frequency.value=f,v.detune.value=(p-1)*4;let y=this.ctx.createGain();y.gain.value=p===0?.45:.2,v.connect(y),y.connect(this.humFilter),v.start()}),this.humFilter.connect(this.humGain),this.humGain.connect(this.master);let m=this.ctx.createGain();m.gain.value=.55,[130.81,196,261.63].forEach((f,p)=>{let v=this.ctx.createOscillator();v.type=p===2?"triangle":"sawtooth",v.frequency.value=f,v.detune.value=(p-1)*6.5;let y=this.ctx.createGain();y.gain.value=p===0?.48:p===1?.3:.22,v.connect(y),y.connect(m),v.start()}),this.vocalGain=this.ctx.createGain(),this.vocalGain.gain.value=1e-4;let d=[{f:380,q:5.5,gain:.95},{f:780,q:6.5,gain:.65},{f:2450,q:7.5,gain:.28}];this.formants=d.map(f=>{let p=this.ctx.createBiquadFilter();p.type="bandpass",p.frequency.value=f.f,p.Q.value=f.q;let v=this.ctx.createGain();return v.gain.value=f.gain,m.connect(p),p.connect(v),v.connect(this.vocalGain),p}),this.vocalGain.connect(this.master),this.vocalGain.connect(this.echoSend)}setVolume(t){this.vol=w(t,0,1),this.master&&this.ctx&&this.master.gain.setTargetAtTime(this.vol,this.ctx.currentTime,.04)}updateContinuous(t,o,a,s){if(!this.ctx||!this.humGain||!this.vocalGain)return;let h=this.ctx.currentTime;if(!s){this.humGain.gain.setTargetAtTime(.008,h,.12),this.vocalGain.gain.setTargetAtTime(1e-4,h,.08);return}let c=.024+w(o*.022,0,.045)+a*.018,n=250+w(o*280,0,560)+a*220;this.humGain.gain.setTargetAtTime(c,h,.06),this.humFilter.frequency.setTargetAtTime(n,h,.06);let r=w(t,0,1),i=r>.08?w((r-.08)*.24,0,.2):1e-4;this.vocalGain.gain.setTargetAtTime(i,h,.05),this.formants.length===3&&(this.formants[0].frequency.setTargetAtTime(g(350,780,r),h,.05),this.formants[1].frequency.setTargetAtTime(g(760,1240,r),h,.05),this.formants[2].frequency.setTargetAtTime(g(2380,2760,r),h,.05))}playHeartbeat(t=72,o=!1){if(!this.ctx)return;let a=this.ctx.currentTime,s=w((t-68)/85,0,1),h=w(.25*(74/Math.max(60,t)),.13,.27);this._triggerHeartThump(a,78+s*14,36,.11,.26+s*.08),this._triggerHeartThump(a+h,98+s*16,46,.085,.19+s*.06),o&&!this.ecgMuted&&this.playEcgPing(t>110)}_triggerHeartThump(t,o,a,s,h){let c=this.ctx.createOscillator();c.type="sine",c.frequency.setValueAtTime(o,t),c.frequency.exponentialRampToValueAtTime(a,t+s);let n=this.ctx.createGain();if(n.gain.setValueAtTime(1e-4,t),n.gain.linearRampToValueAtTime(h,t+.012),n.gain.exponentialRampToValueAtTime(8e-4,t+s+.03),c.connect(n),n.connect(this.master),c.start(t),c.stop(t+s+.04),this.noiseBuf){let r=this.ctx.createBufferSource();r.buffer=this.noiseBuf;let i=this.ctx.createBiquadFilter();i.type="lowpass",i.frequency.value=145;let u=this.ctx.createGain();u.gain.setValueAtTime(h*.35,t),u.gain.exponentialRampToValueAtTime(8e-4,t+.065),r.connect(i),i.connect(u),u.connect(this.master),r.start(t),r.stop(t+.075)}}playEcgPing(t=!1){if(!this.ctx)return;let o=this.ctx.currentTime,a=this.ctx.createOscillator();a.type="sine",a.frequency.setValueAtTime(t?1046.5:880,o);let s=this.ctx.createGain();s.gain.setValueAtTime(1e-4,o),s.gain.linearRampToValueAtTime(t?.055:.032,o+.006),s.gain.exponentialRampToValueAtTime(5e-4,o+.095),a.connect(s),s.connect(this.master),a.start(o),a.stop(o+.105)}playBoneClick(t=!0){if(!this.ctx)return;let o=this.ctx.currentTime,a=this.ctx.createOscillator();a.type="triangle",a.frequency.setValueAtTime(t?480:310,o),a.frequency.exponentialRampToValueAtTime(t?195:440,o+.045);let s=this.ctx.createGain();s.gain.setValueAtTime(.001,o),s.gain.linearRampToValueAtTime(.14,o+.004),s.gain.exponentialRampToValueAtTime(8e-4,o+.055),a.connect(s),s.connect(this.master),a.start(o),a.stop(o+.065)}playNeuralStorm(){if(!this.ctx)return;let t=this.ctx.currentTime;[523.25,587.33,659.25,783.99,880,1046.5,1174.66,1567.98].forEach((a,s)=>{let h=t+s*.048,c=this.ctx.createOscillator();c.type=s%2===0?"sine":"triangle",c.frequency.setValueAtTime(a,h),c.frequency.exponentialRampToValueAtTime(a*1.006,h+.42);let n=this.ctx.createGain();n.gain.setValueAtTime(1e-4,h),n.gain.linearRampToValueAtTime(.11,h+.012),n.gain.exponentialRampToValueAtTime(6e-4,h+.52),c.connect(n),n.connect(this.master),n.connect(this.echoSend),c.start(h),c.stop(h+.56)})}playVocalDemo(){if(!this.ctx)return;let t=this.ctx.currentTime,o=this.ctx.createGain();o.gain.value=.5,[130.81,196,261.63].forEach((s,h)=>{let c=this.ctx.createOscillator();c.type=h===2?"triangle":"sawtooth",c.frequency.value=s,c.detune.value=(h-1)*6;let n=this.ctx.createGain();n.gain.value=.34,c.connect(n),n.connect(o),c.start(t),c.stop(t+1.35)});let a=this.ctx.createGain();a.gain.setValueAtTime(1e-4,t),a.gain.linearRampToValueAtTime(.22,t+.22),a.gain.exponentialRampToValueAtTime(8e-4,t+1.3),[[360,770,5.5,.95],[760,1230,6.5,.65],[2400,2720,7.5,.3]].forEach(([s,h,c,n])=>{let r=this.ctx.createBiquadFilter();r.type="bandpass",r.Q.value=c,r.frequency.setValueAtTime(s,t),r.frequency.linearRampToValueAtTime(h,t+.55),r.frequency.linearRampToValueAtTime(s,t+1.25);let i=this.ctx.createGain();i.gain.value=n,o.connect(r),r.connect(i),i.connect(a)}),a.connect(this.master),a.connect(this.echoSend)}playFluoroscopySweep(){if(!this.ctx)return;let t=this.ctx.currentTime,o=this.ctx.createBiquadFilter();o.type="bandpass",o.Q.value=3.5,o.frequency.setValueAtTime(180,t),o.frequency.exponentialRampToValueAtTime(1180,t+.42),o.frequency.exponentialRampToValueAtTime(220,t+.95);let a=this.ctx.createGain();a.gain.setValueAtTime(1e-4,t),a.gain.linearRampToValueAtTime(.18,t+.14),a.gain.exponentialRampToValueAtTime(8e-4,t+.98),[110,220,329.63].forEach((s,h)=>{let c=this.ctx.createOscillator();c.type=h===0?"sawtooth":"triangle",c.frequency.value=s,c.connect(o),c.start(t),c.stop(t+1.02)}),o.connect(a),a.connect(this.master),a.connect(this.echoSend)}};function o0(e,t,o){let a=e.createShader(t);if(e.shaderSource(a,o),e.compileShader(a),!e.getShaderParameter(a,e.COMPILE_STATUS)){let s=e.getShaderInfoLog(a);throw e.deleteShader(a),new Error(`Shader compile error: ${s}`)}return a}function ke(e,t,o,a){let s=e.createProgram(),h=o0(e,e.VERTEX_SHADER,t),c=o0(e,e.FRAGMENT_SHADER,o);if(e.attachShader(s,h),e.attachShader(s,c),e.linkProgram(s),!e.getProgramParameter(s,e.LINK_STATUS))throw new Error(`Program link error: ${e.getProgramInfoLog(s)}`);e.deleteShader(h),e.deleteShader(c);let n={};for(let r of a)n[r]=e.getUniformLocation(s,r);return{prog:s,u:n}}var xe=document.getElementById("xray-app"),G=document.getElementById("xr-canvas"),v0=document.getElementById("xr-hud"),vt=document.getElementById("xr-overlay"),eo=document.getElementById("xr-touch"),to=document.getElementById("xr-perf"),oo=document.getElementById("xr-vitals"),a0=document.getElementById("xr-mode-badge"),ao=document.getElementById("xr-mode-hint"),lt=document.getElementById("xr-toast-feed"),g0=document.getElementById("xr-banner"),no=document.getElementById("xr-banner-title"),so=document.getElementById("xr-banner-sub"),ro=document.getElementById("xr-bpm-val"),io=document.getElementById("xr-rhythm-lbl"),qe=document.getElementById("xr-ecg"),ee=qe?qe.getContext("2d"):null,co=document.getElementById("xr-jaw-fill"),lo=document.getElementById("xr-spark-fill"),uo=document.getElementById("xr-layer-lbl"),ho=document.getElementById("xr-organ-title"),mo=document.getElementById("xr-organ-sub"),fo=document.getElementById("xr-kicker"),x0=document.getElementById("xr-title"),po=document.getElementById("xr-desc"),M0=document.getElementById("xr-btn-start"),vo=document.getElementById("xr-btn-fullmode"),go=document.getElementById("xr-btn-studio"),y0=document.getElementById("xr-studio"),Ke=document.getElementById("xr-scope"),te=Ke?Ke.getContext("2d"):null,gt=document.getElementById("btn-fullxray"),Je=document.getElementById("btn-autoscan"),b0=document.getElementById("btn-webcam"),w0=document.getElementById("btn-adrenaline"),Pt=document.getElementById("btn-storm"),n0=document.getElementById("btn-jaw"),xt=document.getElementById("xr-jaw-range"),T0=document.getElementById("xr-jaw-lbl"),E0=[document.getElementById("layer-1"),document.getElementById("layer-2"),document.getElementById("layer-3"),document.getElementById("layer-4")],l=G.getContext("webgl2",{antialias:!1,alpha:!1,powerPreference:"high-performance"});if(!l)throw x0.textContent="\u5F53\u524D\u6D4F\u89C8\u5668\u672A\u542F\u7528 WebGL2",new Error("WebGL2 unavailable");var s0=l.getExtension("WEBGL_debug_renderer_info"),xo=s0?String(l.getParameter(s0.UNMASKED_RENDERER_WEBGL)):"",Ge=/SwiftShader|llvmpipe|Software/i.test(xo),Se=ke(l,Ot,Ut,["uRes","uTime","uFullScanMix","uNeuralStorm"]),Mt=ke(l,Ht,Xt,["uProj","uView","uMatBust","uNeckAngles","uJawKin","uEyeAngles","uBreath","uBlink","uHeartPulse","uMuscleFlex","uCamPos","uLensPos","uLensAxis","uLensRadius","uFullScanMix","uPassType","uTime","uNeuralStorm","uJawOpen"]),se=ke(l,Yt,qt,["uProj","uView","uModel","uCamPos","uTime","uFade","uNeuralStorm"]),r0=ke(l,Kt,Jt,["uProj","uView","uMatBust","uNeckAngles","uCamRight","uCamUp","uCamPos","uLensPos","uLensAxis","uLensRadius","uFullScanMix"]),Re=ke(l,Zt,$t,["uTex","uRes","uPulseVig","uStormFlash"]),i0=l.createVertexArray(),q=e0(l,Ge),St=t0(l,Ge?480:660),A0=new _e,R=new Oe,Me=null,ye=null,Ce=null,re=0,ie=0,P0=Ge?"med":"high",Mo=Ge?{low:.56,med:.72,high:.85}:{low:.72,med:.88,high:1};function ze(){let e=Math.min(window.devicePixelRatio||1,Ge?1:1.75),t=Math.max(320,xe.clientWidth||800),o=Math.max(240,xe.clientHeight||446),a=Math.round(t*e),s=Math.round(o*e);(G.width!==a||G.height!==s)&&(G.width=a,G.height=s);let h=Mo[P0]||.88,c=Math.max(256,Math.round(a*h)),n=Math.max(180,Math.round(s*h));Me&&c===re&&n===ie||(re=c,ie=n,Me&&l.deleteFramebuffer(Me),ye&&l.deleteTexture(ye),Ce&&l.deleteRenderbuffer(Ce),ye=l.createTexture(),l.bindTexture(l.TEXTURE_2D,ye),l.texImage2D(l.TEXTURE_2D,0,l.RGBA8,re,ie,0,l.RGBA,l.UNSIGNED_BYTE,null),l.texParameteri(l.TEXTURE_2D,l.TEXTURE_MIN_FILTER,l.LINEAR),l.texParameteri(l.TEXTURE_2D,l.TEXTURE_MAG_FILTER,l.LINEAR),l.texParameteri(l.TEXTURE_2D,l.TEXTURE_WRAP_S,l.CLAMP_TO_EDGE),l.texParameteri(l.TEXTURE_2D,l.TEXTURE_WRAP_T,l.CLAMP_TO_EDGE),Ce=l.createRenderbuffer(),l.bindRenderbuffer(l.RENDERBUFFER,Ce),l.renderbufferStorage(l.RENDERBUFFER,l.DEPTH_COMPONENT24,re,ie),Me=l.createFramebuffer(),l.bindFramebuffer(l.FRAMEBUFFER,Me),l.framebufferTexture2D(l.FRAMEBUFFER,l.COLOR_ATTACHMENT0,l.TEXTURE_2D,ye,0),l.framebufferRenderbuffer(l.FRAMEBUFFER,l.DEPTH_ATTACHMENT,l.RENDERBUFFER,Ce),l.bindFramebuffer(l.FRAMEBUFFER,null))}new ResizeObserver(()=>ze()).observe(xe);ze();var S0=!0;typeof IntersectionObserver<"u"&&new IntersectionObserver(t=>{for(let o of t)o.target===xe&&(S0=o.isIntersecting)},{threshold:.01}).observe(xe);var R0={1:{short:"\u590D\u5408\u900F\u89C6",code:"COMPOSITE X-RAY",cls:"active-cyan"},2:{short:"\u9AA8\u9ABC\u900F\u89C6",code:"OSTEOLOGY SKULL",cls:"active-ivory"},3:{short:"\u8111\u5FC3\u900F\u89C6",code:"NEURO-CARDIAC",cls:"active-gold"},4:{short:"\u808C\u7FA4\u89E3\u5256",code:"MYOLOGY FIBERS",cls:"active-terra"}},j="menu",X=1,H=0,ue=0,$=!1,V=[0,.05,5.05],yo=[0,-.16,0],bo=[0,1,0],Ne=z.create(),K=z.create(),c0=z.create(),l0=z.create(),Rt=z.create(),u0=z.create(),Fe=0,Ze=0,be=0,We=0,$e=0,yt=0,bt=0,B=[0,.34,1.55],U=[0,.34,1.55],he=[0,0,1],Te=.56,wt=.56,h0=0,C0=0,I0=.22,L0=!1,Qe=!1,Ee=!1,Tt=0,J=0,me=null,de=Ve(0),Et=.15,Y=!1,B0=72,Z=72,Ie=0,d0=0,Ae=0,ut=0,F0=0,ht=2.8,Xe=0,ce=0,Be=0,et=0,De=128,tt=420,we=new Float32Array(150),dt=0,Ye=0;function W0(e,t,o=2.4){no.textContent=e,so.textContent=t,g0.classList.add("show"),Ye=o}function Q(e,t=""){let o=document.createElement("div");for(o.className=`xr-toast${t?` ${t}`:""}`,o.textContent=e,lt.prepend(o);lt.children.length>3;)lt.lastElementChild.remove();setTimeout(()=>{o.remove()},2800)}function Ct(e=null){R.init(),j="mirror",vt.classList.add("hidden"),v0.classList.add("visible"),eo.classList.add("active"),typeof e=="boolean"&&ot(e,!1),R.playFluoroscopySweep(),W0(H>.5?"\u5168\u8EAB X \u5149\u900F\u89C6\u5DF2\u6FC0\u6D3B":"3D \u8367\u5149\u89E3\u5256\u9B54\u955C\u5DF2\u5C31\u7EEA","\u626B\u63A0\u5149\u6807\u5B9E\u65F6\u900F\u89C6\u9AA8\u9ABC\xB7\u6C9F\u56DE\u5927\u8111\u4E0E\u640F\u52A8\u56DB\u8154\u5FC3\u810F \xB7 \u6309 [Space] \u5F20\u53E3\u53D1\u58F0"),G.focus()}function It(){j==="mirror"?(j="paused",vt.classList.remove("hidden"),fo.textContent="FLUOROSCOPY RIG STANDBY // \u5B9E\u65F6\u89E3\u5256\u9B54\u955C\u5F85\u547D",x0.textContent="X \u5149\u89E3\u5256\u9B54\u955C \xB7 \u8BCA\u65AD\u5F85\u547D",po.textContent="\u968F\u65F6\u5207\u6362\u56DB\u91CD\u89E3\u5256\u5265\u79BB\u5C42\u3001\u8C03\u8BD5\u4E0B\u988C\u9AA8\u5F20\u89D2\u6216\u8BD5\u542C\u96F6\u91C7\u6837\u751F\u7269\u58F0\u5B66\u5408\u6210\u53F0\u3002",M0.textContent="\u7EE7\u7EED\u5B9E\u65F6 X \u5149\u900F\u89C6"):j==="paused"&&(j="mirror",vt.classList.add("hidden"),v0.classList.add("visible"),G.focus())}function le(e,t=!0){let o=1;if(typeof e=="string")o={composite:1,osteology:2,bone:2,neuro:3,brain:3,myology:4,muscle:4}[e.toLowerCase()]||1;else{let s=Math.round(Number(e)||1);o=s<=0?1:((s-1)%4+4)%4+1}X=o;let a=R0[X];if(E0.forEach((s,h)=>{s&&(s.className="xr-tool-btn",h+1===X&&s.classList.add(a.cls))}),document.querySelectorAll(".ly-pill").forEach(s=>{s.classList.toggle("active",Number(s.dataset.l)===X)}),uo.textContent=a.code,t){R.init(),R.playBoneClick(!0);let s=X===3?"gold":X===4?"coral":"";Q(`\u89E3\u5256\u5C42\uFF1A[${X}] ${a.short}`,s)}}function ot(e,t=!0){H=e?1:0,gt.classList.toggle("active",H>.5),gt.textContent=H>.5?"\u73AF\u955C\u900F\u89C6 [X]":"\u5168\u5C4F\u900F\u89C6 [X]",a0.textContent=H>.5?"\u5168\u900F\u89C6":"\u900F\u89C6\u73AF",a0.classList.toggle("full",H>.5),ao.textContent=H>.5?"\u5168\u8EAB\u5B9E\u65F6 X \u5149\u663E\u5F71\u4E2D \xB7 \u6309 [X] \u5207\u56DE\u805A\u7126\u73AF":"\u626B\u63A0\u5149\u6807\u5B9E\u65F6\u5265\u79BB\u89E3\u5256\u5C42",t&&(R.init(),R.playFluoroscopySweep(),Q(H>.5?"\u5DF2\u5C55\u5F00\u5168\u8EAB X \u5149\u900F\u89C6\u89C6\u91CE":"\u5DF2\u5207\u6362\u4E3A 3D \u9EC4\u94DC\u805A\u7126\u900F\u89C6\u73AF","gold"))}function at(e=!0){ce=1,Be=3.8,et=.55,Pt.classList.add("active");let t=St.update(.016,performance.now()*.001,Ae,Z/72,1);tt=t.drawCount,De=Math.max(320,t.activeSparks),e&&(R.init(),R.playNeuralStorm(),W0("\u76AE\u5C42\u795E\u7ECF\u5143\u52A8\u4F5C\u7535\u4F4D\u98CE\u66B4!","\u5DE6\u53F3\u5927\u8111\u534A\u7403\u6C9F\u56DE\u4E0E\u89C6\u795E\u7ECF\u675F\u91D1\u8272\u7A81\u89E6\u540C\u6B65\u6FC0\u53D1",2.2),Q("\u89E6\u53D1\u76AE\u5C42\u7A81\u89E6\u7535\u4F4D\u98CE\u66B4!","gold"))}function N0(){Y=!Y,B0=Y?148:72,w0.classList.toggle("active",Y),io.textContent=Y?"BPM \xB7 \u4EA4\u611F\u52A0\u901F":"BPM \xB7 \u7AA6\u6027\u5FC3\u5F8B",R.init(),R.playEcgPing(Y),Q(Y?"\u80BE\u4E0A\u817A\u7D20\u6CE8\u5165\uFF1A\u5FC3\u7387\u51B2\u523A 148 BPM!":"\u8FF7\u8D70\u795E\u7ECF\u5E73\u590D\uFF1A\u6062\u590D 72 BPM \u9759\u606F\u5FC3\u5F8B",Y?"coral":"")}var ge=new Set;window.addEventListener("keydown",e=>{if(!(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))){if(ge.add(e.code),e.code==="KeyP"||e.code==="Escape"){(j==="mirror"||j==="paused")&&(e.preventDefault(),It());return}e.code==="Digit1"?le(1):e.code==="Digit2"?le(2):e.code==="Digit3"?le(3):e.code==="Digit4"?le(4):e.code==="KeyX"?ot(H<.5):e.code==="KeyN"?at(!0):e.code==="KeyE"?N0():e.code==="KeyV"?($=!$,Je.classList.toggle("active",$),Q($?"\u5DF2\u5F00\u542F\u81EA\u52A8\u5168\u8EAB\u900F\u89C6\u5DE1\u822A":"\u5DF2\u6062\u590D\u5149\u6807\u81EA\u7531\u626B\u63A0")):e.code==="KeyW"?G0():e.code==="Space"&&(e.preventDefault(),me=null,e.repeat||(R.init(),R.playBoneClick(!0)))}});window.addEventListener("keyup",e=>{ge.delete(e.code)});G.addEventListener("contextmenu",e=>e.preventDefault());function D0(e,t){let o=G.getBoundingClientRect();o.width>0&&o.height>0&&(C0=(e-o.left)/o.width*2-1,I0=1-(t-o.top)/o.height*2,L0=!0)}G.addEventListener("pointermove",e=>{if(D0(e.clientX,e.clientY),Qe){let t=e.clientX-Tt;Tt=e.clientX,Ze+=t*.011,Lt(null)}$&&!Qe&&($=!1,Je.classList.remove("active"))});G.addEventListener("pointerdown",e=>{j==="mirror"&&(R.init(),D0(e.clientX,e.clientY),G.setPointerCapture?.(e.pointerId),e.button===2||e.button===1?(Qe=!0,Tt=e.clientX):e.button===0&&(Ee=!0,me=null,R.playBoneClick(!0)))});function k0(e){(e.button===2||e.button===1)&&(Qe=!1),e.button===0&&Ee&&(Ee=!1,R.playBoneClick(!1))}G.addEventListener("pointerup",k0);G.addEventListener("pointercancel",k0);G.addEventListener("wheel",e=>{j==="mirror"&&(e.preventDefault(),wt=w(wt-Math.sign(e.deltaY)*.06,.3,1.1))},{passive:!1});M0.addEventListener("click",()=>{j==="paused"?It():Ct()});vo.addEventListener("click",()=>{Ct(!0)});gt.addEventListener("click",()=>ot(H<.5));Je.addEventListener("click",()=>{$=!$,Je.classList.toggle("active",$),Q($?"\u5DF2\u5F00\u542F 3D \u900F\u89C6\u73AF\u81EA\u52A8\u5DE1\u822A":"\u5DF2\u6062\u590D\u5149\u6807\u81EA\u7531\u626B\u63A0")});async function G0(){R.init();let e=await A0.toggle();b0.classList.toggle("active",e.active),e.ok&&e.active?Q("\u672C\u5730\u6444\u50CF\u5934\u955C\u50CF\u5DF2\u8FDE\u63A5\uFF1A\u5934\u90E8\u504F\u8F6C\u4E0E\u5F20\u53E3\u5B9E\u65F6\u540C\u6B65!","gold"):e.ok&&!e.active?Q("\u5DF2\u5173\u95ED\u6444\u50CF\u5934\u955C\u50CF\uFF0C\u6062\u590D\u5149\u6807\u5B9E\u65F6\u8FFD\u8E2A"):Q("\u5F53\u524D\u73AF\u5883\u672A\u6388\u6743\u6444\u50CF\u5934 \xB7 \u5DF2\u542F\u7528\u9AD8\u7CBE\u5EA6\u5149\u6807\u4E0E\u6309\u952E\u5B9E\u65F6\u8FFD\u8E2A")}b0.addEventListener("click",G0);document.getElementById("btn-pause").addEventListener("click",It);document.getElementById("btn-fs").addEventListener("click",()=>{document.fullscreenElement?document.exitFullscreen?.().catch(()=>{}):xe.requestFullscreen?.().catch(()=>{})});w0.addEventListener("click",N0);Pt.addEventListener("click",()=>at(!0));function Lt(e){document.querySelectorAll(".xr-pose-btn[data-yaw]").forEach(t=>{t.classList.toggle("active",e!==null&&Number(t.dataset.yaw)===e)})}document.querySelectorAll(".xr-pose-btn[data-yaw]").forEach(e=>{e.addEventListener("click",()=>{let t=Number(e.dataset.yaw);Ze=t*je,Lt(t),R.init(),R.playBoneClick(!1),Q(t===180?"\u80CC\u810A\u89C6\u89D2\uFF1A\u900F\u89C6\u9888\u690E C1-C7 \u68D8\u7A81\u4E0E\u5C0F\u8111":t===68?"\u4FA7\u9885\u89C6\u89D2\uFF1A\u89C2\u5BDF\u98A7\u5F13\u4E0E\u989E\u4E0B\u988C\u5173\u8282\u94F0\u94FE":"\u6B63\u89C6\u89C6\u89D2\uFF1A\u6807\u51C6\u89E3\u5256\u5B66\u65B9\u4F4D")})});E0.forEach((e,t)=>{e?.addEventListener("click",()=>le(t+1))});var Le=!1;n0.addEventListener("pointerdown",e=>{e.preventDefault(),R.init(),Le=!Le,me=Le?1:0,n0.classList.toggle("active-gold",Le),R.playBoneClick(Le)});document.getElementById("xr-tb-jaw")?.addEventListener("touchstart",e=>{e.preventDefault(),R.init(),Ee=!0,me=null},{passive:!1});document.getElementById("xr-tb-jaw")?.addEventListener("touchend",()=>{Ee=!1});document.getElementById("xr-tb-storm")?.addEventListener("click",()=>at(!0));document.getElementById("xr-tb-layer")?.addEventListener("click",()=>le(X%4+1));document.querySelectorAll(".ly-pill").forEach(e=>{e.addEventListener("click",()=>le(Number(e.dataset.l)))});document.querySelectorAll(".q-pill").forEach(e=>{e.addEventListener("click",()=>{P0=e.dataset.q,document.querySelectorAll(".q-pill").forEach(t=>t.classList.toggle("active",t===e)),ze()})});xt.addEventListener("input",()=>{R.init();let e=Number(xt.value)/100;me=e>.01?e:null,T0.textContent=`${Math.round(e*34)}\xB0`});document.getElementById("xr-vol").addEventListener("input",e=>{R.init(),R.setVolume(Number(e.target.value)/100)});go.addEventListener("click",()=>{R.init(),y0.classList.toggle("open")});document.querySelectorAll(".xr-sfx-trigger").forEach(e=>{e.addEventListener("click",()=>{R.init();let t=e.dataset.s;t==="heart"?R.playHeartbeat(Z,!1):t==="vocal"?R.playVocalDemo():t==="storm"?R.playNeuralStorm():t==="xray"?R.playFluoroscopySweep():t==="bone"?R.playBoneClick(!0):t==="ecg"&&R.playEcgPing(!0)})});function z0(){let e=xe.classList.toggle("tall"),t=document.getElementById("btn-tall"),o=document.getElementById("menu-btn-tall");t&&(t.textContent=e?"\u6536\u8D77":"\u5927\u5C4F"),o&&(o.textContent=e?"\u6536\u8D77\u5927\u5C4F\u89C6\u91CE":"\u5C55\u5F00\u5927\u5C4F\u89C6\u91CE"),ze()}document.getElementById("btn-tall")?.addEventListener("click",z0);document.getElementById("menu-btn-tall")?.addEventListener("click",z0);var m0=[0,0,-1],wo=[0,0,1.55],To=[0,0,1],mt=[0,0,1.55];function Eo(e,t){Ye>0&&(Ye-=e,Ye<=0&&g0.classList.remove("show"));let o=(ge.has("KeyD")||ge.has("ArrowRight")?1:0)-(ge.has("KeyA")||ge.has("ArrowLeft")?1:0);o!==0&&(Ze+=o*e*1.65,Lt(null)),Fe=k(Fe,Ze,9.5,e),z.fromRotationY(Fe,Rt);let a=Math.max(.5,re/Math.max(1,ie));z.perspective(39*je,a,.15,30,Ne),z.lookAt(V,yo,bo,K),z.multiply(Ne,K,c0),z.invert(c0,l0);let s=A0.sample();j==="menu"?(U[0]=Math.sin(t*.82)*.36,U[1]=.06+Math.cos(t*.58)*.56,U[2]=1.55):$?(U[0]=Math.sin(t*.85)*.42,U[1]=-.1+Math.cos(t*.56)*.72,U[2]=1.55):L0?(z.unprojectRay(l0,C0,I0,V,m0),Vt(V,m0,wo,To,mt),U[0]=w(mt[0],-1.55,1.55),U[1]=w(mt[1],-1.35,1.15),U[2]=1.55):(U[0]=.15,U[1]=.28,U[2]=1.55);let h=B[0],c=B[1];B[0]=k(B[0],U[0],14,e),B[1]=k(B[1],U[1],14,e),B[2]=1.55,h0=Math.hypot(B[0]-h,B[1]-c)/Math.max(e,.001),Te=k(Te,wt,10,e),ue=k(ue,H,8.5,e),O.normalize(V[0]-B[0],V[1]-B[1],V[2]-B[2],he);let n=0,r=0,i=0,u=0;if(s)n=s.yaw,r=s.pitch,i=w(s.yaw*.55,-.35,.35),u=w(s.pitch*.55,-.25,.25);else{let b=w(B[0]/1.4,-1,1),M=w((B[1]-.35)/1.2,-1,1);n=b*.26+Math.sin(t*.7)*.03,r=-M*.18+Math.cos(t*.55)*.02,i=b*.34,u=-M*.26}be=k(be,n,6.5,e),We=k(We,r,6.5,e),$e=k($e,-be*.16,6,e),yt=k(yt,i,14,e),bt=k(bt,u,14,e);let m=0;if(me!==null)m=me;else if(ge.has("Space")||Ee)m=.94+.06*Math.sin(t*7.5);else if(s)m=s.jawOpen;else if(j==="menu"){let b=Math.sin(t*.95)-.55;m=b>0?w(b*1.6,0,.68):0}J=k(J,m,12,e),de=Ve(J);let d=Math.min(1,Math.hypot(be,We)*1.6),f=w(.16+J*.78+d*.35+(Y?.3:0),0,1);Et=k(Et,f,8,e),ht-=e,ht<=0?(ht=2.6+(Math.sin(t*13.7)*.5+.5)*2.4,Xe=1):Xe=k(Xe,0,15,e);let p=B0+J*6+ce*12;Z=k(Z,w(p,68,155),2.5,e),d0=Ie,Ie=(Ie+Z/60*e)%1,Ie<d0&&j==="mirror"&&R.playHeartbeat(Z,Y);let v=zt(Ie);for(Ae=v.systole,ut=(ut+Z/60/4.3*e)%1,F0=jt(ut),dt+=e;dt>=1/60;)dt-=1/60,we.copyWithin(0,1),we[we.length-1]=v.ecgMv;Be>0&&(Be-=e,Be<=0&&Pt.classList.remove("active")),ce=k(ce,Be>0?1:0,3.2,e),et=k(et,0,5.5,e);let y=St.update(e,t,Ae,Z/72,ce);tt=y.drawCount,De=y.activeSparks,R.updateContinuous(J,h0,ue,j==="mirror")}function f0(e){let t=Mt.u;l.useProgram(Mt.prog),l.uniformMatrix4fv(t.uProj,!1,Ne),l.uniformMatrix4fv(t.uView,!1,K),l.uniformMatrix4fv(t.uMatBust,!1,Rt),l.uniform3f(t.uNeckAngles,be,We,$e),l.uniform3f(t.uJawKin,de.angleRad,de.glideY,de.glideZ),l.uniform2f(t.uEyeAngles,yt,bt),l.uniform1f(t.uBreath,F0),l.uniform1f(t.uBlink,Xe),l.uniform1f(t.uHeartPulse,Ae),l.uniform1f(t.uMuscleFlex,Et),l.uniform3f(t.uCamPos,V[0],V[1],V[2]),l.uniform3f(t.uLensPos,B[0],B[1],B[2]),l.uniform3f(t.uLensAxis,he[0],he[1],he[2]),l.uniform1f(t.uLensRadius,Te),l.uniform1f(t.uFullScanMix,ue),l.uniform1f(t.uTime,e),l.uniform1f(t.uNeuralStorm,ce),l.uniform1f(t.uJawOpen,J)}function oe(e,t){l.uniform1i(Mt.u.uPassType,t),l.bindVertexArray(e.vao),l.drawElements(l.TRIANGLES,e.count,l.UNSIGNED_INT,0)}function p0(){if(tt<=0)return;let e=r0.u;l.useProgram(r0.prog),l.uniformMatrix4fv(e.uProj,!1,Ne),l.uniformMatrix4fv(e.uView,!1,K),l.uniformMatrix4fv(e.uMatBust,!1,Rt),l.uniform3f(e.uNeckAngles,be,We,$e),l.uniform3f(e.uCamRight,K[0],K[4],K[8]),l.uniform3f(e.uCamUp,K[1],K[5],K[9]),l.uniform3f(e.uCamPos,V[0],V[1],V[2]),l.uniform3f(e.uLensPos,B[0],B[1],B[2]),l.uniform3f(e.uLensAxis,he[0],he[1],he[2]),l.uniform1f(e.uLensRadius,Te),l.uniform1f(e.uFullScanMix,ue),l.bindVertexArray(St.vao),l.drawArraysInstanced(l.TRIANGLES,0,6,tt)}function Ao(e){ze(),l.bindFramebuffer(l.FRAMEBUFFER,Me),l.viewport(0,0,re,ie),l.depthMask(!0),l.clearColor(.031,.063,.09,1),l.clear(l.COLOR_BUFFER_BIT|l.DEPTH_BUFFER_BIT),l.disable(l.DEPTH_TEST),l.depthMask(!1),l.disable(l.BLEND),l.useProgram(Se.prog),l.uniform2f(Se.u.uRes,re,ie),l.uniform1f(Se.u.uTime,e),l.uniform1f(Se.u.uFullScanMix,ue),l.uniform1f(Se.u.uNeuralStorm,ce),l.bindVertexArray(i0),l.drawArrays(l.TRIANGLES,0,3),l.enable(l.DEPTH_TEST),l.depthFunc(l.LEQUAL),l.depthMask(!0),l.disable(l.CULL_FACE),f0(e),oe(q.outerMesh,0),X===1?(oe(q.neuroMesh,3),l.enable(l.BLEND),l.depthMask(!1),l.enable(l.CULL_FACE),l.cullFace(l.BACK),l.blendFunc(l.SRC_ALPHA,l.ONE_MINUS_SRC_ALPHA),oe(q.boneMesh,4),l.blendFunc(l.SRC_ALPHA,l.ONE),oe(q.muscleMesh,6),l.disable(l.CULL_FACE),p0(),l.disable(l.BLEND),l.depthMask(!0)):X===2?oe(q.boneMesh,2):X===3?(oe(q.neuroMesh,3),l.enable(l.BLEND),l.blendFunc(l.SRC_ALPHA,l.ONE),l.depthMask(!1),l.enable(l.CULL_FACE),l.cullFace(l.BACK),f0(e),oe(q.boneMesh,5),l.disable(l.CULL_FACE),p0(),l.disable(l.BLEND),l.depthMask(!0)):(oe(q.boneMesh,2),oe(q.muscleMesh,1));let t=w(1-ue*1.15,0,1);t>.01&&(z.fromPosNormalScale(B,he,Te,u0),l.enable(l.BLEND),l.blendFunc(l.SRC_ALPHA,l.ONE_MINUS_SRC_ALPHA),l.depthMask(!1),l.useProgram(se.prog),l.uniformMatrix4fv(se.u.uProj,!1,Ne),l.uniformMatrix4fv(se.u.uView,!1,K),l.uniformMatrix4fv(se.u.uModel,!1,u0),l.uniform3f(se.u.uCamPos,V[0],V[1],V[2]),l.uniform1f(se.u.uTime,e),l.uniform1f(se.u.uFade,t),l.uniform1f(se.u.uNeuralStorm,ce),l.bindVertexArray(q.scannerRing.vao),l.drawElements(l.TRIANGLES,q.scannerRing.count,l.UNSIGNED_INT,0),l.disable(l.BLEND),l.depthMask(!0)),l.bindFramebuffer(l.FRAMEBUFFER,null),l.viewport(0,0,G.width,G.height),l.disable(l.DEPTH_TEST),l.depthMask(!1),l.useProgram(Re.prog),l.activeTexture(l.TEXTURE0),l.bindTexture(l.TEXTURE_2D,ye),l.uniform1i(Re.u.uTex,0),l.uniform2f(Re.u.uRes,re,ie),l.uniform1f(Re.u.uPulseVig,Y?Ae:Ae*.25),l.uniform1f(Re.u.uStormFlash,et),l.bindVertexArray(i0),l.drawArrays(l.TRIANGLES,0,3),l.bindVertexArray(null)}function Po(){if(j!=="mirror")return;let e=Math.round((Fe*Dt%360+540)%360-180);oo.textContent=`${Math.round(Z)} BPM \xB7 \u4E0B\u988C ${de.angleDeg.toFixed(1)}\xB0 \xB7 \u89C6\u89D2 ${e}\xB0`,ro.textContent=String(Math.round(Z)),co.style.width=`${Math.round(J*100)}%`;let t=w(Math.round(De/360*100),12,100);lo.style.width=`${t}%`;let o=_t(B[0],B[1]+.12,0,Fe,J);if(ho.textContent=o.title,mo.textContent=`\u706B\u82B1 ${De} \xB7 ${o.sub}`,ee){let a=qe.width,s=qe.height;ee.fillStyle="#050b10",ee.fillRect(0,0,a,s),ee.strokeStyle=Y?"#ef4444":"#22d3ee",ee.lineWidth=1.6,ee.beginPath();for(let h=0;h<we.length;h++){let c=h/(we.length-1)*a,n=s*.68-we[h]*(s*.52);h===0?ee.moveTo(c,n):ee.lineTo(c,n)}ee.stroke()}}var Ue=new Uint8Array(256);function So(){if(!te||!y0.classList.contains("open"))return;let e=Ke.width,t=Ke.height;if(te.fillStyle="#04090d",te.fillRect(0,0,e,t),!!R.analyser){R.analyser.getByteTimeDomainData(Ue),te.strokeStyle="#22d3ee",te.lineWidth=2,te.beginPath();for(let o=0;o<Ue.length;o++){let a=o/(Ue.length-1)*e,s=Ue[o]/255*t;o===0?te.moveTo(a,s):te.lineTo(a,s)}te.stroke()}}var ft=performance.now(),pt=0,He=0,At=60;function j0(e){if(requestAnimationFrame(j0),!S0){ft=e;return}let t=Math.min(.05,Math.max(.001,(e-ft)*.001));ft=e;let o=e*.001;if(pt++,He+=t,He>=.5){At=Math.round(pt/He),pt=0,He=0;let a=R0[X];to.textContent=`${At} FPS \xB7 ${a.short} \xB7 \u955C\u5F84 ${Te.toFixed(2)}`}Eo(t,o),Ao(o),Po(),So()}requestAnimationFrame(j0);window.__XRAYMIRROR__={getState(){return{mode:j,fps:At,glErr:l.getError(),layerMode:X,jawAngleDeg:Number(de.angleDeg.toFixed(1)),bpm:Math.round(Z),fullXray:H>.5,neuralSparks:De}},startMirror(e=!1){return Ct(!!e),this.getState()},setLayerMode(e=1){return le(e,!1),this.getState()},setJawOpen(e=1){let t=w(Number(e)||0,0,1);return me=t,J=t,de=Ve(J),xt.value=String(Math.round(t*100)),T0.textContent=`${Math.round(de.angleDeg)}\xB0`,this.getState()},triggerNeuralStorm(){return at(!1),this.getState()},toggleFullXray(e){let t=typeof e=="boolean"?e:H<.5;return ot(t,!1),ue=H,this.getState()}};</script>
+</body>
+</html>

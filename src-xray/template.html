@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>X 光解剖魔镜 X-RAY ANATOMY MIRROR — 零外部素材 WebGL2 实时骨骼脑神经心脉透视雕塑</title>
+  <meta name="description" content="致敬 Fable 5.2 X-Ray Mirror 的零外部素材 WebGL2 实时解剖透视魔镜：温润雪花石膏胸像在 3D 荧光透视环下实时剥离，显露可张合 34° 下颌骨与 28 颗牙齿、沟回大脑金色突触风暴、搏动四腔心脏与条纹肌群。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="xray-app" class="__APP_CLASS__">
+    <canvas id="xr-canvas" tabindex="0"></canvas>
+
+    <section id="xr-hud" aria-label="X光解剖魔镜实时医学遥测界面">
+      <div id="xr-top-left">
+        <div id="xr-perf">60 FPS · 复合透视 · 镜径 0.56</div>
+        <div id="xr-vitals">72 BPM · 下颌 0.0° · 视角 0°</div>
+        <div id="xr-status-pill">
+          <span id="xr-mode-badge">透视环</span>
+          <span id="xr-mode-hint">扫掠光标实时剥离解剖层</span>
+        </div>
+      </div>
+
+      <div id="xr-top-right">
+        <div id="xr-quick-bar">
+          <button id="btn-fullxray" class="xr-mini-btn" type="button">全屏透视 [X]</button>
+          <button id="btn-autoscan" class="xr-mini-btn" type="button">巡航 [V]</button>
+          <button id="btn-webcam" class="xr-mini-btn" type="button">摄像头 [W]</button>
+          <!--__HUD_MODE_BTNS__-->
+          <button id="btn-fs" class="xr-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="xr-mini-btn" type="button">菜单 [P]</button>
+        </div>
+
+        <div id="xr-pose-bar" aria-label="解剖视角与生理激发栏">
+          <button class="xr-pose-btn active" data-yaw="0" type="button">正视</button>
+          <button class="xr-pose-btn" data-yaw="68" type="button">侧颅</button>
+          <button class="xr-pose-btn" data-yaw="180" type="button">背脊 180°</button>
+          <button id="btn-adrenaline" class="xr-pose-btn coral" type="button">肾上腺素 [E]</button>
+          <button id="btn-storm" class="xr-pose-btn gold" type="button">神经风暴 [N]</button>
+        </div>
+
+        <div id="xr-toast-feed"></div>
+      </div>
+
+      <div id="xr-banner">
+        <div id="xr-banner-title"></div>
+        <div id="xr-banner-sub"></div>
+      </div>
+
+      <div id="xr-vital-card">
+        <div class="vital-card-top">
+          <span id="xr-bpm-val">72</span>
+          <span id="xr-rhythm-lbl" class="vital-unit">BPM · 窦性心律</span>
+        </div>
+        <canvas id="xr-ecg" width="150" height="26"></canvas>
+        <div class="xr-meter-row">
+          <span class="xr-meter-lbl">下颌张角</span>
+          <div class="xr-meter-track"><div id="xr-jaw-fill"></div></div>
+        </div>
+        <div class="xr-meter-row">
+          <span class="xr-meter-lbl">皮层电位</span>
+          <div class="xr-meter-track"><div id="xr-spark-fill"></div></div>
+        </div>
+      </div>
+
+      <div id="xr-bottom-center">
+        <div id="xr-layer-bar">
+          <button id="layer-1" class="xr-tool-btn active-cyan" type="button">[1] 复合透视</button>
+          <button id="layer-2" class="xr-tool-btn" type="button">[2] 骨骼</button>
+          <button id="layer-3" class="xr-tool-btn" type="button">[3] 脑心</button>
+          <button id="layer-4" class="xr-tool-btn" type="button">[4] 肌群</button>
+          <button id="btn-jaw" class="xr-tool-btn" type="button">[Space] 张口</button>
+        </div>
+        <div id="xr-controls-tip">移动扫掠 X 光环 · 右键/AD 旋转 180° · 滚轮缩放镜环</div>
+      </div>
+
+      <div id="xr-diag-card">
+        <span id="xr-layer-lbl">COMPOSITE X-RAY</span>
+        <strong id="xr-organ-title">额叶皮层 · 额骨颅盖</strong>
+        <span id="xr-organ-sub">突触火花 128 · 胸廓呼吸同步</span>
+      </div>
+    </section>
+
+    <div id="xr-touch">
+      <div class="xr-t-actions">
+        <button id="xr-tb-jaw" class="xr-t-btn gold" type="button">张口发声</button>
+        <button id="xr-tb-storm" class="xr-t-btn cyan" type="button">神经风暴</button>
+        <button id="xr-tb-layer" class="xr-t-btn" type="button">切换解剖层</button>
+      </div>
+    </div>
+
+    <main id="xr-overlay">
+      <div class="xr-placard">
+        <header>
+          <div id="xr-kicker" class="xr-kicker">REAL-TIME FLUOROSCOPY RIG // 零外部素材 WebGL2 实时骨骼·脑神经·心脉·肌群透视魔镜</div>
+          <h1 id="xr-title">X 光解剖魔镜 · X-RAY ANATOMY MIRROR</h1>
+          <p id="xr-desc" class="xr-desc">
+            温润博物馆级雪花石膏人像静立眼前，挪动 3D 黄铜荧光透视环即可实时剥离表层肌肤：内藏随呼吸起伏的 16 根胸廓肋弓、搏动四腔心脏与颈总动脉、布满沟回与金色动作电位的大脑皮层，以及可随指令或摄像头张合 34° 并触发元音合唱共振的颞下颌关节与 28 颗上下齿列！
+          </p>
+        </header>
+
+        <div class="xr-actions">
+          <button id="xr-btn-start" class="xr-btn-primary" type="button">启动 X 光解剖魔镜 · 实时透视</button>
+          <button id="xr-btn-fullmode" class="xr-btn-gold" type="button">全屏全身 X 光透视</button>
+          <button id="xr-btn-studio" class="xr-btn-secondary" type="button">生物声学与心电合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="xr-studio" aria-label="纯代码生物声学与医学监护合成台">
+          <div class="xr-studio-head">
+            <span>BIO-ACOUSTIC &amp; FLUOROSCOPY SYNTH · 零采样心音·元音共振峰·突触钟琴合成</span>
+            <span>DIAGNOSTIC AUDIO</span>
+          </div>
+          <canvas id="xr-scope" width="560" height="52"></canvas>
+          <div class="xr-studio-btns">
+            <button class="xr-sfx-trigger" data-s="heart" type="button">心室搏动 Lub-Dub</button>
+            <button class="xr-sfx-trigger" data-s="vocal" type="button">张口元音共振合唱</button>
+            <button class="xr-sfx-trigger" data-s="storm" type="button">皮层突触电位风暴</button>
+            <button class="xr-sfx-trigger" data-s="xray" type="button">X 光透视环电磁扫掠</button>
+            <button class="xr-sfx-trigger" data-s="bone" type="button">颞下颌骨关节咬合</button>
+            <button class="xr-sfx-trigger" data-s="ecg" type="button">ECG 监护 R 波信标</button>
+          </div>
+        </section>
+
+        <div class="xr-settings">
+          <div class="xr-set-group">
+            <span>解剖层</span>
+            <button class="xr-pill ly-pill active" data-l="1" type="button">复合透视</button>
+            <button class="xr-pill ly-pill" data-l="2" type="button">骨骼层</button>
+            <button class="xr-pill ly-pill" data-l="3" type="button">脑心层</button>
+            <button class="xr-pill ly-pill" data-l="4" type="button">肌群层</button>
+          </div>
+          <div class="xr-set-group">
+            <label for="xr-jaw-range">张口测试</label>
+            <input id="xr-jaw-range" type="range" min="0" max="100" value="0" />
+            <span id="xr-jaw-lbl">0°</span>
+          </div>
+          <div class="xr-set-group">
+            <span>画质</span>
+            <button class="xr-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="xr-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="xr-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="xr-set-group">
+            <label for="xr-vol">音量</label>
+            <input id="xr-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="xr-keys-grid">
+          <div><span>扫掠 3D 透视魔镜 / 缩放镜径</span><span><kbd>鼠标移动</kbd> / <kbd>滚轮</kbd></span></div>
+          <div><span>四重解剖剥离层切换</span><span><kbd>1</kbd> 复合 <kbd>2</kbd> 骨 <kbd>3</kbd> 脑心 <kbd>4</kbd> 肌</span></div>
+          <div><span>张口发声（联动下颌骨+元音合唱）</span><span><kbd>Space</kbd> / <kbd>左键按住</kbd></span></div>
+          <div><span>360° 旋转雕像观察颈椎与小脑</span><span><kbd>A D</kbd> / <kbd>右键拖拽</kbd></span></div>
+          <div><span>皮层神经元风暴 / 肾上腺素加速</span><span><kbd>N</kbd> 突触风暴 / <kbd>E</kbd> 心率飙升</span></div>
+          <div><span>切换全屏透视 / 本地摄像头镜像</span><span><kbd>X</kbd> 全透视 / <kbd>W</kbd> 摄像头</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>
