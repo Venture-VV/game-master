@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>3D 硬件焊接实验室 ROBOTICS LAB — 零外部素材 WebGL2 真实电路贴装、烙铁焊锡与机械臂工坊</title>
+  <meta name="description" content="致敬 Fable 5.2 Robotics Lab 的零外部素材 WebGL2 3D 硬件焊接实验室：四大可切换真实开发板（UNO-R3 追光流水灯、ESP32 超声波声呐云台、SYNTH-555 芯片八音盒、CYBER-ARM 三轴桌面机械臂），亲手插装芯片、380°C 电烙铁熔锡冒烟焊接、插接硅胶杜邦飞线并通电运行！" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="robotics-app" class="__APP_CLASS__">
+    <canvas id="rb-canvas" tabindex="0"></canvas>
+
+    <section id="rb-hud" aria-label="硬件焊接实验室遥测与工具界面">
+      <div id="rb-top-left">
+        <div id="rb-perf">60 FPS · 380°C 恒温焊台 · 待命</div>
+        <div id="rb-stats-pill">贴装 0/6 · 焊点 0/22 · 飞线 0/3</div>
+        <div id="rb-quest-pill">
+          <span id="rb-step-tag">贴装</span>
+          <span id="rb-step-desc">点击发光虚影安装元件</span>
+        </div>
+      </div>
+
+      <div id="rb-top-right">
+        <div id="rb-quick-bar">
+          <button id="btn-auto" class="rb-mini-btn emerald" type="button">一键装配 [G]</button>
+          <button id="btn-cam" class="rb-mini-btn" type="button">视角 [C]</button>
+          <button id="btn-reset" class="rb-mini-btn" type="button">重焊 [R]</button>
+          <!--__HUD_MODE_BTNS__-->
+          <button id="btn-fs" class="rb-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="rb-mini-btn" type="button">菜单 [P]</button>
+        </div>
+
+        <div id="rb-board-tabs" aria-label="四大 3D 电子工程实验板切换栏">
+          <button class="rb-tab-btn active" data-b="0" type="button">01 追光流水灯</button>
+          <button class="rb-tab-btn" data-b="1" type="button">02 超声波雷达</button>
+          <button class="rb-tab-btn" data-b="2" type="button">03 555八音盒</button>
+          <button class="rb-tab-btn" data-b="3" type="button">04 机械臂驱动</button>
+        </div>
+
+        <div id="rb-toast-feed"></div>
+      </div>
+
+      <div id="rb-hover-layer"></div>
+
+      <div id="rb-banner">
+        <div id="rb-banner-title"></div>
+        <div id="rb-banner-sub"></div>
+      </div>
+
+      <div id="rb-iron-card">
+        <div class="iron-card-top">
+          <span id="rb-temp-val">380°C</span>
+          <span id="rb-rail-unit" class="iron-unit">DC 5.0V 待机</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">装配完成</span>
+          <div class="meter-track"><div id="rb-build-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">总线电流</span>
+          <div class="meter-track"><div id="rb-curr-fill"></div></div>
+        </div>
+        <div class="amp-row">
+          <span>回路导通率</span>
+          <strong id="rb-cond-val">0%</strong>
+        </div>
+      </div>
+
+      <div id="rb-bottom-center">
+        <div id="rb-tool-bar">
+          <button id="tool-place" class="rb-tool-btn active-emerald" type="button">[1] 贴装</button>
+          <button id="tool-solder" class="rb-tool-btn" type="button">[2] 焊接</button>
+          <button id="tool-wire" class="rb-tool-btn" type="button">[3] 飞线</button>
+          <button id="tool-step" class="rb-tool-btn" type="button">[F] 推进</button>
+          <button id="tool-power" class="rb-tool-btn" type="button">[Space] 通电运行</button>
+        </div>
+        <div id="rb-controls-tip">左键贴装/划过焊盘连焊 · 右键或WASD环绕 · [B] 换板</div>
+      </div>
+
+      <div id="rb-score-card">
+        <span id="rb-score-val">0</span>
+        <span id="rb-state-val">待命组装中</span>
+        <span id="rb-board-code">01 · UNO-R3</span>
+      </div>
+    </section>
+
+    <main id="rb-overlay">
+      <div class="rb-placard">
+        <header>
+          <div id="rb-kicker" class="rb-kicker">TECH-MAGIC HARDWARE WORKBENCH // 零外部素材 WebGL2 3D 电路焊接与机器人实验室</div>
+          <h1 id="rb-title">3D 硬件焊接实验室 · ROBOTICS LAB</h1>
+          <p id="rb-desc" class="rb-desc">
+            防静电工作台之上，四块精密沉金玻璃纤维 PCB 触手可及：亲手将 DIP 芯片、晶振、超声波探头与散热电桥卡入插座，握持 380°C 恒温电烙铁在沉金焊盘点出赤金冷却至镜面银锡的饱满焊锥与袅袅松香白烟，插接彩色硅胶飞线并拨动通电开关，唤醒流水数码管、±65° 声呐云台、NE555 芯片八音盒与三轴机械夹爪臂！
+          </p>
+        </header>
+
+        <div class="rb-menu-boards" aria-label="选择启动开发板项目">
+          <button class="rb-board-pill active" data-b="0" type="button">01 · UNO-R3 追光流水灯矩阵</button>
+          <button class="rb-board-pill" data-b="1" type="button">02 · ESP32 超声波雷达云台</button>
+          <button class="rb-board-pill" data-b="2" type="button">03 · SYNTH-555 芯片八音盒</button>
+          <button class="rb-board-pill" data-b="3" type="button">04 · CYBER-ARM 机械臂驱动盾</button>
+        </div>
+
+        <div class="rb-actions">
+          <button id="rb-btn-start" class="rb-btn-primary" type="button">进入焊接工作台 · 亲手组装</button>
+          <button id="rb-btn-demo" class="rb-btn-emerald" type="button">一键自动贴装焊接并通电</button>
+          <button id="rb-btn-studio" class="rb-btn-secondary" type="button">硬件声学合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="rb-studio" aria-label="纯代码电子与焊接声学合成台">
+          <div class="rb-studio-head">
+            <span>PROCEDURAL HARDWARE WEB AUDIO · 零采样松香助焊嘶鸣与芯片合成器</span>
+            <span>380°C LAB SCOPE</span>
+          </div>
+          <canvas id="rb-scope" width="560" height="52"></canvas>
+          <div class="rb-studio-btns">
+            <button class="rb-sfx-trigger" data-s="snap" type="button">DIP 芯片插座清脆卡扣</button>
+            <button class="rb-sfx-trigger" data-s="solder" type="button">380°C 松香助焊嘶鸣</button>
+            <button class="rb-sfx-trigger" data-s="wire" type="button">杜邦硅胶飞线插接</button>
+            <button class="rb-sfx-trigger" data-s="power" type="button">拨杆开关与稳压嗡鸣</button>
+            <button class="rb-sfx-trigger" data-s="sonar" type="button">HC-SR04 超声波声呐</button>
+            <button class="rb-sfx-trigger" data-s="chip" type="button">NE555 八音盒方波琶音</button>
+          </div>
+        </section>
+
+        <div class="rb-settings">
+          <div class="rb-set-group">
+            <span>渲染精度</span>
+            <button class="rb-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="rb-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="rb-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="rb-set-group">
+            <label for="rb-vol">主音量</label>
+            <input id="rb-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="rb-keys-grid">
+          <div><span>切换贴装 / 烙铁焊接 / 飞线</span><span><kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></span></div>
+          <div><span>推进下一步 / 一键装配通电</span><span><kbd>F</kbd> 推进 / <kbd>G</kbd> 全自动</span></div>
+          <div><span>拨动 3D 电源开关通电运行</span><span><kbd>Space</kbd> 通电测试</span></div>
+          <div><span>环绕观察 / 俯仰缩放工作台</span><span><kbd>右键拖拽</kbd> / <kbd>WASD</kbd> + 滚轮</span></div>
+          <div><span>切换四大 3D 电子工程主板</span><span><kbd>B</kbd> 切换项目板</span></div>
+          <div><span>切换特写机位 / 重新拆焊当前板</span><span><kbd>C</kbd> 机位 / <kbd>R</kbd> 重置</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

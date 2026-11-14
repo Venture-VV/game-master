@@ -1,0 +1,744 @@
+/* Sandstone Gold (#f5b82e), Fortress Limestone (#e7e0d2), Roof Terracotta (#e0633a),
+   Sea Turquoise (#14b8a6), Emerald Meadow (#10b981), Flame Amber (#f97316), Slate Charcoal (#0b1117).
+   Scoped Vanilla CSS with >=12px Typography Everywhere. */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body.standalone-body {
+  background: #0a1016;
+  overflow: hidden;
+}
+
+#keep-app {
+  position: relative;
+  width: 100%;
+  height: 446px;
+  overflow: hidden;
+  background: #0b1117;
+  color: #e7e0d2;
+  border: 1px solid rgba(245, 184, 46, 0.30);
+}
+
+#keep-app.tall {
+  height: 720px;
+}
+
+#keep-app.standalone {
+  height: 100vh;
+  border: none;
+}
+
+#kp-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  cursor: grab;
+}
+
+#kp-canvas:active {
+  cursor: grabbing;
+}
+
+/* In-Game Cryptographic Fortress HUD */
+#kp-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+#kp-hud.visible {
+  opacity: 1;
+}
+
+/* Top-Left Telemetry Stack */
+#kp-top-left {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-width: 344px;
+}
+
+#kp-perf {
+  padding: 3px 9px;
+  background: rgba(11, 17, 23, 0.88);
+  border: 1px solid rgba(20, 184, 166, 0.34);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #5eead4;
+  white-space: nowrap;
+}
+
+#kp-tier-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: rgba(11, 17, 23, 0.92);
+  border: 1px solid rgba(245, 184, 46, 0.42);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#kp-tier-tag {
+  padding: 1px 7px;
+  background: #f5b82e;
+  color: #0b1117;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+#kp-tier-tag.weak {
+  background: #e0633a;
+  color: #0b1117;
+}
+
+#kp-tier-tag.mid {
+  background: #14b8a6;
+  color: #0b1117;
+}
+
+#kp-tier-tag.strong {
+  background: #10b981;
+  color: #0b1117;
+}
+
+#kp-tier-tag.sovereign {
+  background: #f5b82e;
+  color: #0b1117;
+}
+
+#kp-bits-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  color: #f5b82e;
+}
+
+#kp-crack-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: rgba(11, 17, 23, 0.88);
+  border: 1px solid rgba(231, 224, 210, 0.22);
+  font-size: 12px;
+  color: rgba(231, 224, 210, 0.82);
+  white-space: nowrap;
+}
+
+#kp-crack-val {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5b82e;
+}
+
+/* Top-Right Quick Bar, Pool Breakdown & Toast Feed */
+#kp-top-right {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  max-width: 430px;
+}
+
+#kp-quick-bar {
+  display: flex;
+  gap: 4px;
+  pointer-events: auto;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+.kp-mini-btn {
+  padding: 4px 8px;
+  background: rgba(11, 17, 23, 0.90);
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  color: #e7e0d2;
+  font-size: 12px;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.kp-mini-btn:hover {
+  background: rgba(28, 39, 49, 0.96);
+  border-color: #f5b82e;
+  color: #ffffff;
+}
+
+#kp-pool-bar {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+
+.kp-pool-pill {
+  padding: 2px 6px;
+  background: rgba(9, 15, 21, 0.90);
+  border: 1px solid rgba(231, 224, 210, 0.22);
+  color: rgba(231, 224, 210, 0.62);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.kp-pool-pill.active {
+  background: rgba(8, 28, 24, 0.94);
+  border-color: #10b981;
+  color: #6ee7b7;
+  font-weight: 700;
+}
+
+.kp-pool-pill.gold.active {
+  background: rgba(28, 21, 9, 0.94);
+  border-color: #f5b82e;
+  color: #f5b82e;
+  font-weight: 700;
+}
+
+#kp-toast-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 260px;
+}
+
+.kp-toast {
+  padding: 4px 9px;
+  background: rgba(11, 17, 23, 0.90);
+  border-right: 3px solid #f5b82e;
+  font-size: 12px;
+  text-align: right;
+  color: #e7e0d2;
+  white-space: nowrap;
+}
+
+.kp-toast.emerald {
+  border-right-color: #10b981;
+}
+
+.kp-toast.amber {
+  border-right-color: #f97316;
+}
+
+/* Transient Tier-Up & Siege Milestone Banner */
+#kp-banner {
+  display: none;
+  position: absolute;
+  top: 128px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  max-width: 390px;
+  padding: 7px 16px;
+  background: rgba(11, 17, 23, 0.92);
+  border-top: 1px solid #f5b82e;
+  border-bottom: 1px solid #f5b82e;
+}
+
+#kp-banner.show {
+  display: block;
+}
+
+#kp-banner-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #f5b82e;
+}
+
+#kp-banner-sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #e7e0d2;
+}
+
+/* Unified Bottom Password Architect Console Dock (Zero Overlap at 800x446) */
+#kp-bottom-dock {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  padding: 7px 10px;
+  background: rgba(11, 17, 23, 0.92);
+  border: 1px solid rgba(245, 184, 46, 0.36);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.kp-dock-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kp-in-label {
+  padding: 5px 8px;
+  background: rgba(245, 184, 46, 0.16);
+  border: 1px solid rgba(245, 184, 46, 0.44);
+  color: #f5b82e;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#kp-pass-input {
+  flex: 1;
+  min-width: 150px;
+  height: 30px;
+  padding: 4px 10px;
+  background: #080d12;
+  border: 1px solid rgba(20, 184, 166, 0.45);
+  color: #ffffff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, "PingFang SC", monospace;
+  font-size: 13px;
+  outline: none;
+  user-select: text;
+  -webkit-user-select: text;
+  pointer-events: auto;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#kp-pass-input:focus {
+  border-color: #f5b82e;
+  box-shadow: 0 0 0 1px rgba(245, 184, 46, 0.45);
+}
+
+#kp-pass-input::placeholder {
+  color: rgba(231, 224, 210, 0.42);
+  font-size: 12px;
+}
+
+#kp-stat-badge {
+  padding: 4px 8px;
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid rgba(20, 184, 166, 0.30);
+  color: #5eead4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.kp-dock-btn {
+  padding: 5px 9px;
+  background: rgba(22, 32, 42, 0.92);
+  border: 1px solid rgba(231, 224, 210, 0.28);
+  color: #e7e0d2;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.kp-dock-btn:hover {
+  border-color: #f5b82e;
+  color: #ffffff;
+}
+
+.kp-siege-btn {
+  padding: 5px 11px;
+  background: #f97316;
+  border: 1px solid #f5b82e;
+  color: #0b1117;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.kp-siege-btn:hover {
+  background: #fb923c;
+}
+
+.kp-siege-btn.active {
+  background: #e0633a;
+  color: #ffffff;
+}
+
+.kp-dock-bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#kp-presets {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.kp-chip {
+  padding: 3px 7px;
+  background: rgba(18, 28, 38, 0.92);
+  border: 1px solid rgba(231, 224, 210, 0.25);
+  color: #e7e0d2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, "PingFang SC", monospace;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.kp-chip:hover {
+  background: rgba(20, 184, 166, 0.22);
+  border-color: #14b8a6;
+  color: #ffffff;
+}
+
+.kp-chip.gold {
+  background: rgba(245, 184, 46, 0.16);
+  border-color: rgba(245, 184, 46, 0.55);
+  color: #f5b82e;
+  font-weight: 700;
+}
+
+.kp-chip.gold:hover {
+  background: rgba(245, 184, 46, 0.30);
+  color: #ffffff;
+}
+
+.kp-meter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.kp-ent-track {
+  width: 68px;
+  height: 7px;
+  flex-shrink: 0;
+  background: rgba(231, 224, 210, 0.14);
+  border: 1px solid rgba(231, 224, 210, 0.22);
+}
+
+#kp-ent-fill {
+  width: 0%;
+  height: 100%;
+  background: #e0633a;
+  transition: width 0.18s ease, background 0.22s ease;
+}
+
+#kp-vuln-tag {
+  font-size: 12px;
+  color: rgba(231, 224, 210, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 168px;
+}
+
+/* Title / Pause / Siege Debrief Overlay */
+#kp-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(11, 17, 23, 0.58) 0%, rgba(11, 17, 23, 0.86) 100%);
+  overflow-y: auto;
+}
+
+#kp-overlay.hidden {
+  display: none;
+}
+
+.kp-placard {
+  width: min(760px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 14px 18px;
+  background: rgba(11, 17, 23, 0.92);
+  border: 1px solid rgba(245, 184, 46, 0.38);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.kp-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  color: #f5b82e;
+}
+
+.kp-placard h1 {
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #e7e0d2;
+  margin-top: 2px;
+}
+
+.kp-desc {
+  font-size: 13px;
+  line-height: 1.48;
+  color: rgba(231, 224, 210, 0.86);
+  margin-top: 2px;
+}
+
+/* Siege Debrief Grid */
+#kp-siege-debrief {
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+#kp-siege-debrief.show {
+  display: grid;
+}
+
+.kp-db-cell {
+  padding: 6px 8px;
+  background: rgba(18, 27, 36, 0.90);
+  border: 1px solid rgba(231, 224, 210, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: rgba(231, 224, 210, 0.74);
+}
+
+.kp-db-cell strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  color: #e7e0d2;
+}
+
+.kp-db-cell.gold strong {
+  color: #f5b82e;
+}
+
+/* Overlay Action Buttons */
+.kp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.kp-btn-primary {
+  padding: 8px 15px;
+  background: #f5b82e;
+  border: 1px solid #fde68a;
+  color: #0b1117;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.kp-btn-primary:hover {
+  background: #fbbf24;
+  transform: translateY(-1px);
+}
+
+.kp-btn-emerald {
+  padding: 8px 13px;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+
+.kp-btn-emerald:hover {
+  background: rgba(16, 185, 129, 0.34);
+  color: #ffffff;
+}
+
+.kp-btn-secondary {
+  padding: 7px 12px;
+  background: rgba(18, 28, 38, 0.90);
+  border: 1px solid rgba(245, 184, 46, 0.34);
+  color: #e7e0d2;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.kp-btn-secondary:hover {
+  background: rgba(28, 42, 56, 0.96);
+  border-color: #f5b82e;
+}
+
+/* Fortress Acoustic Synthesizer Studio */
+#kp-studio {
+  display: none;
+  flex-direction: column;
+  gap: 7px;
+  padding: 8px 11px;
+  background: rgba(8, 13, 18, 0.94);
+  border: 1px solid rgba(245, 184, 46, 0.30);
+}
+
+#kp-studio.open {
+  display: flex;
+}
+
+.kp-studio-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #f5b82e;
+}
+
+#kp-scope {
+  width: 100%;
+  height: 52px;
+  background: #060a0e;
+  border: 1px solid rgba(20, 184, 166, 0.28);
+}
+
+.kp-studio-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kp-sfx-trigger {
+  padding: 5px 9px;
+  background: rgba(18, 28, 38, 0.94);
+  border: 1px solid rgba(20, 184, 166, 0.30);
+  color: #e7e0d2;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.kp-sfx-trigger:hover {
+  border-color: #f5b82e;
+  color: #ffffff;
+}
+
+/* Settings & Legend Grid */
+.kp-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 4px;
+  border-top: 1px solid rgba(231, 224, 210, 0.12);
+  font-size: 12px;
+  color: rgba(231, 224, 210, 0.80);
+}
+
+.kp-set-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.kp-pill {
+  padding: 3px 8px;
+  background: rgba(18, 28, 38, 0.90);
+  border: 1px solid rgba(231, 224, 210, 0.24);
+  color: #e7e0d2;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.kp-pill.active {
+  background: #14b8a6;
+  border-color: #5eead4;
+  color: #0b1117;
+  font-weight: 700;
+}
+
+#kp-vol {
+  width: 78px;
+  accent-color: #f5b82e;
+}
+
+.kp-keys-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px 10px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(231, 224, 210, 0.12);
+  font-size: 12px;
+  color: rgba(231, 224, 210, 0.78);
+}
+
+.kp-keys-grid > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.kp-keys-grid code {
+  padding: 0 4px;
+  background: rgba(245, 184, 46, 0.14);
+  border: 1px solid rgba(245, 184, 46, 0.30);
+  color: #f5b82e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  #kp-pool-bar {
+    display: none;
+  }
+  .kp-dock-bot {
+    flex-wrap: wrap;
+  }
+  #kp-presets {
+    flex-wrap: wrap;
+  }
+  .kp-keys-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

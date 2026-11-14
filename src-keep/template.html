@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>密码筑城 KEEP: PASSWORD FORTRESS — 零外部素材 WebGL2 信息熵活体王国与算力攻防</title>
+  <meta name="description" content="致敬 Fable 5.2 Keep — password strength meter 的零外部素材 WebGL2 3D 活体密码筑城世界：每个字符实时拔地筑起木寨、石堡、灯塔、浮空圣城与黄金守护神龙，并可发起 10^11 H/s 暴力算力攻城实测。" />
+  <style>/*__INLINE_CSS__*/</style>
+</head>
+<body class="__BODY_CLASS__">
+  <div id="keep-app" class="__APP_CLASS__">
+    <canvas id="kp-canvas" tabindex="0"></canvas>
+
+    <section id="kp-hud" aria-label="密码筑城实时信息熵遥测界面">
+      <div id="kp-top-left">
+        <div id="kp-perf">60 FPS · 狂风骤浪 · 环岛俯瞰</div>
+        <div id="kp-tier-pill">
+          <span id="kp-tier-tag">TIER 0 · 飘摇木筏</span>
+          <span id="kp-bits-val">0.0 BITS</span>
+        </div>
+        <div id="kp-crack-pill">
+          <span>10¹¹/s 穷举耗时:</span>
+          <strong id="kp-crack-val">瞬间秒破 (0.0000秒)</strong>
+        </div>
+      </div>
+
+      <div id="kp-top-right">
+        <div id="kp-quick-bar">
+          <button id="btn-cam" class="kp-mini-btn" type="button">机位 [C]</button>
+          <button id="btn-mute" class="kp-mini-btn" type="button">声效</button>
+          <!--__HUD_MODE_BTNS__-->
+          <button id="btn-fs" class="kp-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="kp-mini-btn" type="button">菜单 [P]</button>
+        </div>
+
+        <div id="kp-pool-bar" aria-label="字符集建筑映射统计">
+          <span id="pool-lower" class="kp-pool-pill">a-z 农舍 0</span>
+          <span id="pool-digit" class="kp-pool-pill">0-9 哨塔 0</span>
+          <span id="pool-upper" class="kp-pool-pill">A-Z 石堡 0</span>
+          <span id="pool-symbol" class="kp-pool-pill">!@# 火炮 0</span>
+          <span id="pool-unicode" class="kp-pool-pill">汉字 圣碑 0</span>
+        </div>
+
+        <div id="kp-toast-feed"></div>
+      </div>
+
+      <div id="kp-banner" aria-live="polite">
+        <div id="kp-banner-title"></div>
+        <div id="kp-banner-sub"></div>
+      </div>
+
+      <div id="kp-bottom-dock" aria-label="密码筑城输入与预设控制台">
+        <div class="kp-dock-top">
+          <label for="kp-pass-input" class="kp-in-label">筑城密钥</label>
+          <input
+            id="kp-pass-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="输入任意密码实时筑造王国（小写农舍 · 数字哨塔 · 大写石堡 · 符号火炮 · 汉字圣碑）…"
+          />
+          <span id="kp-stat-badge">0 字符 · 建筑 4</span>
+          <button id="btn-clear" class="kp-dock-btn" type="button">清空</button>
+          <button id="btn-siege" class="kp-siege-btn" type="button">发起算力攻城</button>
+        </div>
+
+        <div class="kp-dock-bot">
+          <div id="kp-presets" aria-label="一键体验密码强度预设">
+            <button class="kp-chip" data-pw="123456" type="button">123456</button>
+            <button class="kp-chip" data-pw="castle2026" type="button">castle2026</button>
+            <button class="kp-chip" data-pw="Sun&amp;Sea#Keep88" type="button">Sun&amp;Sea#Keep88</button>
+            <button class="kp-chip" data-pw="星穹神龙!99$Citadel#2077" type="button">星穹神龙!99$Citadel#2077</button>
+            <button class="kp-chip gold" data-pw="__RANDOM__" type="button">随机神级密码</button>
+          </div>
+
+          <div class="kp-meter-wrap">
+            <div class="kp-ent-track"><div id="kp-ent-fill"></div></div>
+            <span id="kp-vuln-tag">空口令 · 亟待筑城</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main id="kp-overlay">
+      <div class="kp-placard">
+        <header>
+          <div class="kp-kicker">CRYPTOGRAPHIC LIVING DIORAMA // 零外部素材 WebGL2 信息熵筑城世界</div>
+          <h1 id="kp-title">密码筑城 · KEEP: PASSWORD FORTRESS</h1>
+          <p class="kp-desc">
+            将抽象的信息论密码熵化作一座呼吸生长的 3D 岛屿王国：弱口令只是狂风骇浪中的一叶朽木浮筏；每敲入一枚小写、大写、数字、符号或汉字，农舍、哨塔、花岗岩石垣、黄铜火炮、浮空圣城飞瀑乃至黄金守护神龙便弹性拔地而起！随时点击「发起算力攻城」，实测抵御 10¹¹ H/s 暴力陨石轰击！
+          </p>
+        </header>
+
+        <section id="kp-siege-debrief" aria-label="算力攻城实测战报">
+          <div class="kp-db-cell"><span>当前阶位</span><strong id="db-tier">TIER 0</strong></div>
+          <div class="kp-db-cell"><span>信息熵值</span><strong id="db-bits">0.0 BITS</strong></div>
+          <div class="kp-db-cell"><span>拦截算力波</span><strong id="db-int">0 / 0</strong></div>
+          <div class="kp-db-cell"><span>防线缺口</span><strong id="db-breach">0</strong></div>
+          <div class="kp-db-cell gold"><span>防御评级</span><strong id="db-rank">C</strong></div>
+        </section>
+
+        <div class="kp-actions">
+          <button id="kp-btn-start" class="kp-btn-primary" type="button">开始筑城 · 实时密码沙盒</button>
+          <button id="kp-btn-sovereign" class="kp-btn-emerald" type="button">一键降临 · 星穹神龙满级</button>
+          <button id="kp-btn-studio" class="kp-btn-secondary" type="button">筑城声学合成台</button>
+          <!--__MENU_MODE_BTNS__-->
+        </div>
+
+        <section id="kp-studio" aria-label="纯代码筑城与号角声学合成台">
+          <div class="kp-studio-head">
+            <span>FORTRESS &amp; ROYAL HORN WEB AUDIO · 零采样木石锻造与王国鲁特琴合成</span>
+            <span>LIVE OSCILLOSCOPE</span>
+          </div>
+          <canvas id="kp-scope" width="560" height="52"></canvas>
+          <div class="kp-studio-btns">
+            <button class="kp-sfx-trigger" data-s="build" type="button">黄铜火炮铁砧锻造</button>
+            <button class="kp-sfx-trigger" data-s="fanfare" type="button">晋阶王城铜管号角</button>
+            <button class="kp-sfx-trigger" data-s="cannon" type="button">城垛火炮齐射轰鸣</button>
+            <button class="kp-sfx-trigger" data-s="shield" type="button">浮空圣城穹盾偏折</button>
+            <button class="kp-sfx-trigger" data-s="dragon" type="button">星穹金龙振翼咆哮</button>
+            <button class="kp-sfx-trigger" data-s="lute" type="button">中世纪鲁特竖琴和弦</button>
+          </div>
+        </section>
+
+        <div class="kp-settings">
+          <div class="kp-set-group">
+            <span>画质档位</span>
+            <button class="kp-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="kp-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="kp-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="kp-set-group">
+            <label for="kp-vol">主音量</label>
+            <input id="kp-vol" type="range" min="0" max="100" value="80" />
+          </div>
+          <div class="kp-set-group">
+            <span>镜头操控: 拖拽画布 360° 环视 · 滚轮缩放 · 快捷键失焦生效</span>
+          </div>
+        </div>
+
+        <div class="kp-keys-grid">
+          <div><span>小写字母 <code>a-z</code></span><span>弹性筑起陶瓦农舍</span></div>
+          <div><span>阿拉伯数字 <code>0-9</code></span><span>竖立木石烽火哨塔</span></div>
+          <div><span>大写字母 <code>A-Z</code></span><span>垒筑雉堞花岗石堡</span></div>
+          <div><span>特殊符号 <code>!@#$</code></span><span>锻造黄铜城防巨炮</span></div>
+          <div><span>中文汉字 / Unicode</span><span>召唤鎏金符文圣碑</span></div>
+          <div><span>视角环绕 / 算力攻城</span><span>拖拽画布 / 点击攻城</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">/*__INLINE_JS__*/</script>
+</body>
+</html>

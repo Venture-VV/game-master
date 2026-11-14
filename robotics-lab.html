@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>3D 硬件焊接实验室 ROBOTICS LAB — 零外部素材 WebGL2 真实电路贴装、烙铁焊锡与机械臂工坊</title>
+  <meta name="description" content="致敬 Fable 5.2 Robotics Lab 的零外部素材 WebGL2 3D 硬件焊接实验室：四大可切换真实开发板（UNO-R3 追光流水灯、ESP32 超声波声呐云台、SYNTH-555 芯片八音盒、CYBER-ARM 三轴桌面机械臂），亲手插装芯片、380°C 电烙铁熔锡冒烟焊接、插接硅胶杜邦飞线并通电运行！" />
+  <style>*,*:before,*:after{box-sizing:border-box;margin:0;padding:0}body{margin:0;padding:0;background:transparent;font-family:system-ui,-apple-system,PingFang SC,Noto Sans SC,Microsoft YaHei,sans-serif;-webkit-font-smoothing:antialiased;user-select:none}body.standalone-body{background:#090e13;overflow:hidden}#robotics-app{position:relative;width:100%;height:446px;overflow:hidden;background:#0c1218;color:#e6f4f1;border:1px solid rgba(16,185,129,.32)}#robotics-app.tall{height:720px}#robotics-app.standalone{height:100vh;border:none}#rb-canvas{display:block;width:100%;height:100%;outline:none;cursor:crosshair}#rb-hud{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;transition:opacity .25s ease}#rb-hud.visible{opacity:1}#rb-top-left{position:absolute;top:8px;left:10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:288px}#rb-perf{padding:3px 9px;background:#091016e0;border:1px solid rgba(34,211,238,.3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#67e8f9;white-space:nowrap}#rb-stats-pill{padding:3px 9px;background:#091016e0;border:1px solid rgba(245,184,46,.32);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f5b82e;white-space:nowrap}#rb-quest-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;background:#091016e6;border:1px solid rgba(16,185,129,.36);font-size:12px;max-width:288px;overflow:hidden;white-space:nowrap}#rb-step-tag{padding:1px 6px;background:#10b981;color:#07110e;font-weight:700;font-size:12px;flex-shrink:0}#rb-step-tag.solder{background:#f97316;color:#120802}#rb-step-tag.wire{background:#22d3ee;color:#061317}#rb-step-tag.power{background:#f5b82e;color:#140e02}#rb-step-desc{color:#e6f4f1;font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis}#rb-top-right{position:absolute;top:8px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:480px}#rb-quick-bar{display:flex;gap:4px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}.rb-mini-btn{padding:3px 7px;background:#091016e0;border:1px solid rgba(34,211,238,.3);color:#e6f4f1;font-size:12px;font-family:inherit;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease}.rb-mini-btn:hover{background:#0f2a34f2;border-color:#22d3ee}.rb-mini-btn.emerald{background:#0f6b4ab8;border-color:#34d399;color:#ecfdf5;font-weight:700}.rb-mini-btn.emerald:hover{background:#0f6b4a;border-color:#6ee7b7}#rb-board-tabs{display:flex;gap:4px;pointer-events:auto}.rb-tab-btn{padding:3px 7px;background:#091016e0;border:1px solid rgba(245,184,46,.28);color:#d1fae5;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease}.rb-tab-btn:hover{border-color:#f5b82e;color:#fff}.rb-tab-btn.active{background:#0f6b4a;border-color:#f5b82e;color:#fff;font-weight:700}#rb-toast-feed{display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:224px}.rb-toast{padding:4px 8px;background:#091016e6;border-right:3px solid #22d3ee;font-size:12px;text-align:right;color:#e6f4f1;animation:rbToastIn .2s ease-out}.rb-toast.amber{border-right-color:#f97316}.rb-toast.emerald{border-right-color:#10b981}.rb-toast.gold{border-right-color:#f5b82e}@keyframes rbToastIn{0%{opacity:0;transform:translate(8px)}to{opacity:1;transform:translate(0)}}#rb-hover-layer{position:absolute;inset:0;overflow:hidden}.rb-hover-chip{position:absolute;transform:translate(-50%,-100%);padding:3px 8px;background:#091016eb;border:1px solid #f5b82e;color:#fef3c7;font-size:12px;font-weight:600;white-space:nowrap}#rb-banner{position:absolute;top:138px;left:50%;transform:translate(-50%);text-align:center;max-width:288px;padding:6px 12px;background:#091016eb;border-top:1px solid #f5b82e;border-bottom:1px solid #f5b82e;opacity:0;transition:opacity .24s ease}#rb-banner.show{opacity:1}#rb-banner-title{font-size:15px;font-weight:700;letter-spacing:.8px;color:#f5b82e}#rb-banner-sub{margin-top:2px;font-size:12px;color:#d1fae5}#rb-iron-card{position:absolute;left:10px;bottom:8px;width:162px;padding:6px 8px;background:#091016e0;border:1px solid rgba(245,184,46,.3);display:flex;flex-direction:column;gap:4px}.iron-card-top{display:flex;justify-content:space-between;align-items:baseline}#rb-temp-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;font-weight:700;color:#f97316}.iron-unit{font-size:12px;color:#67e8f9}.meter-row{display:flex;align-items:center;gap:5px;font-size:12px;color:#e6f4f1d1}.meter-lbl{width:48px;flex-shrink:0}.meter-track{flex:1;height:6px;background:#ffffff1f}#rb-build-fill{width:0%;height:100%;background:#10b981;transition:width .15s ease}#rb-curr-fill{width:6%;height:100%;background:#22d3ee;transition:width .15s ease}.amp-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#e6f4f1cc}#rb-cond-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f5b82e}#rb-bottom-center{position:absolute;bottom:8px;left:50%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;max-width:416px}#rb-tool-bar{display:flex;gap:4px;pointer-events:auto}.rb-tool-btn{padding:4px 7px;background:#091016e6;border:1px solid rgba(34,211,238,.3);color:#e6f4f1;font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease}.rb-tool-btn:hover{border-color:#f5b82e}.rb-tool-btn.active-emerald{background:#10b981;border-color:#6ee7b7;color:#06130e;font-weight:700}.rb-tool-btn.active-orange{background:#f97316;border-color:#f5b82e;color:#140802;font-weight:700}.rb-tool-btn.active-cyan{background:#22d3ee;border-color:#67e8f9;color:#051317;font-weight:700}.rb-tool-btn.powered-on{background:#f5b82e;border-color:#fde68a;color:#140e02;font-weight:700}#rb-controls-tip{padding:3px 8px;background:#091016d6;border:1px solid rgba(16,185,129,.25);font-size:12px;color:#e6f4f1d6;white-space:nowrap}#rb-score-card{position:absolute;right:10px;bottom:8px;width:162px;padding:6px 8px;background:#091016e0;border:1px solid rgba(16,185,129,.3);text-align:right;display:flex;flex-direction:column;gap:2px}#rb-score-val{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;font-weight:700;color:#f5b82e}#rb-state-val{font-size:12px;color:#34d399;white-space:nowrap}#rb-board-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#67e8f9;white-space:nowrap}#rb-overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(180deg,#090e13a3,#090e13e0);overflow-y:auto}#rb-overlay.hidden{display:none}.rb-placard{width:min(760px,100%);max-height:100%;overflow-y:auto;padding:14px 18px;background:#0c1218eb;border:1px solid rgba(16,185,129,.38);backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:9px}.rb-kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1.4px;color:#f5b82e}.rb-placard h1{font-size:clamp(20px,2.8vw,28px);font-weight:800;letter-spacing:1.5px;color:#f0fdf4;margin-top:2px}.rb-desc{font-size:12px;line-height:1.48;color:#e6f4f1db;margin-top:3px}.rb-menu-boards{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.rb-board-pill{padding:6px 10px;background:#0f1c24e6;border:1px solid rgba(34,211,238,.26);color:#d1fae5;font-size:12px;font-family:inherit;text-align:left;cursor:pointer;transition:background .15s ease,border-color .15s ease}.rb-board-pill:hover{border-color:#f5b82e;background:#0f342ee0}.rb-board-pill.active{background:#0f6b4ac7;border-color:#f5b82e;color:#fff;font-weight:700}.rb-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.rb-btn-primary{padding:8px 15px;background:#f5b82e;border:1px solid #fde68a;color:#120d02;font-size:13px;font-weight:700;letter-spacing:.6px;cursor:pointer;font-family:inherit;transition:background .15s ease,transform .12s ease}.rb-btn-primary:hover{background:#fbbf24;transform:translateY(-1px)}.rb-btn-emerald{padding:8px 13px;background:#0f6b4aad;border:1px solid #34d399;color:#ecfdf5;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s ease}.rb-btn-emerald:hover{background:#0f6b4a;color:#fff}.rb-btn-secondary{padding:7px 12px;background:#0f1c24e6;border:1px solid rgba(34,211,238,.32);color:#e6f4f1;font-size:12px;text-decoration:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;transition:background .15s ease,border-color .15s ease}.rb-btn-secondary:hover{background:#142e3af5;border-color:#22d3ee}#rb-studio{display:none;flex-direction:column;gap:7px;padding:9px 12px;background:#070c10eb;border:1px solid rgba(245,184,46,.32)}#rb-studio.open{display:flex}.rb-studio-head{display:flex;justify-content:space-between;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#f5b82e}#rb-scope{width:100%;height:52px;background:#060b0f;border:1px solid rgba(34,211,238,.24)}.rb-studio-btns{display:flex;flex-wrap:wrap;gap:6px}.rb-sfx-trigger{padding:5px 9px;background:#0f1c24f0;border:1px solid rgba(16,185,129,.3);color:#e6f4f1;font-size:12px;cursor:pointer;font-family:inherit}.rb-sfx-trigger:hover{border-color:#f5b82e;background:#0f3e34e6}.rb-settings{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding-top:4px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:#e6f4f1d1}.rb-set-group{display:flex;align-items:center;gap:6px}.rb-pill{padding:3px 9px;background:#0f1c24e0;border:1px solid rgba(34,211,238,.25);color:#d1fae5;font-size:12px;cursor:pointer;font-family:inherit}.rb-pill.active{background:#0f6b4a;border-color:#34d399;color:#fff;font-weight:700}#rb-vol{width:96px;accent-color:#f5b82e;cursor:pointer}.rb-keys-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px 14px;padding-top:5px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:#e6f4f1c7}.rb-keys-grid>div{display:flex;justify-content:space-between;align-items:center;gap:8px}kbd{display:inline-block;padding:1px 5px;background:#14242eeb;border:1px solid rgba(245,184,46,.34);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#fde68a}@media(max-width:720px){.rb-menu-boards,.rb-keys-grid{grid-template-columns:1fr}#rb-iron-card,#rb-score-card{display:none}}</style>
+</head>
+<body class="standalone-body">
+  <div id="robotics-app" class="standalone">
+    <canvas id="rb-canvas" tabindex="0"></canvas>
+
+    <section id="rb-hud" aria-label="硬件焊接实验室遥测与工具界面">
+      <div id="rb-top-left">
+        <div id="rb-perf">60 FPS · 380°C 恒温焊台 · 待命</div>
+        <div id="rb-stats-pill">贴装 0/6 · 焊点 0/22 · 飞线 0/3</div>
+        <div id="rb-quest-pill">
+          <span id="rb-step-tag">贴装</span>
+          <span id="rb-step-desc">点击发光虚影安装元件</span>
+        </div>
+      </div>
+
+      <div id="rb-top-right">
+        <div id="rb-quick-bar">
+          <button id="btn-auto" class="rb-mini-btn emerald" type="button">一键装配 [G]</button>
+          <button id="btn-cam" class="rb-mini-btn" type="button">视角 [C]</button>
+          <button id="btn-reset" class="rb-mini-btn" type="button">重焊 [R]</button>
+          <a href="./password-keep.html" class="rb-mini-btn">⇄ 密码筑城</a><a href="./index.html" class="rb-mini-btn">⌂ 十二作大厅</a>
+          <button id="btn-fs" class="rb-mini-btn" type="button">全屏</button>
+          <button id="btn-pause" class="rb-mini-btn" type="button">菜单 [P]</button>
+        </div>
+
+        <div id="rb-board-tabs" aria-label="四大 3D 电子工程实验板切换栏">
+          <button class="rb-tab-btn active" data-b="0" type="button">01 追光流水灯</button>
+          <button class="rb-tab-btn" data-b="1" type="button">02 超声波雷达</button>
+          <button class="rb-tab-btn" data-b="2" type="button">03 555八音盒</button>
+          <button class="rb-tab-btn" data-b="3" type="button">04 机械臂驱动</button>
+        </div>
+
+        <div id="rb-toast-feed"></div>
+      </div>
+
+      <div id="rb-hover-layer"></div>
+
+      <div id="rb-banner">
+        <div id="rb-banner-title"></div>
+        <div id="rb-banner-sub"></div>
+      </div>
+
+      <div id="rb-iron-card">
+        <div class="iron-card-top">
+          <span id="rb-temp-val">380°C</span>
+          <span id="rb-rail-unit" class="iron-unit">DC 5.0V 待机</span>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">装配完成</span>
+          <div class="meter-track"><div id="rb-build-fill"></div></div>
+        </div>
+        <div class="meter-row">
+          <span class="meter-lbl">总线电流</span>
+          <div class="meter-track"><div id="rb-curr-fill"></div></div>
+        </div>
+        <div class="amp-row">
+          <span>回路导通率</span>
+          <strong id="rb-cond-val">0%</strong>
+        </div>
+      </div>
+
+      <div id="rb-bottom-center">
+        <div id="rb-tool-bar">
+          <button id="tool-place" class="rb-tool-btn active-emerald" type="button">[1] 贴装</button>
+          <button id="tool-solder" class="rb-tool-btn" type="button">[2] 焊接</button>
+          <button id="tool-wire" class="rb-tool-btn" type="button">[3] 飞线</button>
+          <button id="tool-step" class="rb-tool-btn" type="button">[F] 推进</button>
+          <button id="tool-power" class="rb-tool-btn" type="button">[Space] 通电运行</button>
+        </div>
+        <div id="rb-controls-tip">左键贴装/划过焊盘连焊 · 右键或WASD环绕 · [B] 换板</div>
+      </div>
+
+      <div id="rb-score-card">
+        <span id="rb-score-val">0</span>
+        <span id="rb-state-val">待命组装中</span>
+        <span id="rb-board-code">01 · UNO-R3</span>
+      </div>
+    </section>
+
+    <main id="rb-overlay">
+      <div class="rb-placard">
+        <header>
+          <div id="rb-kicker" class="rb-kicker">TECH-MAGIC HARDWARE WORKBENCH // 零外部素材 WebGL2 3D 电路焊接与机器人实验室</div>
+          <h1 id="rb-title">3D 硬件焊接实验室 · ROBOTICS LAB</h1>
+          <p id="rb-desc" class="rb-desc">
+            防静电工作台之上，四块精密沉金玻璃纤维 PCB 触手可及：亲手将 DIP 芯片、晶振、超声波探头与散热电桥卡入插座，握持 380°C 恒温电烙铁在沉金焊盘点出赤金冷却至镜面银锡的饱满焊锥与袅袅松香白烟，插接彩色硅胶飞线并拨动通电开关，唤醒流水数码管、±65° 声呐云台、NE555 芯片八音盒与三轴机械夹爪臂！
+          </p>
+        </header>
+
+        <div class="rb-menu-boards" aria-label="选择启动开发板项目">
+          <button class="rb-board-pill active" data-b="0" type="button">01 · UNO-R3 追光流水灯矩阵</button>
+          <button class="rb-board-pill" data-b="1" type="button">02 · ESP32 超声波雷达云台</button>
+          <button class="rb-board-pill" data-b="2" type="button">03 · SYNTH-555 芯片八音盒</button>
+          <button class="rb-board-pill" data-b="3" type="button">04 · CYBER-ARM 机械臂驱动盾</button>
+        </div>
+
+        <div class="rb-actions">
+          <button id="rb-btn-start" class="rb-btn-primary" type="button">进入焊接工作台 · 亲手组装</button>
+          <button id="rb-btn-demo" class="rb-btn-emerald" type="button">一键自动贴装焊接并通电</button>
+          <button id="rb-btn-studio" class="rb-btn-secondary" type="button">硬件声学合成台</button>
+          <a href="./password-keep.html" class="rb-btn-secondary">⇄ 密码筑城</a><a href="./index.html" class="rb-btn-secondary">⌂ 十二作典藏大厅</a>
+        </div>
+
+        <section id="rb-studio" aria-label="纯代码电子与焊接声学合成台">
+          <div class="rb-studio-head">
+            <span>PROCEDURAL HARDWARE WEB AUDIO · 零采样松香助焊嘶鸣与芯片合成器</span>
+            <span>380°C LAB SCOPE</span>
+          </div>
+          <canvas id="rb-scope" width="560" height="52"></canvas>
+          <div class="rb-studio-btns">
+            <button class="rb-sfx-trigger" data-s="snap" type="button">DIP 芯片插座清脆卡扣</button>
+            <button class="rb-sfx-trigger" data-s="solder" type="button">380°C 松香助焊嘶鸣</button>
+            <button class="rb-sfx-trigger" data-s="wire" type="button">杜邦硅胶飞线插接</button>
+            <button class="rb-sfx-trigger" data-s="power" type="button">拨杆开关与稳压嗡鸣</button>
+            <button class="rb-sfx-trigger" data-s="sonar" type="button">HC-SR04 超声波声呐</button>
+            <button class="rb-sfx-trigger" data-s="chip" type="button">NE555 八音盒方波琶音</button>
+          </div>
+        </section>
+
+        <div class="rb-settings">
+          <div class="rb-set-group">
+            <span>渲染精度</span>
+            <button class="rb-pill q-pill" data-q="low" type="button">流畅</button>
+            <button class="rb-pill q-pill" data-q="med" type="button">均衡</button>
+            <button class="rb-pill q-pill active" data-q="high" type="button">极致</button>
+          </div>
+          <div class="rb-set-group">
+            <label for="rb-vol">主音量</label>
+            <input id="rb-vol" type="range" min="0" max="100" value="80" />
+          </div>
+        </div>
+
+        <div class="rb-keys-grid">
+          <div><span>切换贴装 / 烙铁焊接 / 飞线</span><span><kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></span></div>
+          <div><span>推进下一步 / 一键装配通电</span><span><kbd>F</kbd> 推进 / <kbd>G</kbd> 全自动</span></div>
+          <div><span>拨动 3D 电源开关通电运行</span><span><kbd>Space</kbd> 通电测试</span></div>
+          <div><span>环绕观察 / 俯仰缩放工作台</span><span><kbd>右键拖拽</kbd> / <kbd>WASD</kbd> + 滚轮</span></div>
+          <div><span>切换四大 3D 电子工程主板</span><span><kbd>B</kbd> 切换项目板</span></div>
+          <div><span>切换特写机位 / 重新拆焊当前板</span><span><kbd>C</kbd> 机位 / <kbd>R</kbd> 重置</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">var ee=Math.PI*2,Qe=Math.PI/180;function ne(e,t,o){return e<t?t:e>o?o:e}function ce(e,t,o){return e+(t-e)*o}function W(e,t,o,r){return ce(e,t,1-Math.exp(-o*r))}var U={create(e=0,t=0,o=0){return[e,t,o]},add(e,t){return[e[0]+t[0],e[1]+t[1],e[2]+t[2]]},sub(e,t){return[e[0]-t[0],e[1]-t[1],e[2]-t[2]]},scale(e,t){return[e[0]*t,e[1]*t,e[2]*t]},dot(e,t){return e[0]*t[0]+e[1]*t[1]+e[2]*t[2]},cross(e,t){return[e[1]*t[2]-e[2]*t[1],e[2]*t[0]-e[0]*t[2],e[0]*t[1]-e[1]*t[0]]},len(e){return Math.hypot(e[0],e[1],e[2])},dist(e,t){return Math.hypot(e[0]-t[0],e[1]-t[1],e[2]-t[2])},normalize(e){let t=Math.hypot(e[0],e[1],e[2]);return t<1e-8?[0,1,0]:[e[0]/t,e[1]/t,e[2]/t]},lerp(e,t,o){return[e[0]+(t[0]-e[0])*o,e[1]+(t[1]-e[1])*o,e[2]+(t[2]-e[2])*o]}},p={create(){let e=new Float32Array(16);return e[0]=1,e[5]=1,e[10]=1,e[15]=1,e},identity(e){return e.fill(0),e[0]=1,e[5]=1,e[10]=1,e[15]=1,e},copy(e,t){return e.set(t),e},perspective(e,t,o,r,n){let f=1/Math.tan(t*.5),s=1/(r-n);return e.fill(0),e[0]=f/o,e[5]=f,e[10]=(n+r)*s,e[11]=-1,e[14]=2*n*r*s,e},lookAt(e,t,o,r){let n=t[0]-o[0],f=t[1]-o[1],s=t[2]-o[2],a=Math.hypot(n,f,s);a<1e-8?s=1:(n/=a,f/=a,s/=a);let c=r[1]*s-r[2]*f,l=r[2]*n-r[0]*s,u=r[0]*f-r[1]*n;a=Math.hypot(c,l,u),a<1e-8?(c=1,l=0,u=0):(c/=a,l/=a,u/=a);let h=f*u-s*l,v=s*c-n*u,m=n*l-f*c;return e[0]=c,e[1]=h,e[2]=n,e[3]=0,e[4]=l,e[5]=v,e[6]=f,e[7]=0,e[8]=u,e[9]=m,e[10]=s,e[11]=0,e[12]=-(c*t[0]+l*t[1]+u*t[2]),e[13]=-(h*t[0]+v*t[1]+m*t[2]),e[14]=-(n*t[0]+f*t[1]+s*t[2]),e[15]=1,e},multiply(e,t,o){let r=t[0],n=t[1],f=t[2],s=t[3],a=t[4],c=t[5],l=t[6],u=t[7],h=t[8],v=t[9],m=t[10],b=t[11],y=t[12],w=t[13],P=t[14],R=t[15],M=o[0],B=o[1],V=o[2],N=o[3],D=o[4],k=o[5],X=o[6],$=o[7],K=o[8],H=o[9],J=o[10],I=o[11],ye=o[12],Se=o[13],we=o[14],Ne=o[15];return e[0]=M*r+B*a+V*h+N*y,e[1]=M*n+B*c+V*v+N*w,e[2]=M*f+B*l+V*m+N*P,e[3]=M*s+B*u+V*b+N*R,e[4]=D*r+k*a+X*h+$*y,e[5]=D*n+k*c+X*v+$*w,e[6]=D*f+k*l+X*m+$*P,e[7]=D*s+k*u+X*b+$*R,e[8]=K*r+H*a+J*h+I*y,e[9]=K*n+H*c+J*v+I*w,e[10]=K*f+H*l+J*m+I*P,e[11]=K*s+H*u+J*b+I*R,e[12]=ye*r+Se*a+we*h+Ne*y,e[13]=ye*n+Se*c+we*v+Ne*w,e[14]=ye*f+Se*l+we*m+Ne*P,e[15]=ye*s+Se*u+we*b+Ne*R,e},invert(e,t){let o=t[0],r=t[1],n=t[2],f=t[3],s=t[4],a=t[5],c=t[6],l=t[7],u=t[8],h=t[9],v=t[10],m=t[11],b=t[12],y=t[13],w=t[14],P=t[15],R=o*a-r*s,M=o*c-n*s,B=o*l-f*s,V=r*c-n*a,N=r*l-f*a,D=n*l-f*c,k=u*y-h*b,X=u*w-v*b,$=u*P-m*b,K=h*w-v*y,H=h*P-m*y,J=v*P-m*w,I=R*J-M*H+B*K+V*$-N*X+D*k;return Math.abs(I)<1e-10?p.identity(e):(I=1/I,e[0]=(a*J-c*H+l*K)*I,e[1]=(n*H-r*J-f*K)*I,e[2]=(y*D-w*N+P*V)*I,e[3]=(v*N-h*D-m*V)*I,e[4]=(c*$-s*J-l*X)*I,e[5]=(o*J-n*$+f*X)*I,e[6]=(w*B-b*D-P*M)*I,e[7]=(u*D-v*B+m*M)*I,e[8]=(s*H-a*$+l*k)*I,e[9]=(r*$-o*H-f*k)*I,e[10]=(b*N-y*B+P*R)*I,e[11]=(h*B-u*N-m*R)*I,e[12]=(a*X-s*K-c*k)*I,e[13]=(o*K-r*X+n*k)*I,e[14]=(y*M-b*V-w*R)*I,e[15]=(u*V-h*M+v*R)*I,e)},translate(e,t,o,r,n){return t!==e&&e.set(t),e[12]=t[0]*o+t[4]*r+t[8]*n+t[12],e[13]=t[1]*o+t[5]*r+t[9]*n+t[13],e[14]=t[2]*o+t[6]*r+t[10]*n+t[14],e[15]=t[3]*o+t[7]*r+t[11]*n+t[15],e},rotateX(e,t,o){let r=Math.sin(o),n=Math.cos(o),f=t[4],s=t[5],a=t[6],c=t[7],l=t[8],u=t[9],h=t[10],v=t[11];return t!==e&&(e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15]),e[4]=f*n+l*r,e[5]=s*n+u*r,e[6]=a*n+h*r,e[7]=c*n+v*r,e[8]=l*n-f*r,e[9]=u*n-s*r,e[10]=h*n-a*r,e[11]=v*n-c*r,e},rotateY(e,t,o){let r=Math.sin(o),n=Math.cos(o),f=t[0],s=t[1],a=t[2],c=t[3],l=t[8],u=t[9],h=t[10],v=t[11];return t!==e&&(e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=t[7],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15]),e[0]=f*n-l*r,e[1]=s*n-u*r,e[2]=a*n-h*r,e[3]=c*n-v*r,e[8]=f*r+l*n,e[9]=s*r+u*n,e[10]=a*r+h*n,e[11]=c*r+v*n,e},rotateZ(e,t,o){let r=Math.sin(o),n=Math.cos(o),f=t[0],s=t[1],a=t[2],c=t[3],l=t[4],u=t[5],h=t[6],v=t[7];return t!==e&&(e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=t[11],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15]),e[0]=f*n+l*r,e[1]=s*n+u*r,e[2]=a*n+h*r,e[3]=c*n+v*r,e[4]=l*n-f*r,e[5]=u*n-s*r,e[6]=h*n-a*r,e[7]=v*n-c*r,e},scale(e,t,o,r,n){return e[0]=t[0]*o,e[1]=t[1]*o,e[2]=t[2]*o,e[3]=t[3]*o,e[4]=t[4]*r,e[5]=t[5]*r,e[6]=t[6]*r,e[7]=t[7]*r,e[8]=t[8]*n,e[9]=t[9]*n,e[10]=t[10]*n,e[11]=t[11]*n,t!==e&&(e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15]),e},fromTRS(e,t,o,r,n,f,s,a=1,c=1,l=1){return p.identity(e),p.translate(e,e,t,o,r),f!==0&&p.rotateY(e,e,f),n!==0&&p.rotateX(e,e,n),s!==0&&p.rotateZ(e,e,s),(a!==1||c!==1||l!==1)&&p.scale(e,e,a,c,l),e},transformPoint(e,t,o,r){let n=e[3]*t+e[7]*o+e[11]*r+e[15]||1;return[(e[0]*t+e[4]*o+e[8]*r+e[12])/n,(e[1]*t+e[5]*o+e[9]*r+e[13])/n,(e[2]*t+e[6]*o+e[10]*r+e[14])/n]},projectToScreen(e,t,o,r,n,f){let s=e[0]*t+e[4]*o+e[8]*r+e[12],a=e[1]*t+e[5]*o+e[9]*r+e[13],c=e[2]*t+e[6]*o+e[10]*r+e[14],l=e[3]*t+e[7]*o+e[11]*r+e[15];if(l<=.05)return null;let u=s/l,h=a/l,v=c/l;return v<-1||v>1.05?null:{x:(u*.5+.5)*n,y:(.5-h*.5)*f,z:v}},screenToWorldRay(e,t,o){let r=p.transformPoint(e,t,o,-1),n=p.transformPoint(e,t,o,1),f=U.normalize(U.sub(n,r));return{origin:r,dir:f}}};function ht(e,t,o=0){if(Math.abs(t[1])<1e-6)return null;let r=(o-e[1])/t[1];return r<=0?null:[e[0]+t[0]*r,o,e[2]+t[2]*r,r]}function Je(e,t,o,r,n,f,s,a){let c=-1/0,l=1/0,u=[o,r,n],h=[f,s,a];for(let v=0;v<3;v++){let m=e[v],b=t[v];if(Math.abs(b)<1e-8){if(m<u[v]||m>h[v])return-1}else{let y=(u[v]-m)/b,w=(h[v]-m)/b;if(y>w){let P=y;y=w,w=P}if(y>c&&(c=y),w<l&&(l=w),c>l)return-1}}return l<0?-1:c>=0?c:l}function n0(e,t,o,r,n){let f=n*n,s=f*n,a=[0,0,0];for(let c=0;c<3;c++){let l=e[c],u=t[c],h=o[c],v=r[c];a[c]=.5*(2*u+(-l+h)*n+(2*l-5*u+4*h-v)*f+(-l+3*u-3*h+v)*s)}return a}function a0(e,t=24){if(e.length<2)return e.slice();let o=[e[0],...e,e[e.length-1]],r=e.length-1,n=[];for(let f=0;f<=t;f++){let s=f/t*r,a=Math.min(r-1,Math.floor(s)),c=s-a;n.push(n0(o[a],o[a+1],o[a+2],o[a+3],c))}return n}function Ue(e,t,o=1.05,r=28){let n=t[0]-e[0],f=t[2]-e[2],s=Math.hypot(n,f),a=Math.max(.55,o+s*.16),c=s>1e-4?-f/s*.14:.08,l=s>1e-4?n/s*.14:0,u=[e[0],e[1],e[2]],h=[e[0],e[1]+.34,e[2]],v=[ce(e[0],t[0],.28)+c,Math.max(e[1],t[1])+a*.86,ce(e[2],t[2],.28)+l],m=[ce(e[0],t[0],.5)+c*1.15,Math.max(e[1],t[1])+a,ce(e[2],t[2],.5)+l*1.15],b=[ce(e[0],t[0],.72)+c,Math.max(e[1],t[1])+a*.86,ce(e[2],t[2],.72)+l],y=[t[0],t[1]+.34,t[2]],w=[t[0],t[1],t[2]];return a0([u,h,v,m,b,y,w],r)}var vt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uCamPos;
+out vec3 vDir;
+
+void main() {
+  vDir = aPos;
+  gl_Position = uProj * uView * vec4(uCamPos + aPos * 85.0, 1.0);
+}`,bt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vDir;
+uniform float uTime;
+out vec4 fragColor;
+
+void main() {
+  vec3 d = normalize(vDir);
+  float up = clamp(d.y * 0.5 + 0.5, 0.0, 1.0);
+
+  // Warm ESD Slate floor-to-studio brushed charcoal gradient
+  vec3 nadir = vec3(0.032, 0.050, 0.068);
+  vec3 horizon = vec3(0.062, 0.096, 0.125);
+  vec3 zenith = vec3(0.042, 0.068, 0.092);
+  vec3 col = mix(nadir, horizon, smoothstep(0.0, 0.48, up));
+  col = mix(col, zenith, smoothstep(0.48, 1.0, up));
+
+  // Brushed aluminum architectural studio wall band near horizon
+  float band = exp(-abs(d.y - 0.08) * 9.0);
+  float brush = sin(atan(d.z, d.x) * 90.0) * 0.008;
+  col += (vec3(0.055, 0.082, 0.102) + brush) * band;
+
+  // Subtle distant engineering blueprint grid on upper wall
+  if (d.y > -0.05 && d.y < 0.45) {
+    float az = atan(d.z, d.x) * 5.72958;
+    float el = d.y * 18.0;
+    float gx = smoothstep(0.965, 0.995, cos(az * 3.14159));
+    float gy = smoothstep(0.965, 0.995, cos(el * 3.14159));
+    float gFade = smoothstep(-0.05, 0.10, d.y) * (1.0 - smoothstep(0.28, 0.45, d.y));
+    col += vec3(0.03, 0.11, 0.13) * max(gx, gy) * gFade * 0.35;
+  }
+
+  // Studio Overhead Key Softbox (Warm Ivory-Amber) & Rim Softbox (Cool Cyan)
+  vec3 keyLightDir = normalize(vec3(0.42, 0.82, 0.38));
+  vec3 rimLightDir = normalize(vec3(-0.55, 0.68, -0.48));
+  float keySpot = pow(max(dot(d, keyLightDir), 0.0), 26.0);
+  float rimSpot = pow(max(dot(d, rimLightDir), 0.0), 32.0);
+  col += vec3(0.95, 0.84, 0.64) * keySpot * 0.55;
+  col += vec3(0.14, 0.72, 0.82) * rimSpot * 0.38;
+
+  fragColor = vec4(col, 1.0);
+}`,xt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec2 aUV;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+
+out vec3 vWorldPos;
+out vec3 vNormal;
+out vec2 vUV;
+
+void main() {
+  vWorldPos = aPos;
+  vNormal = aNorm;
+  vUV = aUV;
+  gl_Position = uProj * uView * vec4(aPos, 1.0);
+}`,Tt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vNormal;
+in vec2 vUV;
+
+uniform vec3 uCamPos;
+uniform float uTime;
+uniform vec4 uBoardRect;   // xy: halfWidth, halfDepth; zw: centerX, centerZ
+uniform vec4 uSonarOrigin; // xyz: origin, w: active intensity (Board 02 sonar sweep)
+uniform vec3 uSonarDir;    // xz sweep direction
+
+out vec4 fragColor;
+
+float hash21(vec2 p) {
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+void main() {
+  vec2 p = vWorldPos.xz;
+  float distOrigin = length(p);
+
+  // Warm Anti-Static ESD Rubber Mat base (#0c1218 -> #111c24)
+  float grain = hash21(floor(p * 110.0)) * 0.016 - 0.008;
+  vec3 matCol = vec3(0.052, 0.084, 0.108) + grain;
+
+  // Inner active ESD cutting/soldering mat rectangle [-9.5..9.5, -6.5..6.5]
+  vec2 matBounds = abs(p) - vec2(9.2, 6.2);
+  float insideMat = 1.0 - smoothstep(-0.08, 0.08, max(matBounds.x, matBounds.y));
+
+  // Brushed aluminum bench surround outside the ESD mat
+  float brush = sin(p.x * 45.0 + sin(p.y * 8.0) * 0.5) * 0.012;
+  vec3 benchMetal = vec3(0.10, 0.13, 0.16) + brush;
+  vec3 col = mix(benchMetal, matCol, insideMat);
+
+  // ESD Mat silkscreened cm & 5cm precision grid
+  if (insideMat > 0.01) {
+    vec2 g1 = abs(fract(p * 1.0 - 0.5) - 0.5) / fwidth(p * 1.0);
+    float line1 = 1.0 - min(min(g1.x, g1.y), 1.0);
+
+    vec2 g5 = abs(fract(p * 0.25 - 0.5) - 0.5) / fwidth(p * 0.25);
+    float line5 = 1.0 - min(min(g5.x, g5.y), 1.0);
+
+    float borderLine = 1.0 - smoothstep(0.0, 0.06, abs(max(matBounds.x, matBounds.y) + 0.35));
+    vec3 gridInk = vec3(0.09, 0.24, 0.26);
+    col = mix(col, gridInk, line1 * 0.24 * insideMat);
+    col = mix(col, vec3(0.12, 0.36, 0.34), (line5 * 0.42 + borderLine * 0.65) * insideMat);
+  }
+
+  // Ambient occlusion shadow directly under the PCB & standoffs
+  vec2 dBoard = abs(p - uBoardRect.zw) - uBoardRect.xy;
+  float sdBoard = length(max(dBoard, 0.0)) + min(max(dBoard.x, dBoard.y), 0.0);
+  float ao = smoothstep(-0.25, 1.15, sdBoard);
+  col *= mix(0.32, 1.0, ao);
+
+  // Overhead warm studio worklamp pool
+  float lampPool = exp(-dot(p, p) * 0.018);
+  col *= (0.58 + 0.68 * lampPool);
+
+  // Live Ultrasonic Sonar Ping Rings on Workbench (Board 02 ESP32 Radar)
+  if (uSonarOrigin.w > 0.01) {
+    vec2 rel = p - uSonarOrigin.xz;
+    float r = length(rel);
+    vec2 dir2 = r > 1e-4 ? rel / r : vec2(0.0, 1.0);
+    vec2 aim2 = normalize(uSonarDir.xz + vec2(0.0, 1e-5));
+    float cone = smoothstep(0.42, 0.92, dot(dir2, aim2));
+    float wave = fract(r * 0.55 - uTime * 1.85);
+    float ring = smoothstep(0.84, 0.96, wave) * (1.0 - smoothstep(0.96, 1.0, wave));
+    float rangeFade = exp(-r * 0.22) * smoothstep(0.25, 0.85, r);
+    vec3 sonarCol = mix(vec3(0.06, 0.72, 0.50), vec3(0.13, 0.83, 0.93), 0.65);
+    col += sonarCol * (ring * 0.95 + cone * 0.16) * rangeFade * uSonarOrigin.w;
+  }
+
+  // Distance fade into dark studio floor
+  float edgeFade = smoothstep(22.0, 9.5, distOrigin);
+  col = mix(vec3(0.035, 0.054, 0.072), col, edgeFade);
+
+  fragColor = vec4(col, 1.0);
+}`,yt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec2 aUV;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
+out vec3 vWorldPos;
+out vec3 vLocalPos;
+out vec3 vNormal;
+out vec2 vUV;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  vLocalPos = aPos;
+  vNormal = normalize(mat3(uModel) * aNorm);
+  vUV = aUV;
+  gl_Position = uProj * uView * wp;
+}`,St=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vLocalPos;
+in vec3 vNormal;
+in vec2 vUV;
+
+uniform vec3 uCamPos;
+uniform float uTime;
+uniform int uBoardTheme;    // 0: Emerald UNO, 1: Dark-Teal ESP32, 2: Amber-Gold 555, 3: Navy-Cyan Arm Shield
+uniform float uPowerAmt;    // 0..1 circuit live power
+uniform vec4 uHoverSpot;    // xyz: world hover pos, w: active radius
+uniform int uTraceCount;
+uniform vec4 uTraces[20];   // (x1, z1, x2, z2) in board space
+
+out vec4 fragColor;
+
+float segDist(vec2 p, vec2 a, vec2 b, out float hOut) {
+  vec2 pa = p - a;
+  vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-6), 0.0, 1.0);
+  hOut = h;
+  return length(pa - ba * h);
+}
+
+void main() {
+  vec3 N = normalize(vNormal);
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 L1 = normalize(vec3(0.42, 0.84, 0.36));
+  vec3 L2 = normalize(vec3(-0.55, 0.65, -0.45));
+
+  // FR-4 Chamfered / Side Fiberglass Edge Laminate
+  if (abs(N.y) < 0.65) {
+    float ply = 0.5 + 0.5 * sin(vLocalPos.y * 95.0);
+    vec3 fr4 = mix(vec3(0.62, 0.50, 0.26), vec3(0.78, 0.66, 0.38), ply);
+    float diff = max(dot(N, L1), 0.0) * 0.75 + 0.35;
+    fragColor = vec4(fr4 * diff, 1.0);
+    return;
+  }
+
+  // Theme Solder-Mask Base Colors
+  vec3 maskBase = vec3(0.022, 0.235, 0.145); // 0: Deep Rich Emerald #0f6b4a
+  if (uBoardTheme == 1) {
+    maskBase = vec3(0.018, 0.175, 0.215);    // 1: Deep Matte Dark-Teal IoT
+  } else if (uBoardTheme == 2) {
+    maskBase = vec3(0.265, 0.148, 0.028);    // 2: Rich Retro Amber-Gold Synth
+  } else if (uBoardTheme == 3) {
+    maskBase = vec3(0.022, 0.125, 0.205);    // 3: Deep Industrial Navy-Cyan Shield
+  }
+
+  vec2 bp = vLocalPos.xz;
+
+  // Subsurface woven fiberglass weave under glossy solder-mask
+  float weave = (sin(bp.x * 58.0) * sin(bp.y * 58.0)) * 0.018;
+  vec3 col = maskBase + weave;
+
+  // Subtle decorative ground-plane copper hatch pattern under mask
+  float diagA = abs(fract((bp.x + bp.y) * 3.2) - 0.5);
+  float groundCopper = smoothstep(0.44, 0.49, diagA) * 0.06;
+  col += maskBase * groundCopper;
+
+  // Explicit PCB Copper Traces + Racing Electron Pulses when Powered!
+  float traceMask = 0.0;
+  float pulseGlow = 0.0;
+  for (int i = 0; i < 20; i++) {
+    if (i >= uTraceCount) break;
+    vec4 tr = uTraces[i];
+    float h = 0.0;
+    float d = segDist(bp, tr.xy, tr.zw, h);
+    float trLine = 1.0 - smoothstep(0.038, 0.062, d);
+    traceMask = max(traceMask, trLine);
+
+    if (uPowerAmt > 0.01 && d < 0.13) {
+      float packet = fract(h * 1.8 - uTime * (1.85 + float(i % 3) * 0.35) + float(i) * 0.21);
+      float spark = exp(-pow((packet - 0.5) * 5.2, 2.0));
+      float radial = exp(-d * d * 240.0);
+      pulseGlow += spark * radial * uPowerAmt;
+    }
+  }
+
+  // Raised golden-copper trace tint beneath translucent solder mask
+  vec3 traceTint = mix(maskBase * 1.55 + vec3(0.14, 0.11, 0.03), vec3(0.82, 0.62, 0.20), 0.38);
+  col = mix(col, traceTint, traceMask * 0.88);
+
+  // Silkscreen Perimeter Border & Fiducial Marks
+  vec2 halfExt = vec2(3.65, 2.55);
+  vec2 edgeDist = halfExt - abs(bp);
+  float silkBorder = (1.0 - smoothstep(0.0, 0.035, abs(min(edgeDist.x, edgeDist.y) - 0.14))) *
+                     step(0.05, min(edgeDist.x, edgeDist.y));
+
+  // Subtle silkscreen ruler ticks along bottom & top edges
+  float tickMask = 0.0;
+  if (abs(abs(bp.y) - 2.34) < 0.06 && abs(bp.x) < 3.2) {
+    float tx = abs(fract(bp.x * 3.937) - 0.5);
+    tickMask = (1.0 - smoothstep(0.0, 0.07, tx)) * 0.65;
+  }
+  vec3 silkWhite = vec3(0.92, 0.95, 0.94);
+  col = mix(col, silkWhite, clamp(silkBorder * 0.72 + tickMask * 0.55, 0.0, 0.85));
+
+  // PBR-inspired glossy solder-mask lighting
+  float diff1 = max(dot(N, L1), 0.0);
+  float diff2 = max(dot(N, L2), 0.0);
+  vec3 H1 = normalize(L1 + V);
+  vec3 H2 = normalize(L2 + V);
+  float spec1 = pow(max(dot(N, H1), 0.0), 48.0) * 0.38;
+  float spec2 = pow(max(dot(N, H2), 0.0), 36.0) * 0.22;
+  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 4.0) * 0.14;
+
+  vec3 lit = col * (0.34 + diff1 * 0.72 + diff2 * 0.28);
+  lit += vec3(1.0, 0.95, 0.86) * spec1 + vec3(0.35, 0.85, 0.95) * spec2 + vec3(0.12, 0.22, 0.24) * fresnel;
+
+  // Racing Electron Current Pulses along traces when powered!
+  if (pulseGlow > 0.001) {
+    vec3 electronCol = (uBoardTheme == 2)
+      ? vec3(1.0, 0.72, 0.18)
+      : mix(vec3(0.13, 0.85, 0.95), vec3(0.96, 0.74, 0.20), 0.35);
+    lit += electronCol * min(pulseGlow, 2.2) * 0.95;
+  }
+
+  // Subtle 3D Workbench Cursor Inspection Ring on PCB
+  if (uHoverSpot.w > 0.01) {
+    float hd = length(vWorldPos.xz - uHoverSpot.xz);
+    float ring = 1.0 - smoothstep(0.0, 0.035, abs(hd - uHoverSpot.w));
+    lit += vec3(0.20, 0.86, 0.76) * ring * 0.55;
+  }
+
+  fragColor = vec4(lit, 1.0);
+}`,wt=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNorm;
+layout(location = 2) in vec2 aUV;
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform mat4 uModel;
+
+out vec3 vWorldPos;
+out vec3 vLocalPos;
+out vec3 vNormal;
+out vec2 vUV;
+
+void main() {
+  vec4 wp = uModel * vec4(aPos, 1.0);
+  vWorldPos = wp.xyz;
+  vLocalPos = aPos;
+  vNormal = normalize(mat3(uModel) * aNorm);
+  vUV = aUV;
+  gl_Position = uProj * uView * wp;
+}`,At=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec3 vWorldPos;
+in vec3 vLocalPos;
+in vec3 vNormal;
+in vec2 vUV;
+
+uniform vec3 uCamPos;
+uniform float uTime;
+uniform int uMatType;
+uniform vec3 uBaseColor;
+uniform float uParam1; // solderHeat / ledPower / resistorSeed / hoverGlow / tipHeat
+uniform float uParam2; // secondary state
+
+out vec4 fragColor;
+
+void main() {
+  vec3 N = normalize(vNormal);
+  vec3 V = normalize(uCamPos - vWorldPos);
+  vec3 L1 = normalize(vec3(0.42, 0.84, 0.36));
+  vec3 L2 = normalize(vec3(-0.55, 0.65, -0.45));
+  vec3 H1 = normalize(L1 + V);
+  vec3 H2 = normalize(L2 + V);
+
+  float diff1 = max(dot(N, L1), 0.0);
+  float diff2 = max(dot(N, L2), 0.0);
+  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 3.5);
+
+  // 6: Ghost Placement Blueprint Hologram (Translucent)
+  if (uMatType == 6) {
+    float scan = 0.55 + 0.45 * sin(vWorldPos.y * 42.0 - uTime * 6.0);
+    float pulse = 0.72 + 0.28 * sin(uTime * 4.5);
+    float rim = pow(1.0 - abs(dot(N, V)), 1.8);
+    float hovered = uParam1; // 0 or 1
+    vec3 holoCol = mix(vec3(0.12, 0.82, 0.68), vec3(0.98, 0.74, 0.20), hovered);
+    float alpha = clamp(0.22 + rim * 0.48 + hovered * 0.22, 0.18, 0.82) * pulse;
+    vec3 finalHolo = holoCol * (0.75 + scan * 0.55 + rim * 0.9);
+    fragColor = vec4(finalHolo, alpha);
+    return;
+  }
+
+  vec3 albedo = uBaseColor;
+  float specPow = 32.0;
+  float specAmt = 0.35;
+  vec3 emissive = vec3(0.0);
+
+  if (uMatType == 0) {
+    // Matte Dark-Charcoal Epoxy DIP IC Package + Laser-etched Top Markings
+    float micro = fract(sin(dot(floor(vWorldPos.xz * 180.0), vec2(12.9898, 78.233))) * 43758.5453);
+    albedo = uBaseColor + (micro - 0.5) * 0.025;
+    if (N.y > 0.85) {
+      // Crisp silver-ivory IC part-number text bars & Pin-1 notch indicator
+      float stripe1 = step(0.32, vUV.y) * step(vUV.y, 0.42) * step(0.18, vUV.x) * step(vUV.x, 0.82);
+      float stripe2 = step(0.55, vUV.y) * step(vUV.y, 0.62) * step(0.22, vUV.x) * step(vUV.x, 0.66);
+      float dash = step(0.35, fract(vUV.x * 11.0));
+      float pin1Dot = 1.0 - smoothstep(0.05, 0.08, length(vUV - vec2(0.14, 0.24)));
+      float mark = max((stripe1 + stripe2) * dash * 0.75, pin1Dot);
+      albedo = mix(albedo, vec3(0.78, 0.82, 0.84), clamp(mark, 0.0, 1.0));
+    }
+    specPow = 18.0;
+    specAmt = 0.18;
+  } else if (uMatType == 1) {
+    // Brushed Aluminum / Tin-Plated Metal (IC Leads, USB-B, HC-SR04 Eyes, Heatsink, Arm Struts)
+    float aniso = sin((vWorldPos.x + vWorldPos.y * 1.7 + vWorldPos.z) * 85.0) * 0.04;
+    albedo = uBaseColor + aniso;
+    specPow = 64.0;
+    specAmt = 0.85;
+  } else if (uMatType == 2) {
+    // ENIG Gold-Plated Copper Pads, Header Pins & Piezo Resonator (#f5b82e)
+    albedo = vec3(0.96, 0.72, 0.18) * (0.9 + 0.1 * uBaseColor);
+    specPow = 72.0;
+    specAmt = 0.95;
+    // Highlight unsoldered target pad ring subtly when uParam1 > 0
+    emissive += vec3(0.98, 0.68, 0.15) * uParam1 * (0.35 + 0.25 * sin(uTime * 6.5));
+  } else if (uMatType == 3) {
+    // Molten-to-Mirror Silver-Tin Solder Cone!
+    float heat = clamp(uParam1, 0.0, 1.0);
+    vec3 coolSilver = vec3(0.84, 0.89, 0.94);
+    vec3 moltenCol = mix(vec3(0.98, 0.44, 0.08), vec3(1.0, 0.86, 0.42), heat * heat);
+    albedo = mix(coolSilver, moltenCol, heat * 0.85);
+    specPow = mix(96.0, 42.0, heat);
+    specAmt = mix(1.15, 0.65, heat);
+    emissive += moltenCol * heat * 1.65;
+  } else if (uMatType == 4) {
+    // Glossy Colored Translucent LED Dome / 7-Segment Bar / VU Segment
+    float glow = max(uParam1, 0.0);
+    albedo = mix(uBaseColor * 0.38, uBaseColor, clamp(glow, 0.0, 1.0));
+    specPow = 88.0;
+    specAmt = 0.92;
+    // Bright internal core emission + subsurface scattering
+    float core = 0.55 + 0.45 * max(dot(N, V), 0.0);
+    emissive += uBaseColor * glow * (1.25 * core + 0.45) + vec3(1.0, 0.97, 0.88) * max(glow - 0.85, 0.0) * 0.55;
+  } else if (uMatType == 5) {
+    // Ceramic Axial Resistor with 4 Procedural EIA Color Bands
+    albedo = vec3(0.85, 0.74, 0.54); // Warm tan ceramic body
+    float u = vUV.x;
+    int seed = int(uParam1);
+    vec3 b1 = (seed % 2 == 0) ? vec3(0.55, 0.24, 0.08) : vec3(0.92, 0.24, 0.18); // Brown / Red
+    vec3 b2 = (seed % 3 == 0) ? vec3(0.06, 0.62, 0.42) : vec3(0.96, 0.46, 0.09); // Emerald / Orange
+    vec3 b3 = vec3(0.92, 0.24, 0.18); // Red multiplier (220R / 330R)
+    vec3 b4 = vec3(0.95, 0.72, 0.18); // Gold 5% tolerance band
+    if (abs(u - 0.24) < 0.045) albedo = b1;
+    else if (abs(u - 0.39) < 0.045) albedo = b2;
+    else if (abs(u - 0.54) < 0.045) albedo = b3;
+    else if (abs(u - 0.76) < 0.040) albedo = b4;
+    specPow = 40.0;
+    specAmt = 0.42;
+  } else if (uMatType == 7) {
+    // Flexible Silicone Jumper Wire with Live Signal Shimmer
+    albedo = uBaseColor;
+    specPow = 24.0;
+    specAmt = 0.28;
+    if (uParam1 > 0.01) {
+      float wave = fract(vUV.y * 2.0 - uTime * 2.6);
+      float pulse = exp(-pow((wave - 0.5) * 4.5, 2.0));
+      emissive += mix(uBaseColor, vec3(0.95, 0.92, 0.75), 0.45) * pulse * uParam1 * 0.55;
+    }
+  } else if (uMatType == 8) {
+    // 380C Soldering Iron Conical Tip (Tinned Silver Point + Temper Collar + Thermal Glow)
+    float tipDist = clamp(vUV.y, 0.0, 1.0); // 0 at sharp tip, 1 at base barrel
+    vec3 tinned = vec3(0.88, 0.91, 0.95);
+    vec3 copperTemper = vec3(0.76, 0.46, 0.22);
+    albedo = mix(tinned, copperTemper, smoothstep(0.28, 0.85, tipDist));
+    specPow = 84.0;
+    specAmt = 0.95;
+    float tipGlow = (1.0 - smoothstep(0.0, 0.58, tipDist)) * (0.45 + 0.55 * uParam1);
+    emissive += vec3(1.0, 0.48, 0.10) * tipGlow * 1.35;
+  } else {
+    // 9: Industrial Molded Housing / Capacitor Sleeve / Servo Body / Ergonomic Handle
+    specPow = 36.0;
+    specAmt = 0.36;
+    emissive += uBaseColor * uParam1 * 0.35;
+  }
+
+  float spec1 = pow(max(dot(N, H1), 0.0), specPow) * specAmt;
+  float spec2 = pow(max(dot(N, H2), 0.0), specPow * 0.75) * (specAmt * 0.55);
+
+  // Metallic reflection tinting for metals (types 1, 2, 3, 8)
+  bool isMetal = (uMatType == 1 || uMatType == 2 || uMatType == 3 || uMatType == 8);
+  vec3 diffTerm = isMetal ? albedo * 0.38 : albedo;
+  vec3 specTint1 = isMetal ? mix(vec3(1.0, 0.96, 0.88), albedo, 0.65) : vec3(1.0, 0.96, 0.90);
+  vec3 specTint2 = isMetal ? mix(vec3(0.25, 0.85, 0.95), albedo, 0.55) : vec3(0.25, 0.82, 0.92);
+
+  vec3 envBounce = mix(vec3(0.05, 0.08, 0.10), vec3(0.16, 0.22, 0.26), N.y * 0.5 + 0.5);
+  vec3 col = diffTerm * (envBounce + diff1 * 0.82 + diff2 * 0.34);
+  col += specTint1 * spec1 + specTint2 * spec2;
+  col += (isMetal ? albedo : vec3(0.16, 0.28, 0.32)) * fresnel * 0.24;
+  col += emissive;
+
+  fragColor = vec4(col, 1.0);
+}`,Et=`#version 300 es
+precision highp float;
+precision highp int;
+
+layout(location = 0) in vec2 aQuad;
+layout(location = 1) in vec4 iPosSize;    // xyz: world pos, w: size
+layout(location = 2) in vec4 iColorAlpha; // rgb: color, a: alpha
+layout(location = 3) in vec2 iKindPhase;  // x: 0=rosin smoke, 1=solder spark, y: phase/angle
+
+uniform mat4 uProj;
+uniform mat4 uView;
+uniform vec3 uCamRight;
+uniform vec3 uCamUp;
+
+out vec2 vUV;
+out vec4 vColor;
+out vec2 vKindPhase;
+
+void main() {
+  float ang = iKindPhase.y;
+  float c = cos(ang);
+  float s = sin(ang);
+  vec2 rq = vec2(aQuad.x * c - aQuad.y * s, aQuad.x * s + aQuad.y * c);
+
+  vec3 worldPos = iPosSize.xyz + (uCamRight * rq.x + uCamUp * rq.y) * iPosSize.w;
+  vUV = aQuad; // [-1..1]
+  vColor = iColorAlpha;
+  vKindPhase = iKindPhase;
+  gl_Position = uProj * uView * vec4(worldPos, 1.0);
+}`,Pt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUV;
+in vec4 vColor;
+in vec2 vKindPhase;
+
+out vec4 fragColor;
+
+void main() {
+  float r2 = dot(vUV, vUV);
+  if (r2 > 1.0) discard;
+
+  if (vKindPhase.x < 0.5) {
+    // Soft curling Rosin Flux Smoke Wisp
+    float r = sqrt(r2);
+    float swirl = sin(vUV.x * 3.8 + vKindPhase.y * 2.0) * cos(vUV.y * 3.4 - vKindPhase.y) * 0.22;
+    float soft = pow(max(1.0 - r + swirl * (1.0 - r), 0.0), 2.1);
+    fragColor = vec4(vColor.rgb, vColor.a * soft * 0.55);
+  } else {
+    // Incandescent Golden Solder Spark
+    float core = exp(-r2 * 5.5);
+    vec3 col = mix(vColor.rgb, vec3(1.0, 0.97, 0.84), core * 0.7);
+    fragColor = vec4(col, vColor.a * core);
+  }
+}`,Rt=`#version 300 es
+precision highp float;
+precision highp int;
+
+out vec2 vUV;
+
+void main() {
+  vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+  vUV = pos;
+  gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+}`,Mt=`#version 300 es
+precision highp float;
+precision highp int;
+
+in vec2 vUV;
+uniform sampler2D uSceneTex;
+uniform vec2 uTexelSize;
+
+out vec4 fragColor;
+
+vec3 acesFilm(vec3 x) {
+  float a = 2.51;
+  float b = 0.03;
+  float c = 2.43;
+  float d = 0.59;
+  float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+void main() {
+  vec3 hdr = texture(uSceneTex, vUV).rgb;
+
+  // 8-tap soft emissive bloom halo for glowing LEDs, molten solder & electron pulses
+  vec3 bloom = vec3(0.0);
+  vec2 r1 = uTexelSize * 2.5;
+  vec2 r2 = uTexelSize * 5.5;
+
+  vec3 s0 = texture(uSceneTex, vUV + vec2(r1.x, 0.0)).rgb;
+  vec3 s1 = texture(uSceneTex, vUV - vec2(r1.x, 0.0)).rgb;
+  vec3 s2 = texture(uSceneTex, vUV + vec2(0.0, r1.y)).rgb;
+  vec3 s3 = texture(uSceneTex, vUV - vec2(0.0, r1.y)).rgb;
+  vec3 s4 = texture(uSceneTex, vUV + vec2(r2.x, r2.y)).rgb;
+  vec3 s5 = texture(uSceneTex, vUV + vec2(-r2.x, r2.y)).rgb;
+  vec3 s6 = texture(uSceneTex, vUV + vec2(r2.x, -r2.y)).rgb;
+  vec3 s7 = texture(uSceneTex, vUV + vec2(-r2.x, -r2.y)).rgb;
+
+  bloom += max(s0 - vec3(0.78), vec3(0.0));
+  bloom += max(s1 - vec3(0.78), vec3(0.0));
+  bloom += max(s2 - vec3(0.78), vec3(0.0));
+  bloom += max(s3 - vec3(0.78), vec3(0.0));
+  bloom += max(s4 - vec3(0.78), vec3(0.0)) * 0.7;
+  bloom += max(s5 - vec3(0.78), vec3(0.0)) * 0.7;
+  bloom += max(s6 - vec3(0.78), vec3(0.0)) * 0.7;
+  bloom += max(s7 - vec3(0.78), vec3(0.0)) * 0.7;
+
+  hdr += bloom * 0.16;
+
+  // ACES Filmic Tone Mapping + Gamma
+  vec3 mapped = acesFilm(hdr * 1.06);
+  mapped = pow(mapped, vec3(1.0 / 2.2));
+
+  // Subtle studio lens vignette
+  vec2 q = vUV - 0.5;
+  float vig = 1.0 - dot(q, q) * 0.34;
+  mapped *= clamp(vig, 0.75, 1.0);
+
+  fragColor = vec4(mapped, 1.0);
+}`;var F=0,O=-.32,x={charcoalIC:[.11,.13,.15],darkSlate:[.16,.2,.24],silverMetal:[.8,.85,.9],brushedAlum:[.7,.76,.82],darkHeatsink:[.22,.27,.32],enigGold:[.96,.72,.18],copperOrange:[.976,.451,.086],ledCyan:[.133,.827,.933],ledEmerald:[.063,.725,.506],ledAmber:[.961,.62,.043],ledRed:[.937,.255,.2],servoTeal:[.08,.48,.64],ivoryHorn:[.92,.94,.95],capNavy:[.09,.22,.32],amberGrip:[.92,.54,.08]},i0=[[1,1,1,1,1,1,0],[0,1,1,0,0,0,0],[1,1,0,1,1,0,1],[1,1,1,1,0,0,1],[0,1,1,0,0,1,1],[1,0,1,1,0,1,1],[1,0,1,1,1,1,1],[1,1,1,0,0,0,0],[1,1,1,1,1,1,1],[1,1,1,1,0,1,1]];function he(e,t,o){let r=e.createVertexArray();e.bindVertexArray(r);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,new Float32Array(t),e.STATIC_DRAW);let f=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,f),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(o),e.STATIC_DRAW);let s=32;return e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,s,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,s,12),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,2,e.FLOAT,!1,s,24),e.bindVertexArray(null),{vao:r,vbo:n,ibo:f,count:o.length}}function s0(e){let t=[{n:[0,1,0],u:[1,0,0],v:[0,0,1],o:[-.5,.5,-.5]},{n:[0,-1,0],u:[1,0,0],v:[0,0,-1],o:[-.5,-.5,.5]},{n:[0,0,1],u:[1,0,0],v:[0,1,0],o:[-.5,-.5,.5]},{n:[0,0,-1],u:[-1,0,0],v:[0,1,0],o:[.5,-.5,-.5]},{n:[1,0,0],u:[0,0,-1],v:[0,1,0],o:[.5,-.5,.5]},{n:[-1,0,0],u:[0,0,1],v:[0,1,0],o:[-.5,-.5,-.5]}],o=[],r=[],n=0;for(let f of t){let s=[[0,0],[1,0],[1,1],[0,1]];for(let[a,c]of s){let l=f.o[0]+f.u[0]*a+f.v[0]*c,u=f.o[1]+f.u[1]*a+f.v[1]*c,h=f.o[2]+f.u[2]*a+f.v[2]*c;o.push(l,u,h,f.n[0],f.n[1],f.n[2],a,c)}r.push(n,n+1,n+2,n,n+2,n+3),n+=4}return he(e,o,r)}function c0(e){let t=[-1,-1,1,1,-1,1,1,1,1,-1,1,1,-1,-1,-1,-1,1,-1,1,1,-1,1,-1,-1],o=[0,1,2,0,2,3,4,5,6,4,6,7,3,2,6,3,6,5,4,7,1,4,1,0,1,7,6,1,6,2,4,0,3,4,3,5],r=e.createVertexArray();e.bindVertexArray(r);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,new Float32Array(t),e.STATIC_DRAW);let f=e.createBuffer();return e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,f),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(o),e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,0,0),e.bindVertexArray(null),{vao:r,count:o.length}}function l0(e,t=26,o=O){let r=[-t,o,-t,0,1,0,0,0,t,o,-t,0,1,0,1,0,t,o,t,0,1,0,1,1,-t,o,t,0,1,0,0,1];return he(e,r,[0,3,2,0,2,1])}function d0(e,t=3.65,o=2.55,r=-.11,n=0,f=.24){let s=[[-t+f,-o],[t-f,-o],[t,-o+f],[t,o-f],[t-f,o],[-t+f,o],[-t,o-f],[-t,-o+f]],a=[],c=[];a.push(0,n,0,0,1,0,.5,.5);for(let u=0;u<s.length;u++){let[h,v]=s[u];a.push(h,n,v,0,1,0,h/t*.5+.5,v/o*.5+.5)}for(let u=0;u<s.length;u++){let h=(u+1)%s.length;c.push(0,1+h,1+u)}let l=a.length/8;a.push(0,r,0,0,-1,0,.5,.5);for(let u=0;u<s.length;u++){let[h,v]=s[u];a.push(h,r,v,0,-1,0,h/t*.5+.5,v/o*.5+.5)}for(let u=0;u<s.length;u++){let h=(u+1)%s.length;c.push(l,l+1+u,l+1+h)}for(let u=0;u<s.length;u++){let h=(u+1)%s.length,[v,m]=s[u],[b,y]=s[h],w=b-v,P=y-m,R=Math.hypot(w,P)||1,M=-P/R,B=w/R,V=a.length/8;a.push(v,r,m,M,0,B,0,0,b,r,y,M,0,B,1,0,b,n,y,M,0,B,1,1,v,n,m,M,0,B,0,1),c.push(V,V+2,V+1,V,V+3,V+2)}return he(e,a,c)}function Ct(e,t=20,o=1,r=1,n=!0){let f=[],s=[],a=o-r;for(let c=0;c<=t;c++){let l=c/t,u=l*ee,h=Math.cos(u),v=Math.sin(u),m=Math.hypot(1,a),b=h/m,y=a/m,w=v/m;f.push(h*o,0,v*o,b,y,w,l,0),f.push(h*r,1,v*r,b,y,w,l,1)}for(let c=0;c<t;c++){let l=c*2;s.push(l,l+1,l+3,l,l+3,l+2)}if(n&&r>.001){let c=f.length/8;f.push(0,1,0,0,1,0,.5,.5);for(let l=0;l<=t;l++){let u=l/t*ee,h=Math.cos(u),v=Math.sin(u);f.push(h*r,1,v*r,0,1,0,h*.5+.5,v*.5+.5)}for(let l=0;l<t;l++)s.push(c,c+1+l+1,c+1+l)}if(n&&o>.001){let c=f.length/8;f.push(0,0,0,0,-1,0,.5,.5);for(let l=0;l<=t;l++){let u=l/t*ee,h=Math.cos(u),v=Math.sin(u);f.push(h*o,0,v*o,0,-1,0,h*.5+.5,v*.5+.5)}for(let l=0;l<t;l++)s.push(c,c+1+l,c+1+l+1)}return he(e,f,s)}function f0(e,t=20,o=.36,r=1,n=.016){let f=[],s=[];for(let c=0;c<=t;c++){let l=c/t,u=l*ee,h=Math.cos(u),v=Math.sin(u);f.push(h*o,n,v*o,0,1,0,0,l),f.push(h*r,n,v*r,0,1,0,1,l)}for(let c=0;c<t;c++){let l=c*2;s.push(l,l+1,l+3,l,l+3,l+2)}let a=f.length/8;for(let c=0;c<=t;c++){let l=c/t*ee,u=Math.cos(l),h=Math.sin(l);f.push(u*r,0,h*r,u,.3,h,0,0),f.push(u*r,n,h*r,u,.3,h,0,1)}for(let c=0;c<t;c++){let l=a+c*2;s.push(l,l+1,l+3,l,l+3,l+2)}return he(e,f,s)}function u0(e,t=20,o=6){let r=[],n=[];for(let a=0;a<=o;a++){let c=a/o,l=ce(.15,1,Math.pow(1-c,1.75)),u=-1.75*.85*Math.pow(Math.max(1-c,.02),.75);for(let h=0;h<=t;h++){let v=h/t,m=v*ee,b=Math.cos(m),y=Math.sin(m),w=1,P=-u*.65,R=Math.hypot(w,P);r.push(b*l,c,y*l,b*w/R,P/R,y*w/R,v,c)}}let f=t+1;for(let a=0;a<o;a++)for(let c=0;c<t;c++){let l=a*f+c,u=l+f;n.push(l,u,u+1,l,u+1,l+1)}let s=r.length/8;r.push(0,1,0,0,1,0,.5,1);for(let a=0;a<=t;a++){let c=a/t*ee;r.push(Math.cos(c)*.15,1,Math.sin(c)*.15,0,1,0,.5,1)}for(let a=0;a<t;a++)n.push(s,s+1+a+1,s+1+a);return he(e,r,n)}function m0(e,t=18,o=6){let r=[[1.12,0],[1.12,.12],[.95,.13],[.95,.65]];for(let a=1;a<=o;a++){let c=a/o*(Math.PI*.5);r.push([Math.cos(c)*.95,.65+Math.sin(c)*.35])}let n=[],f=[];for(let a=0;a<r.length;a++){let[c,l]=r[a],u=r[Math.max(0,a-1)],h=r[Math.min(r.length-1,a+1)],v=h[1]-u[1],m=h[0]-u[0],b=Math.hypot(v,-m)||1,y=v/b,w=-m/b;for(let P=0;P<=t;P++){let R=P/t,M=R*ee,B=Math.cos(M),V=Math.sin(M);n.push(B*c,l,V*c,B*y,w,V*y,R,l)}}let s=t+1;for(let a=0;a<r.length-1;a++)for(let c=0;c<t;c++){let l=a*s+c,u=l+s;f.push(l,u,u+1,l,u+1,l+1)}return he(e,n,f)}function gt(e,t,o=.042,r=10){let n=[],f=[],s=t.length,a=[0,0,1];for(let l=0;l<s;l++){let u=t[l],h=t[Math.max(0,l-1)],v=t[Math.min(s-1,l+1)],m=U.normalize(U.sub(v,h)),b=U.cross(m,a);U.len(b)<1e-4&&(b=U.cross(m,[1,0,0])),b=U.normalize(b);let y=U.normalize(U.cross(b,m));a=y;let w=l/(s-1);for(let P=0;P<=r;P++){let R=P/r,M=R*ee,B=Math.cos(M),V=Math.sin(M),N=b[0]*B+y[0]*V,D=b[1]*B+y[1]*V,k=b[2]*B+y[2]*V;n.push(u[0]+N*o,u[1]+D*o,u[2]+k*o,N,D,k,R,w)}}let c=r+1;for(let l=0;l<s-1;l++)for(let u=0;u<r;u++){let h=l*c+u,v=h+c;f.push(h,v,v+1,h,v+1,h+1)}return he(e,n,f)}function p0(e,t=24,o=8){let r=t+1,n=o+1,f=r*n*8,s=[];for(let v=0;v<r-1;v++)for(let m=0;m<o;m++){let b=v*n+m,y=b+n;s.push(b,y,y+1,b,y+1,b+1)}let a=e.createVertexArray();e.bindVertexArray(a);let c=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,c),e.bufferData(e.ARRAY_BUFFER,f*4,e.DYNAMIC_DRAW);let l=e.createBuffer();e.bindBuffer(e.ELEMENT_ARRAY_BUFFER,l),e.bufferData(e.ELEMENT_ARRAY_BUFFER,new Uint16Array(s),e.STATIC_DRAW);let u=32;e.enableVertexAttribArray(0),e.vertexAttribPointer(0,3,e.FLOAT,!1,u,0),e.enableVertexAttribArray(1),e.vertexAttribPointer(1,3,e.FLOAT,!1,u,12),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,2,e.FLOAT,!1,u,24),e.bindVertexArray(null);let h=new Float32Array(f);return{vao:a,count:s.length,segments:t,update(v,m,b=.04){let y=Ue(v,m,.85,t),w=0,P=[0,0,1];for(let R=0;R<y.length;R++){let M=y[R],B=y[Math.max(0,R-1)],V=y[Math.min(y.length-1,R+1)],N=U.normalize(U.sub(V,B)),D=U.cross(N,P);U.len(D)<1e-4&&(D=U.cross(N,[1,0,0])),D=U.normalize(D);let k=U.normalize(U.cross(D,N));P=k;let X=R/(y.length-1);for(let $=0;$<=o;$++){let K=$/o,H=K*ee,J=Math.cos(H),I=Math.sin(H),ye=D[0]*J+k[0]*I,Se=D[1]*J+k[1]*I,we=D[2]*J+k[2]*I;h[w++]=M[0]+ye*b,h[w++]=M[1]+Se*b,h[w++]=M[2]+we*b,h[w++]=ye,h[w++]=Se,h[w++]=we,h[w++]=K,h[w++]=X}}e.bindBuffer(e.ARRAY_BUFFER,c),e.bufferSubData(e.ARRAY_BUFFER,0,h)}}}function Bt(e){return{skyCube:c0(e),workbench:l0(e,26,O),pcbBoard:d0(e,3.65,2.55,-.11,F,.24),box:s0(e),cylinder:Ct(e,20,1,1,!0),coneTip:Ct(e,20,.04,1,!0),padRing:f0(e,20,.36,1,.015),solderCone:u0(e,20,6),ledDome:m0(e,18,5),dynWire:p0(e,24,8)}}function Vt(e,t=320){let o=new Float32Array([-1,-1,1,-1,1,1,-1,-1,1,1,-1,1]),r=e.createVertexArray();e.bindVertexArray(r);let n=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,n),e.bufferData(e.ARRAY_BUFFER,o,e.STATIC_DRAW),e.enableVertexAttribArray(0),e.vertexAttribPointer(0,2,e.FLOAT,!1,0,0);let f=10,s=new Float32Array(t*f),a=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,a),e.bufferData(e.ARRAY_BUFFER,s.byteLength,e.DYNAMIC_DRAW);let c=f*4;e.enableVertexAttribArray(1),e.vertexAttribPointer(1,4,e.FLOAT,!1,c,0),e.vertexAttribDivisor(1,1),e.enableVertexAttribArray(2),e.vertexAttribPointer(2,4,e.FLOAT,!1,c,16),e.vertexAttribDivisor(2,1),e.enableVertexAttribArray(3),e.vertexAttribPointer(3,2,e.FLOAT,!1,c,32),e.vertexAttribDivisor(3,1),e.bindVertexArray(null);let l=[];return{vao:r,spawnFluxSmoke(u,h,v,m=2){for(let b=0;b<m;b++)l.length>=t&&l.shift(),l.push({kind:0,x:u+(Math.random()-.5)*.08,y:h+.05,z:v+(Math.random()-.5)*.08,vx:(Math.random()-.5)*.16,vy:.48+Math.random()*.36,vz:(Math.random()-.5)*.16,size:.08+Math.random()*.05,grow:.38+Math.random()*.24,age:0,life:1.35+Math.random()*.65,phase:Math.random()*ee,spin:(Math.random()-.5)*1.8,r:.84,g:.89,b:.92})},spawnSolderSparks(u,h,v,m=8){for(let b=0;b<m;b++){l.length>=t&&l.shift();let y=Math.random()*ee,w=.65+Math.random()*1.45;l.push({kind:1,x:u,y:h+.05,z:v,vx:Math.cos(y)*w,vy:.85+Math.random()*1.35,vz:Math.sin(y)*w,size:.032+Math.random()*.024,grow:-.02,age:0,life:.36+Math.random()*.28,phase:Math.random()*ee,spin:0,r:1,g:.68+Math.random()*.24,b:.16})}},updateAndUpload(u){let h=0;for(let v=l.length-1;v>=0;v--){let m=l[v];if(m.age+=u,m.age>=m.life){l.splice(v,1);continue}let b=m.age/m.life;m.kind===0?(m.vx+=Math.sin(m.age*4.5+m.phase)*.32*u,m.vz+=Math.cos(m.age*3.8+m.phase)*.32*u,m.x+=m.vx*u,m.y+=m.vy*u,m.z+=m.vz*u,m.size+=m.grow*u,m.phase+=m.spin*u):(m.vy-=5.8*u,m.x+=m.vx*u,m.y+=m.vy*u,m.z+=m.vz*u,m.y<F+.02&&(m.y=F+.02,m.vy=Math.abs(m.vy)*.38,m.vx*=.65,m.vz*=.65));let y=m.kind===0?Math.sin(Math.min(b*Math.PI,Math.PI))*.62:1-b*b,w=h*f;s[w+0]=m.x,s[w+1]=m.y,s[w+2]=m.z,s[w+3]=Math.max(.01,m.size),s[w+4]=m.r,s[w+5]=m.g,s[w+6]=m.b,s[w+7]=y,s[w+8]=m.kind,s[w+9]=m.phase,h++}return h>0&&(e.bindBuffer(e.ARRAY_BUFFER,a),e.bufferSubData(e.ARRAY_BUFFER,0,s.subarray(0,h*f))),h},clear(){l.length=0}}}function He(e,t,o,r,n){let f=[],s=e-(o-1)*r*.5;for(let a=0;a<o;a++){let c=s+a*r;f.push([c,t-n]),f.push([c,t+n])}return f}var Me=[{index:0,code:"UNO-R3",name:"UNO-R3 \u8FFD\u5149\u6D41\u6C34\u706F\u77E9\u9635",subtitle:"\u7ECF\u5178\u7FE0\u7EFF\u5012\u89D2\u5F00\u53D1\u677F \xB7 ATmega328P \u4E3B\u63A7\u4E0E 0-9 \u6570\u7801\u7BA1\u6D41\u6C34\u9635\u5217",theme:0,powerSwitchPos:[-3.05,.15],camTarget:[0,0,0],camDist:8.6,traces:[[-3.05,.15,-1.65,.65],[-1.65,.65,-.55,.65],[-.55,.65,-.55,-.45],[-.55,.65,1.35,.75],[-.55,-.45,.95,-.55],[.95,-.55,.95,-1.55],[1.35,.75,2.35,.75],[-1.95,-.65,-.55,-.45],[-2.45,1.55,-1.25,.85],[-2.15,-1.95,.65,-1.95],[-.35,1.95,1.45,1.95],[1.65,1.95,2.55,1.55]],components:[{id:"atmega328",name:"ATmega328P DIP-28 \u82AF\u7247",short:"ATmega328P",kind:"dip28",pos:[-.45,.62],aabb:[1.05,.36,.46],pads:He(-.45,.62,3,.72,.38)},{id:"xtal16",name:"16MHz \u77F3\u82F1\u6676\u632F",short:"16MHz \u6676\u632F",kind:"crystal",pos:[-1.95,-.62],aabb:[.46,.38,.28],pads:[[-2.16,-.62],[-1.74,-.62]]},{id:"led4",name:"4 \u8DEF\u9AD8\u4EAE LED \u9635\u5217",short:"4\u8DEFLED\u9635\u5217",kind:"led_array",pos:[.95,-1.45],aabb:[1.08,.52,.36],pads:[[.14,-1.45],[.68,-1.45],[1.22,-1.45],[1.76,-1.45]]},{id:"res4",name:"\u8272\u73AF\u9650\u6D41\u7535\u963B\u6392",short:"\u8272\u73AF\u7535\u963B\u6392",kind:"resistor_bank",pos:[.95,-.52],aabb:[1.06,.28,.38],pads:[[.14,-.52],[.68,-.52],[1.22,-.52],[1.76,-.52]]},{id:"seg7",name:"7 \u6BB5\u6570\u7801\u7BA1",short:"7\u6BB5\u6570\u7801\u7BA1",kind:"seg7",pos:[2.35,.58],aabb:[.64,.42,.82],pads:[[2.02,-.18],[2.68,-.18],[2.02,1.34],[2.68,1.34]]},{id:"rst_btn",name:"\u5FAE\u52A8\u590D\u4F4D\u6309\u952E",short:"\u590D\u4F4D\u6309\u952E",kind:"tact_btn",pos:[-2.35,1.48],aabb:[.38,.38,.38],pads:[[-2.62,1.48],[-2.08,1.48]]}],wires:[{id:"uno_w1",name:"5V \u7A33\u538B\u4F9B\u7535\u6BCD\u7EBF",color:x.ledRed,from:[-2.15,-2.02],to:[-.35,-2.02],arcHeight:.78},{id:"uno_w2",name:"D2-D5 \u8FFD\u5149\u8109\u51B2\u98DE\u7EBF",color:x.ledCyan,from:[-1.15,2.02],to:[.68,-2.02],arcHeight:1.25},{id:"uno_w3",name:"BCD \u6570\u7801\u7BA1\u8BD1\u7801\u98DE\u7EBF",color:x.ledAmber,from:[.45,2.02],to:[2.35,2.02],arcHeight:.85}]},{index:1,code:"ESP32-RADAR",name:"ESP32 \u8D85\u58F0\u6CE2\u96F7\u8FBE\u4E91\u53F0",subtitle:"\u6DF1\u9752\u7269\u8054\u7F51\u4E3B\u677F \xB7 SG90 \u5FAE\u578B\u8235\u673A\u9A71\u52A8 HC-SR04 \u53CC\u63A2\u5934 \xB165\xB0 \u58F0\u5450\u626B\u63CF",theme:1,powerSwitchPos:[-3.05,.15],camTarget:[.1,.1,0],camDist:8.8,traces:[[-3.05,.15,-1.55,.15],[-1.55,.15,-1.55,-1.15],[-1.55,.15,.15,.15],[.15,.15,1.75,-.45],[1.75,-.45,1.75,.92],[.15,.15,.15,1.35],[-1.55,-1.15,.15,-1.25],[-1.85,1.98,1.15,1.98],[-.65,-2.02,1.85,-2.02]],components:[{id:"esp32_mod",name:"ESP32 \u53CC\u6838\u6A21\u7EC4",short:"ESP32\u6A21\u7EC4",kind:"esp32",pos:[-1.35,.25],aabb:[.85,.36,1.05],pads:[[-2.08,-.35],[-2.08,.25],[-2.08,.85],[-.62,-.35],[-.62,.25],[-.62,.85]]},{id:"sg90_servo",name:"SG90 9g \u5FAE\u578B\u8235\u673A",short:"SG90\u8235\u673A",kind:"servo_sg90",pos:[1.75,-.55],aabb:[.68,.78,.48],pads:[[1.22,-1.08],[1.75,-1.08],[2.28,-1.08]]},{id:"hcsr04",name:"HC-SR04 \u53CC\u5706\u7B52\u8D85\u58F0\u6CE2\u63A2\u5934",short:"HC-SR04\u63A2\u5934",kind:"ultrasonic",pos:[1.75,.78],aabb:[1.05,.95,.46],pads:[[1.15,1.26],[1.55,1.26],[1.95,1.26],[2.35,1.26]]},{id:"filter_caps",name:"\u7A33\u538B\u6EE4\u6CE2\u7535\u5BB9\u7EC4",short:"\u6EE4\u6CE2\u7535\u5BB9\u7EC4",kind:"cap_bank",pos:[-.25,-1.25],aabb:[.72,.68,.42],pads:[[-.68,-1.25],[-.36,-1.25],[.08,-1.25],[.4,-1.25]]},{id:"piezo_buz",name:"\u538B\u7535\u8702\u9E23\u5668",short:"\u538B\u7535\u8702\u9E23\u5668",kind:"buzzer",pos:[.15,1.32],aabb:[.46,.48,.46],pads:[[-.28,1.32],[.58,1.32]]}],wires:[{id:"esp_w1",name:"5V \u8235\u673A\u52A8\u529B\u4F9B\u7535\u7EBF",color:x.ledRed,from:[-1.85,-2.02],to:[1.25,-2.02],arcHeight:.92},{id:"esp_w2",name:"GPIO18 \u8235\u673A PWM \u98DE\u7EBF",color:x.ledEmerald,from:[-.55,-2.02],to:[2.28,-2.02],arcHeight:.88},{id:"esp_w3",name:"TRIG/ECHO \u58F0\u5450\u56DE\u6CE2\u7EBF",color:x.ledCyan,from:[-1.85,2.02],to:[1.75,2.02],arcHeight:1.05}]},{index:2,code:"SYNTH-555",name:"SYNTH-555 \u82AF\u7247\u516B\u97F3\u76D2",subtitle:"\u590D\u53E4\u7425\u73C0\u6D41\u91D1\u58F0\u5B66\u677F \xB7 NE555 + LM386 \u5B9E\u65F6\u516B\u97F3\u76D2\u7436\u97F3\u4E0E 8 \u6BB5\u7535\u5E73\u706F\u67F1",theme:2,powerSwitchPos:[-3.05,.15],camTarget:[0,0,0],camDist:8.6,traces:[[-3.05,.15,-1.55,-.55],[-1.55,-.55,-.15,-.55],[-.15,-.55,1.25,-.65],[-1.55,-.55,-1.35,1.05],[-.15,-.55,.45,1.05],[.45,1.05,2.35,.25],[1.25,-.65,2.35,.25],[-1.85,2.02,.65,2.02],[-1.45,-2.02,1.45,-2.02]],components:[{id:"ne555",name:"NE555 \u65F6\u57FA\u82AF\u7247",short:"NE555\u82AF\u7247",kind:"dip8",pos:[-1.45,-.55],aabb:[.58,.34,.44],pads:He(-1.45,-.55,2,.48,.36)},{id:"lm386",name:"LM386 \u529F\u653E\u82AF\u7247",short:"LM386\u529F\u653E",kind:"dip8",pos:[-.05,-.55],aabb:[.58,.34,.44],pads:He(-.05,-.55,2,.48,.36)},{id:"pot_dial",name:"\u65CB\u8F6C\u7535\u4F4D\u5668\u65CB\u94AE",short:"\u7535\u4F4D\u5668\u65CB\u94AE",kind:"pot_knob",pos:[-1.35,1.05],aabb:[.58,.68,.58],pads:[[-1.72,1.56],[-1.35,1.56],[-.98,1.56]]},{id:"gold_piezo",name:"\u9EC4\u91D1\u538B\u7535\u626C\u58F0\u5668",short:"\u9EC4\u91D1\u626C\u58F0\u5668",kind:"piezo_gold",pos:[.65,1.05],aabb:[.76,.28,.76],pads:[[.12,1.72],[1.18,1.72]]},{id:"vu_bar8",name:"8 \u6BB5\u7535\u5E73\u706F\u67F1",short:"8\u6BB5\u7535\u5E73\u67F1",kind:"vu_bar",pos:[2.32,.15],aabb:[.46,.38,1.38],pads:[[1.82,-.95],[1.82,-.22],[1.82,.52],[1.82,1.25]]}],wires:[{id:"syn_w1",name:"NE555 \u632F\u8361\u8C03\u9891\u98DE\u7EBF",color:x.ledAmber,from:[-1.85,-2.02],to:[-1.85,2.02],arcHeight:1.08},{id:"syn_w2",name:"LM386 \u97F3\u9891\u8026\u5408\u98DE\u7EBF",color:x.ledCyan,from:[-.05,-2.02],to:[.65,2.02],arcHeight:1.18},{id:"syn_w3",name:"VU \u7535\u5E73\u91C7\u6837\u6BCD\u7EBF",color:x.ledEmerald,from:[1.25,-2.02],to:[2.32,-2.02],arcHeight:.75}]},{index:3,code:"CYBER-ARM",name:"CYBER-ARM \u673A\u68B0\u81C2\u9A71\u52A8\u76FE",subtitle:"\u5DE5\u4E1A\u6DF1\u6D77\u9752\u7535\u673A\u9A71\u52A8\u76FE \xB7 L298N \u6563\u70ED\u7535\u6865\u8054\u52A8\u53F3\u4FA7\u4E09\u8F74\u684C\u9762\u673A\u68B0\u5939\u722A\u81C2",theme:3,hasRoboticArm:!0,powerSwitchPos:[-3.05,.15],camTarget:[1.35,.42,.05],camDist:11.4,traces:[[-3.05,.15,-1.35,.25],[-1.35,.25,.45,.55],[.45,.55,2.65,.55],[-1.35,.25,-1.15,-1.15],[-1.15,-1.15,1.15,-1.05],[1.15,-1.05,2.85,-.55],[.45,.55,2.85,1.35],[-1.85,2.02,2.65,2.02],[-1.65,-2.02,2.65,-2.02]],components:[{id:"l298n",name:"L298N \u6563\u70ED\u7247\u7535\u6865\u82AF\u7247",short:"L298N\u7535\u6865",kind:"l298n",pos:[.45,.65],aabb:[.95,1.05,.62],pads:[[-.25,.02],[.1,.02],[.45,.02],[.8,.02],[1.15,.02]]},{id:"dual_caps",name:"\u53CC\u8DEF\u5927\u7535\u5BB9",short:"\u53CC\u8DEF\u5927\u7535\u5BB9",kind:"cap_bank_large",pos:[-1.25,-.95],aabb:[.88,.92,.52],pads:[[-1.78,-.95],[-1.4,-.95],[-.96,-.95],[-.58,-.95]]},{id:"pwm_driver",name:"PWM \u8C03\u901F\u82AF\u7247",short:"PWM\u8C03\u901F\u82AF\u7247",kind:"pwm_ic",pos:[1.25,-1.05],aabb:[.85,.36,.46],pads:He(1.25,-1.05,2,.62,.38)},{id:"sense_res",name:"\u5927\u529F\u7387\u91C7\u6837\u6392\u963B",short:"\u91C7\u6837\u6392\u963B",kind:"resistor_bank",pos:[-1.45,.85],aabb:[.98,.32,.38],pads:[[-2.12,.85],[-1.68,.85],[-1.22,.85],[-.78,.85]]}],wires:[{id:"arm_w1",name:"12V H\u6865\u4E3B\u52A8\u529B\u7EBF",color:x.ledRed,from:[-1.25,-2.02],to:[3.05,-.85],arcHeight:.95},{id:"arm_w2",name:"\u80A9\u8098\u53CC\u8F74\u4F3A\u670D\u4FE1\u53F7\u7EBF",color:x.ledCyan,from:[1.25,-2.02],to:[3.05,.05],arcHeight:.85},{id:"arm_w3",name:"\u673A\u68B0\u722A\u5F00\u5408\u9A71\u52A8\u98DE\u7EBF",color:x.ledAmber,from:[.45,2.02],to:[3.05,.95],arcHeight:.95}]}],i=p.create(),te=p.create(),ae=p.create();function S(e,t,o,r,n,f,s=0,a=0){e.uniformMatrix4fv(t.u.uModel,!1,r),e.uniform1i(t.u.uMatType,n),e.uniform3fv(t.u.uBaseColor,f),e.uniform1f(t.u.uParam1,s),e.uniform1f(t.u.uParam2,a),e.bindVertexArray(o.vao),e.drawElements(e.TRIANGLES,o.count,e.UNSIGNED_SHORT,0)}function It(e,t,o,r,n){let{powerSwitchAnim:f,powerEffective:s}=n,a=[[-3.28,-2.18],[3.28,-2.18],[3.28,2.18],[-3.28,2.18]];for(let[v,m]of a)p.fromTRS(i,v,O,m,0,0,0,.16,Math.abs(O)-.1,.16),S(e,t,o.cylinder,i,2,x.enigGold),p.fromTRS(i,v,F+.002,m,0,0,0,.22,1,.22),S(e,t,o.padRing,i,2,x.enigGold);p.fromTRS(i,-3.38,.28,-1.18,0,0,0,.72,.56,.62),S(e,t,o.box,i,1,x.silverMetal),p.fromTRS(i,-3.72,.28,-1.18,0,0,0,.08,.36,.42),S(e,t,o.box,i,0,x.charcoalIC),p.fromTRS(i,-3.28,.24,1.38,0,0,0,.76,.48,.54),S(e,t,o.box,i,9,x.charcoalIC),p.fromTRS(i,-3.68,.24,1.38,0,0,Math.PI*.5,.18,.16,.18),S(e,t,o.cylinder,i,1,x.silverMetal);let[c,l]=r.powerSwitchPos;p.fromTRS(i,c,.12,l,0,0,0,.46,.24,.62),S(e,t,o.box,i,9,x.darkSlate),p.fromTRS(i,c,.24,l,0,0,0,.14,.08,.14),S(e,t,o.cylinder,i,1,x.silverMetal);let u=0,h=ce(.45,-.45,f);p.identity(i),p.translate(i,i,c,.28,l),p.rotateX(i,i,h),p.rotateZ(i,i,u),p.scale(i,i,.065,.44,.065),S(e,t,o.cylinder,i,f>.5?2:1,f>.5?x.enigGold:x.silverMetal),p.fromTRS(i,c+.42,0,l,0,0,0,.11,.22,.11),S(e,t,o.ledDome,i,4,x.ledEmerald,n.powered?.8+s*1.3:0);for(let v=0;v<r.wires.length;v++){let m=r.wires[v],b=n.wiredFlags[v],y=n.highlightWireIdx===v,w=[m.from,m.to];for(let P=0;P<2;P++){let[R,M]=w[P];p.fromTRS(i,R,.09,M,0,0,0,.24,.18,.24),S(e,t,o.box,i,9,x.charcoalIC,y?.6:0),p.fromTRS(i,R,0,M,0,0,0,.036,.42,.036),S(e,t,o.cylinder,i,2,x.enigGold,!b&&(n.activeTool===3||y)?1:0)}}r.hasRoboticArm&&(p.fromTRS(i,3.35,.22,.05,0,0,0,.42,.44,2.35),S(e,t,o.box,i,9,x.servoTeal),p.fromTRS(i,4.35,O+.05,.08,0,0,0,1.75,.08,.46),S(e,t,o.box,i,9,x.charcoalIC,s*.2))}function et(e,t,o,r,n,f,s){let[a,c]=r.pos,l=n?.03:r.dropOffset||0,u=v=>n?6:v,h=f?1:0;switch(r.kind){case"dip28":case"pwm_ic":{let v=r.kind==="dip28"?1.88:1.52,m=r.kind==="dip28"?8:6;if(p.fromTRS(i,a,l+.14,c,0,0,0,v,.22,.56),S(e,t,o.box,i,u(0),x.charcoalIC,n?h:0),!n)for(let b=0;b<m;b++){let y=a-v*.42+b/(m-1)*(v*.84);for(let w of[-.33,.33])p.fromTRS(i,y,l+.09,c+w,0,0,0,.06,.2,.08),S(e,t,o.box,i,1,x.silverMetal)}break}case"dip8":{if(p.fromTRS(i,a,l+.14,c,0,0,0,.88,.22,.54),S(e,t,o.box,i,u(0),x.charcoalIC,n?h:0),!n)for(let v=0;v<4;v++){let m=a-.32+v*.213;for(let b of[-.32,.32])p.fromTRS(i,m,l+.09,c+b,0,0,0,.06,.2,.08),S(e,t,o.box,i,1,x.silverMetal)}break}case"esp32":{p.fromTRS(i,a,l+.06,c,0,0,0,1.38,.08,1.88),S(e,t,o.box,i,u(9),x.charcoalIC,n?h:0),p.fromTRS(i,a,l+.18,c+.18,0,0,0,1.12,.18,1.24),S(e,t,o.box,i,u(1),x.silverMetal,n?h:0),n||(p.fromTRS(i,a,l+.105,c-.68,0,0,0,.92,.02,.28),S(e,t,o.box,i,2,x.enigGold),p.fromTRS(i,a+.45,l+.1,c-.55,0,0,0,.07,.1,.07),S(e,t,o.ledDome,i,4,x.ledCyan,s.espLedGlow));break}case"crystal":{p.fromTRS(i,a,l+.04,c,0,0,0,.72,.3,.34),S(e,t,o.cylinder,i,u(1),x.silverMetal,n?h:0);break}case"led_array":{let v=[x.ledCyan,x.ledEmerald,x.ledAmber,x.ledRed];for(let m=0;m<4;m++){let b=a-.81+m*.54,y=n?0:s.chaserLevels[m]||0;p.fromTRS(i,b,l+.08,c,0,0,0,.17,.38,.17),S(e,t,o.ledDome,i,u(4),v[m],n?h:y),n||(p.fromTRS(i,b-.05,l,c,0,0,0,.02,.1,.02),S(e,t,o.cylinder,i,1,x.silverMetal),p.fromTRS(i,b+.05,l,c,0,0,0,.02,.1,.02),S(e,t,o.cylinder,i,1,x.silverMetal))}break}case"resistor_bank":{for(let v=0;v<4;v++){let m=a-.81+v*.54;if(p.identity(i),p.translate(i,i,m,l+.16,c-.22),p.rotateX(i,i,Math.PI*.5),p.scale(i,i,.085,.44,.085),S(e,t,o.cylinder,i,u(5),x.ivoryHorn,n?h:v),!n)for(let b of[-.24,.24])p.fromTRS(i,m,l,c+b,0,0,0,.022,.16,.022),S(e,t,o.cylinder,i,1,x.silverMetal)}break}case"seg7":{if(p.fromTRS(i,a,l+.15,c,0,0,0,1.06,.28,1.42),S(e,t,o.box,i,u(0),x.charcoalIC,n?h:0),!n){let v=i0[s.currentDigit%10],m=l+.3,b=[[0,-.46,.48,.09],[.24,-.23,.09,.42],[.24,.23,.09,.42],[0,.46,.48,.09],[-.24,.23,.09,.42],[-.24,-.23,.09,.42],[0,0,.46,.09]];for(let y=0;y<7;y++){let[w,P,R,M]=b[y],B=s.seg7Active?v[y]*1.95:.04;p.fromTRS(i,a+w,m,c+P,0,0,0,R,.035,M),S(e,t,o.box,i,4,x.ledAmber,B)}p.fromTRS(i,a+.38,m,c+.46,0,0,0,.08,.035,.08),S(e,t,o.box,i,4,x.ledCyan,s.seg7Active?1.4:.04)}break}case"tact_btn":{p.fromTRS(i,a,l+.09,c,0,0,0,.56,.18,.56),S(e,t,o.box,i,u(9),x.charcoalIC,n?h:0),p.fromTRS(i,a,l+.16,c,0,0,0,.18,.16,.18),S(e,t,o.cylinder,i,u(9),x.ledRed,n?h:0);break}case"servo_sg90":{p.fromTRS(i,a,l+.32,c,0,0,0,1.12,.62,.58),S(e,t,o.box,i,u(9),x.servoTeal,n?h:0),n||(p.fromTRS(i,a,l+.63,c+.18,0,0,0,.15,.12,.15),S(e,t,o.cylinder,i,2,x.enigGold),p.fromTRS(i,a,l+.75,c+.18,0,s.radarYaw,0,.92,.06,.16),S(e,t,o.box,i,9,x.ivoryHorn),p.fromTRS(i,a,l+.75,c+.18,0,s.radarYaw,0,.16,.06,.52),S(e,t,o.box,i,9,x.ivoryHorn));break}case"ultrasonic":{let v=n?0:s.radarYaw;p.fromTRS(i,a,l,c,0,0,0,.2,.32,.2),S(e,t,o.cylinder,i,u(1),x.darkSlate,n?h:0),p.fromTRS(te,a,l+.58,c,0,v,0,1.88,.76,.1),S(e,t,o.box,te,u(9),x.servoTeal,n?h:0);for(let m of[-.52,.52])p.identity(i),p.translate(i,i,a,l+.58,c),p.rotateY(i,i,v),p.translate(i,i,m,0,.05),p.rotateX(i,i,Math.PI*.5),p.scale(i,i,.33,.36,.33),S(e,t,o.cylinder,i,u(1),x.silverMetal,n?h:0),n||(p.identity(ae),p.translate(ae,ae,a,l+.58,c),p.rotateY(ae,ae,v),p.translate(ae,ae,m,0,.4),p.rotateX(ae,ae,Math.PI*.5),p.scale(ae,ae,.24,.03,.24),S(e,t,o.cylinder,ae,4,x.ledCyan,s.sonarFlash*1.6));break}case"cap_bank":case"cap_bank_large":{let v=r.kind==="cap_bank_large"?.32:.24,m=r.kind==="cap_bank_large"?.82:.58,b=r.kind==="cap_bank_large"?.42:.36;for(let y of[-b,b])p.fromTRS(i,a+y,l+.05,c,0,0,0,v,m,v),S(e,t,o.cylinder,i,u(9),x.capNavy,n?h:0),n||(p.fromTRS(i,a+y,l+.05+m,c,0,0,0,v*.88,.02,v*.88),S(e,t,o.cylinder,i,1,x.silverMetal));break}case"buzzer":{p.fromTRS(i,a,l+.02,c,0,0,0,.4,.42,.4),S(e,t,o.cylinder,i,u(9),x.charcoalIC,n?h:0),n||(p.fromTRS(i,a,l+.44,c,0,0,0,.12,.02,.12),S(e,t,o.cylinder,i,2,x.enigGold));break}case"pot_knob":{p.fromTRS(i,a,l+.1,c,0,0,0,.84,.2,.84),S(e,t,o.box,i,u(9),x.darkSlate,n?h:0);let v=n?0:s.potAngle;p.fromTRS(i,a,l+.2,c,0,v,0,.34,.46,.34),S(e,t,o.cylinder,i,u(1),x.brushedAlum,n?h:0),n||(p.fromTRS(i,a,l+.67,c,0,v,0,.08,.03,.55),S(e,t,o.box,i,4,x.ledAmber,.9));break}case"piezo_gold":{let v=n?0:s.vuLevel*.025;p.fromTRS(i,a,l+.03+v,c,0,0,0,.72,.08,.72),S(e,t,o.cylinder,i,u(2),x.enigGold,n?h:0),n||(p.fromTRS(i,a,l+.115+v,c,0,0,0,.48,.02,.48),S(e,t,o.cylinder,i,1,x.ivoryHorn));break}case"vu_bar":{if(p.fromTRS(i,a,l+.13,c,0,0,0,.64,.24,2.52),S(e,t,o.box,i,u(0),x.charcoalIC,n?h:0),!n)for(let v=0;v<8;v++){let m=c+1.05-v*.3,b=x.ledEmerald;v>=6?b=x.ledRed:v>=4&&(b=x.ledAmber);let y=(v+.45)/8,w=s.vuActive&&s.vuLevel>=y?2:.05;p.fromTRS(i,a,l+.26,m,0,0,0,.44,.05,.21),S(e,t,o.box,i,4,b,w)}break}case"l298n":{if(p.fromTRS(i,a,l+.36,c-.18,0,0,0,1.45,.64,.22),S(e,t,o.box,i,u(0),x.charcoalIC,n?h:0),p.fromTRS(i,a,l+.48,c+.04,0,0,0,1.62,.92,.16),S(e,t,o.box,i,u(1),x.brushedAlum,n?h:0),!n)for(let v=0;v<7;v++){let m=a-.72+v*.24;p.fromTRS(i,m,l+.48,c+.28,0,0,0,.06,.9,.38),S(e,t,o.box,i,1,x.brushedAlum)}break}}}function _t(e,t,o,r){let s=r.armYaw,a=r.armShoulder,c=r.armElbow,l=r.armClaw;p.fromTRS(i,5.35,O,.08,0,0,0,1.18,.26,1.18),S(e,t,o.cylinder,i,1,x.darkHeatsink),p.fromTRS(i,5.35,O+.265,.08,0,0,0,.96,1,.96),S(e,t,o.padRing,i,4,x.ledCyan,.25+r.armPower*1.5),p.fromTRS(i,5.35,O+.27,.08,0,s,0,.78,.34,.78),S(e,t,o.cylinder,i,9,x.servoTeal);let u=O+.74;p.fromTRS(i,5.35,u,.08,0,s,0,.62,.36,.56),S(e,t,o.box,i,1,x.brushedAlum),p.identity(i),p.translate(i,i,5.35,u,.08),p.rotateY(i,i,s),p.rotateZ(i,i,Math.PI*.5),p.translate(i,i,0,-.36,0),p.scale(i,i,.16,.72,.16),S(e,t,o.cylinder,i,2,x.enigGold);let h=1.55,v=Math.sin(s),m=Math.cos(s),b=-Math.sin(a),y=Math.cos(a);for(let H of[-.22,.22])p.identity(i),p.translate(i,i,5.35,u,.08),p.rotateY(i,i,s),p.translate(i,i,0,0,H),p.rotateZ(i,i,a),p.translate(i,i,0,h*.5,0),p.scale(i,i,.18,h,.08),S(e,t,o.box,i,1,x.silverMetal);let w=5.35+b*h*m,P=u+y*h,R=.08-b*h*v;p.fromTRS(i,w,P,R,0,s,0,.42,.34,.54),S(e,t,o.box,i,9,x.amberGrip);let M=a+c,B=1.32;p.identity(i),p.translate(i,i,w,P,R),p.rotateY(i,i,s),p.rotateZ(i,i,M),p.translate(i,i,0,B*.5,0),p.scale(i,i,.16,B,.24),S(e,t,o.box,i,1,x.brushedAlum);let V=-Math.sin(M),N=Math.cos(M),D=w+V*B*m,k=P+N*B,X=R-V*B*v;p.identity(i),p.translate(i,i,D,k,X),p.rotateY(i,i,s),p.rotateZ(i,i,M),p.scale(i,i,.24,.22,.52),S(e,t,o.box,i,9,x.charcoalIC);let $=.09+l*.19,K=(1-l)*.28;for(let H of[-1,1])p.identity(i),p.translate(i,i,D,k,X),p.rotateY(i,i,s),p.rotateZ(i,i,M),p.translate(i,i,0,.26,H*$),p.rotateX(i,i,-H*K),p.scale(i,i,.12,.46,.07),S(e,t,o.box,i,2,x.enigGold);r.armPower>.2&&l<.35?(p.identity(i),p.translate(i,i,D,k,X),p.rotateY(i,i,s),p.rotateZ(i,i,M),p.translate(i,i,0,.34,0),p.scale(i,i,.22,.22,.22),S(e,t,o.box,i,4,x.ledCyan,1.65)):(p.fromTRS(i,4.15,O+.14,1.65,0,.3,0,.24,.24,.24),S(e,t,o.box,i,4,x.ledAmber,.65+r.armPower*.8))}function Dt(e,t,o,r){p.fromTRS(i,-5.25,O+.08,-1.55,0,.25,0,1.15,.16,1.45),S(e,t,o.box,i,9,x.charcoalIC),p.fromTRS(i,-5.25+.12,O+.16,-1.55+.32,0,0,0,.28,.2,.28),S(e,t,o.cylinder,i,2,x.enigGold),p.fromTRS(i,-5.25-.12,O+.42,-1.55-.28,.5,.25,0,.26,1,.26),S(e,t,o.padRing,i,1,x.silverMetal);let[s,a,c]=r.pos,l=r.heating?1:.35;p.identity(te),p.translate(te,te,s,a,c),p.rotateY(te,te,r.yaw),p.rotateZ(te,te,r.tilt),p.copy(i,te),p.scale(i,i,.085,.52,.085),S(e,t,o.coneTip,i,8,x.silverMetal,l),p.copy(i,te),p.translate(i,i,0,.52,0),p.scale(i,i,.095,.9,.095),S(e,t,o.cylinder,i,1,x.silverMetal),p.copy(i,te),p.translate(i,i,0,1.42,0),p.scale(i,i,.21,.1,.21),S(e,t,o.cylinder,i,9,x.charcoalIC),p.copy(i,te),p.translate(i,i,0,1.52,0),p.scale(i,i,.165,1.32,.165),S(e,t,o.cylinder,i,9,x.amberGrip,r.heating?.25:0),p.copy(i,te),p.translate(i,i,0,1.82,0),p.scale(i,i,.172,.09,.172),S(e,t,o.cylinder,i,4,r.heating?x.copperOrange:x.ledEmerald,r.heating?1.8:.9)}var We=[523.25,659.25,783.99,1046.5,783.99,659.25,587.33,739.99,880,1174.66,880,739.99,659.25,783.99,987.77,1318.51],h0=[130.81,130.81,196,196,146.83,146.83,220,220,164.81,164.81,196,196,130.81,146.83,164.81,196],Oe=class{constructor(){this.ctx=null,this.masterGain=null,this.analyser=null,this.noiseBuffer=null,this.volume=.8,this.sizzleSrc=null,this.sizzleGain=null,this.sizzleFilter=null,this.sizzleActive=!1,this.lastCrackleAt=0,this.humOsc=null,this.humGain=null}ensure(){if(!this.ctx){let t=window.AudioContext||window.webkitAudioContext;if(!t)return!1;this.ctx=new t,this.masterGain=this.ctx.createGain(),this.masterGain.gain.value=this.volume,this.analyser=this.ctx.createAnalyser(),this.analyser.fftSize=512,this.analyser.smoothingTimeConstant=.78,this.masterGain.connect(this.analyser),this.analyser.connect(this.ctx.destination);let o=Math.floor(this.ctx.sampleRate*1.5);this.noiseBuffer=this.ctx.createBuffer(1,o,this.ctx.sampleRate);let r=this.noiseBuffer.getChannelData(0),n=0,f=0,s=0;for(let a=0;a<o;a++){let c=Math.random()*2-1;n=.997*n+c*.029,f=.985*f+c*.032,s=.95*s+c*.048,r[a]=(n+f+s+c*.35)*.65}}return this.ctx.state==="suspended"&&this.ctx.resume().catch(()=>{}),!0}setVolume(t){this.volume=Math.max(0,Math.min(1,t)),this.masterGain&&this.ctx&&this.masterGain.gain.setTargetAtTime(this.volume,this.ctx.currentTime,.02)}playSnap(){if(!this.ensure())return;let t=this.ctx.currentTime,o=this.ctx.createBufferSource();o.buffer=this.noiseBuffer;let r=this.ctx.createBiquadFilter();r.type="bandpass",r.frequency.setValueAtTime(1950,t),r.Q.value=3.2;let n=this.ctx.createGain();n.gain.setValueAtTime(.32,t),n.gain.exponentialRampToValueAtTime(.001,t+.042),o.connect(r),r.connect(n),n.connect(this.masterGain),o.start(t),o.stop(t+.045);let f=this.ctx.createOscillator();f.type="triangle",f.frequency.setValueAtTime(340,t),f.frequency.exponentialRampToValueAtTime(135,t+.055);let s=this.ctx.createGain();s.gain.setValueAtTime(.28,t),s.gain.exponentialRampToValueAtTime(.001,t+.06),f.connect(s),s.connect(this.masterGain),f.start(t),f.stop(t+.065);let a=this.ctx.createOscillator();a.type="sine",a.frequency.setValueAtTime(1420,t+.012),a.frequency.exponentialRampToValueAtTime(880,t+.05);let c=this.ctx.createGain();c.gain.setValueAtTime(.14,t+.012),c.gain.exponentialRampToValueAtTime(.001,t+.055),a.connect(c),c.connect(this.masterGain),a.start(t+.012),a.stop(t+.06)}setSolderSizzle(t,o=1){if(!t){this.sizzleActive&&this.sizzleGain&&this.ctx&&this.sizzleGain.gain.setTargetAtTime(0,this.ctx.currentTime,.035),this.sizzleActive=!1;return}if(!this.ensure())return;let r=this.ctx.currentTime;this.sizzleSrc||(this.sizzleSrc=this.ctx.createBufferSource(),this.sizzleSrc.buffer=this.noiseBuffer,this.sizzleSrc.loop=!0,this.sizzleFilter=this.ctx.createBiquadFilter(),this.sizzleFilter.type="bandpass",this.sizzleFilter.frequency.value=3200,this.sizzleFilter.Q.value=1.9,this.sizzleGain=this.ctx.createGain(),this.sizzleGain.gain.value=0,this.sizzleSrc.connect(this.sizzleFilter),this.sizzleFilter.connect(this.sizzleGain),this.sizzleGain.connect(this.masterGain),this.sizzleSrc.start(r));let n=Math.min(.24,.14*o);if(this.sizzleFilter.frequency.setTargetAtTime(2800+Math.random()*1100,r,.03),this.sizzleGain.gain.setTargetAtTime(n,r,.02),this.sizzleActive=!0,r-this.lastCrackleAt>.075){this.lastCrackleAt=r;let f=this.ctx.createOscillator();f.type="sawtooth";let s=1800+Math.random()*2200;f.frequency.setValueAtTime(s,r),f.frequency.exponentialRampToValueAtTime(420,r+.018);let a=this.ctx.createGain();a.gain.setValueAtTime(.055*o,r),a.gain.exponentialRampToValueAtTime(.001,r+.02),f.connect(a),a.connect(this.masterGain),f.start(r),f.stop(r+.022)}}playSolderDing(t=0){if(!this.ensure())return;let o=this.ctx.currentTime,r=Math.min(1480,740+t*36),n=this.ctx.createOscillator();n.type="sine",n.frequency.setValueAtTime(r,o),n.frequency.exponentialRampToValueAtTime(r*1.25,o+.09);let f=this.ctx.createGain();f.gain.setValueAtTime(.15,o),f.gain.exponentialRampToValueAtTime(.001,o+.12),n.connect(f),f.connect(this.masterGain),n.start(o),n.stop(o+.13)}previewSolderHiss(){this.ensure()&&(this.setSolderSizzle(!0,1.2),setTimeout(()=>this.playSolderDing(3),360),setTimeout(()=>this.setSolderSizzle(!1),620))}playWireClick(){if(!this.ensure())return;let t=this.ctx.currentTime;[960,1480].forEach((r,n)=>{let f=t+n*.032,s=this.ctx.createOscillator();s.type="triangle",s.frequency.setValueAtTime(r,f),s.frequency.exponentialRampToValueAtTime(r*.62,f+.035);let a=this.ctx.createGain();a.gain.setValueAtTime(.2,f),a.gain.exponentialRampToValueAtTime(.001,f+.04),s.connect(a),a.connect(this.masterGain),s.start(f),s.stop(f+.045)})}playPowerToggle(t){if(!this.ensure())return;let o=this.ctx.currentTime,r=this.ctx.createOscillator();r.type="square",r.frequency.setValueAtTime(t?210:170,o),r.frequency.exponentialRampToValueAtTime(68,o+.055);let n=this.ctx.createGain();n.gain.setValueAtTime(.24,o),n.gain.exponentialRampToValueAtTime(.001,o+.06),r.connect(n),n.connect(this.masterGain),r.start(o),r.stop(o+.065);let f=this.ctx.createOscillator();f.type="sawtooth";let s=this.ctx.createBiquadFilter();s.type="lowpass",s.frequency.value=950,t?(f.frequency.setValueAtTime(100,o+.03),f.frequency.exponentialRampToValueAtTime(440,o+.34)):(f.frequency.setValueAtTime(360,o+.02),f.frequency.exponentialRampToValueAtTime(75,o+.28));let a=this.ctx.createGain();a.gain.setValueAtTime(.14,o+.02),a.gain.exponentialRampToValueAtTime(.001,o+.38),f.connect(s),s.connect(a),a.connect(this.masterGain),f.start(o+.02),f.stop(o+.4),t?(this.humOsc||(this.humOsc=this.ctx.createOscillator(),this.humOsc.type="sine",this.humOsc.frequency.value=100,this.humGain=this.ctx.createGain(),this.humGain.gain.value=0,this.humOsc.connect(this.humGain),this.humGain.connect(this.masterGain),this.humOsc.start(o)),this.humGain.gain.setTargetAtTime(.025,o,.08)):this.humGain&&this.humGain.gain.setTargetAtTime(0,o,.05)}playSonarPing(){if(!this.ensure())return;let t=this.ctx.currentTime,o=this.ctx.createOscillator();o.type="sine",o.frequency.setValueAtTime(2480,t),o.frequency.exponentialRampToValueAtTime(2820,t+.06);let r=this.ctx.createGain();r.gain.setValueAtTime(.001,t),r.gain.linearRampToValueAtTime(.15,t+.008),r.gain.exponentialRampToValueAtTime(.001,t+.2),o.connect(r),r.connect(this.masterGain),o.start(t),o.stop(t+.21)}playServoWhirr(t=.22,o=1){if(!this.ensure())return;let r=this.ctx.currentTime,n=this.ctx.createOscillator();n.type="sawtooth",n.frequency.setValueAtTime(185*o,r),n.frequency.linearRampToValueAtTime(245*o,r+t*.5),n.frequency.linearRampToValueAtTime(175*o,r+t);let f=this.ctx.createBiquadFilter();f.type="bandpass",f.frequency.value=680*o,f.Q.value=2.6;let s=this.ctx.createGain();s.gain.setValueAtTime(.001,r),s.gain.linearRampToValueAtTime(.085,r+.03),s.gain.exponentialRampToValueAtTime(.001,r+t),n.connect(f),f.connect(s),s.connect(this.masterGain),n.start(r),n.stop(r+t+.02)}playDigitTick(t=0){if(!this.ensure())return;let o=this.ctx.currentTime,r=this.ctx.createOscillator();r.type="sine",r.frequency.setValueAtTime(t===0?1046.5:660+t*24,o);let n=this.ctx.createGain();n.gain.setValueAtTime(.045,o),n.gain.exponentialRampToValueAtTime(.001,o+.045),r.connect(n),n.connect(this.masterGain),r.start(o),r.stop(o+.05)}playChiptuneStep(t=0){let o=(t%We.length+We.length)%We.length,r=We[o],n=h0[o],f=.42+o*37%10*.058;if(!this.ensure())return{level:f,noteIdx:o};let s=this.ctx.currentTime,a=this.ctx.createOscillator();a.type="square",a.frequency.setValueAtTime(r,s);let c=this.ctx.createBiquadFilter();c.type="lowpass",c.frequency.setValueAtTime(2800,s);let l=this.ctx.createGain();if(l.gain.setValueAtTime(.095,s),l.gain.exponentialRampToValueAtTime(.001,s+.145),a.connect(c),c.connect(l),l.connect(this.masterGain),a.start(s),a.stop(s+.155),o%2===0){let u=this.ctx.createOscillator();u.type="triangle",u.frequency.setValueAtTime(n,s);let h=this.ctx.createGain();h.gain.setValueAtTime(.11,s),h.gain.exponentialRampToValueAtTime(.001,s+.22),u.connect(h),h.connect(this.masterGain),u.start(s),u.stop(s+.23)}return{level:f,noteIdx:o}}previewChiptunePhrase(){if(this.ensure())for(let t=0;t<6;t++)setTimeout(()=>this.playChiptuneStep(t),t*130)}};function zt(e,t,o){let r=e.createShader(t);if(e.shaderSource(r,o),e.compileShader(r),!e.getShaderParameter(r,e.COMPILE_STATUS)){let n=e.getShaderInfoLog(r);throw e.deleteShader(r),new Error(`Shader compile error: ${n}`)}return r}function ge(e,t,o,r){let n=e.createProgram(),f=zt(e,e.VERTEX_SHADER,t),s=zt(e,e.FRAGMENT_SHADER,o);if(e.attachShader(n,f),e.attachShader(n,s),e.linkProgram(n),!e.getProgramParameter(n,e.LINK_STATUS))throw new Error(`Program link error: ${e.getProgramInfoLog(n)}`);e.deleteShader(f),e.deleteShader(s);let a={};for(let c of r)a[c]=e.getUniformLocation(n,c);return{prog:n,u:a}}var ze=document.getElementById("robotics-app"),oe=document.getElementById("rb-canvas"),Ft=document.getElementById("rb-hud"),Nt=document.getElementById("rb-overlay"),v0=document.getElementById("rb-perf"),b0=document.getElementById("rb-stats-pill"),le=document.getElementById("rb-step-tag"),Be=document.getElementById("rb-step-desc"),Ve=document.getElementById("rb-toast-feed"),tt=document.getElementById("rb-hover-layer"),ot=document.getElementById("rb-banner"),x0=document.getElementById("rb-banner-title"),T0=document.getElementById("rb-banner-sub"),y0=document.getElementById("rb-temp-val"),S0=document.getElementById("rb-rail-unit"),w0=document.getElementById("rb-build-fill"),A0=document.getElementById("rb-curr-fill"),E0=document.getElementById("rb-cond-val"),P0=document.getElementById("rb-score-val"),R0=document.getElementById("rb-state-val"),M0=document.getElementById("rb-board-code"),C0=document.getElementById("btn-auto"),g0=document.getElementById("btn-cam"),B0=document.getElementById("btn-reset"),V0=document.getElementById("btn-fs"),I0=document.getElementById("btn-pause"),_0=document.getElementById("btn-tall"),D0=document.getElementById("menu-btn-tall"),Ut=document.getElementById("tool-place"),Ht=document.getElementById("tool-solder"),Wt=document.getElementById("tool-wire"),z0=document.getElementById("tool-step"),dt=document.getElementById("tool-power"),Ot=Array.from(document.querySelectorAll(".rb-tab-btn")),Gt=Array.from(document.querySelectorAll(".rb-board-pill")),k0=document.getElementById("rb-btn-start"),L0=document.getElementById("rb-btn-demo"),F0=document.getElementById("rb-btn-studio"),ft=document.getElementById("rb-studio"),Xe=document.getElementById("rb-scope"),j=Xe?Xe.getContext("2d"):null,kt=document.getElementById("rb-vol"),d=oe.getContext("webgl2",{antialias:!1,alpha:!1,depth:!0,powerPreference:"high-performance"});if(!d)throw new Error("WebGL2 is required for Robotics Lab.");var rt=d.getExtension("EXT_color_buffer_float"),Lt=0,Ie=ge(d,vt,bt,["uProj","uView","uCamPos","uTime"]),ve=ge(d,xt,Tt,["uProj","uView","uCamPos","uTime","uBoardRect","uSonarOrigin","uSonarDir"]),Yt=["uProj","uView","uModel","uCamPos","uTime","uBoardTheme","uPowerAmt","uHoverSpot","uTraceCount"];for(let e=0;e<20;e++)Yt.push(`uTraces[${e}]`);var ie=ge(d,yt,St,Yt),C=ge(d,wt,At,["uProj","uView","uModel","uCamPos","uTime","uMatType","uBaseColor","uParam1","uParam2"]),_e=ge(d,Et,Pt,["uProj","uView","uCamRight","uCamUp"]),nt=ge(d,Rt,Mt,["uSceneTex","uTexelSize"]),N0=d.createVertexArray(),L=Bt(d),me=Vt(d,360),g=new Oe,Pe=0,Re=0,Ce=null,Ee=null,De=null,qt=1;function U0(e,t){let o=Math.max(2,Math.floor(e)),r=Math.max(2,Math.floor(t));if(Ce&&o===Pe&&r===Re)return;Ce&&d.deleteFramebuffer(Ce),Ee&&d.deleteTexture(Ee),De&&d.deleteRenderbuffer(De),Pe=o,Re=r,Ce=d.createFramebuffer(),d.bindFramebuffer(d.FRAMEBUFFER,Ce),Ee=d.createTexture(),d.bindTexture(d.TEXTURE_2D,Ee);let n=rt?d.RGBA16F:d.RGBA8,f=rt?d.HALF_FLOAT:d.UNSIGNED_BYTE;d.texImage2D(d.TEXTURE_2D,0,n,Pe,Re,0,d.RGBA,f,null),d.texParameteri(d.TEXTURE_2D,d.TEXTURE_MIN_FILTER,d.LINEAR),d.texParameteri(d.TEXTURE_2D,d.TEXTURE_MAG_FILTER,d.LINEAR),d.texParameteri(d.TEXTURE_2D,d.TEXTURE_WRAP_S,d.CLAMP_TO_EDGE),d.texParameteri(d.TEXTURE_2D,d.TEXTURE_WRAP_T,d.CLAMP_TO_EDGE),d.framebufferTexture2D(d.FRAMEBUFFER,d.COLOR_ATTACHMENT0,d.TEXTURE_2D,Ee,0),De=d.createRenderbuffer(),d.bindRenderbuffer(d.RENDERBUFFER,De),d.renderbufferStorage(d.RENDERBUFFER,d.DEPTH_COMPONENT24,Pe,Re),d.framebufferRenderbuffer(d.FRAMEBUFFER,d.DEPTH_ATTACHMENT,d.RENDERBUFFER,De),d.checkFramebufferStatus(d.FRAMEBUFFER)!==d.FRAMEBUFFER_COMPLETE&&rt&&(d.bindTexture(d.TEXTURE_2D,Ee),d.texImage2D(d.TEXTURE_2D,0,d.RGBA8,Pe,Re,0,d.RGBA,d.UNSIGNED_BYTE,null)),d.bindFramebuffer(d.FRAMEBUFFER,null)}function H0(e){let t=e.components.map(()=>({placed:!1,dropOffset:0})),o=[];e.components.forEach((n,f)=>{n.pads.forEach(([s,a])=>{o.push({compIdx:f,x:s,z:a,progress:0,soldered:!1,heat:0})})});let r=e.wires.map(n=>{let f=[n.from[0],.34,n.from[1]],s=[n.to[0],.34,n.to[1]],a=Ue(f,s,n.arcHeight,26);return{connected:!1,mesh:gt(d,a,.044,10)}});return{spec:e,compStates:t,padStates:o,wireStates:r,powered:!1,powerSwitchAnim:0,completedBonusGiven:!1}}var W0=Me.map(e=>H0(e)),_="menu",Z=0,G=1,ue=0,ut=0,q=-1,qe=0,fe=0,E={yaw:.08,pitch:.72,dist:8.6,target:[0,0,0],curYaw:.08,curPitch:.72,curDist:8.6,curTarget:[0,0,0],eye:[0,6,6]},T={ndcX:0,ndcY:0,inside:!1,leftDown:!1,rightDown:!1,lastX:0,lastY:0,worldHit:[0,F,0],hasBoardHit:!1,hoverCompIdx:-1,hoverPadIdx:-1,hoverWireIdx:-1,hoverWireEnd:0,hoverSwitch:!1,hoverLabel:"",hoverWorldPos:null},z={pos:[-5.15,O+.52,-1.45],targetPos:[-5.15,O+.52,-1.45],yaw:.25,tilt:-.68,heating:!1,smokeAccum:0},A={chaserLevels:[0,0,0,0],currentDigit:0,digitTimer:0,seg7Active:!1,radarYaw:0,radarDirSign:1,sonarTimer:0,sonarFlash:0,espLedGlow:0,synthTimer:0,synthStep:0,vuLevel:0,vuActive:!1,potAngle:-.4,armPower:0,armPhase:0,armYaw:.25,armShoulder:.32,armElbow:.72,armClaw:.65,armWhirrTimer:0},Ae=p.create(),re=p.create(),at=p.create(),Xt=p.create(),it=p.create(),be=p.create();function Y(){return W0[Z]}function pe(e=Y()){let t=0;for(let h of e.compStates)h.placed&&t++;let o=0;for(let h of e.padStates)h.soldered&&o++;let r=0;for(let h of e.wireStates)h.connected&&r++;let n=e.compStates.length,f=e.padStates.length,s=e.wireStates.length,a=n+f+s,c=t+o+r,l=a>0?c/a:1;return{placedCount:t,totalComps:n,solderedCount:o,totalPads:f,wiredCount:r,totalWires:s,ratio:l,complete:t===n&&o===f&&r===s}}var st=null;function ke(e,t){ot&&(x0.textContent=e,T0.textContent=t,ot.classList.add("show"),st&&clearTimeout(st),st=setTimeout(()=>{ot.classList.remove("show")},2400))}function Te(e,t="cyan"){if(!Ve)return;let o=document.createElement("div");for(o.className=`rb-toast ${t}`,o.textContent=e,Ve.appendChild(o);Ve.children.length>3;)Ve.removeChild(Ve.firstChild);setTimeout(()=>{o.parentNode&&o.parentNode.removeChild(o)},3200)}function Q(e,t=!1){G=ne(e,1,3),q=-1,Ut.className=G===1?"rb-tool-btn active-emerald":"rb-tool-btn",Ht.className=G===2?"rb-tool-btn active-orange":"rb-tool-btn",Wt.className=G===3?"rb-tool-btn active-cyan":"rb-tool-btn",G!==2&&(z.heating=!1,g.setSolderSizzle(!1)),t||Te({1:"\u5DF2\u5207\u6362 [1] \u8D34\u88C5\u5143\u4EF6\u5DE5\u5177\uFF1A\u70B9\u51FB PCB \u53D1\u5149\u865A\u5F71\u5361\u5165\u82AF\u7247",2:"\u5DF2\u5207\u6362 [2] 380\xB0C \u6052\u6E29\u7535\u70D9\u94C1\uFF1A\u70B9\u51FB\u6216\u6309\u4F4F\u5212\u8FC7\u91D1\u710A\u76D8\u8FDE\u710A",3:"\u5DF2\u5207\u6362 [3] \u7845\u80F6\u675C\u90A6\u98DE\u7EBF\uFF1A\u70B9\u51FB\u9AD8\u4EAE\u6392\u9488\u5EA7\u5B8C\u6210\u8DE8\u63A5"}[G],G===2?"amber":"emerald"),de()}function Ke(e=fe){let t=Y().spec;E.target[0]=t.camTarget[0],E.target[1]=t.camTarget[1],E.target[2]=t.camTarget[2],e===0?(E.yaw=.06,E.pitch=.76,E.dist=t.camDist):e===1?(E.yaw=-.22,E.pitch=.62,E.dist=t.camDist*.68):(E.yaw=.48,E.pitch=.52,E.dist=t.camDist*.96)}function je(e){Z=(e%Me.length+Me.length)%Me.length,q=-1,ut=0,me.clear(),g.setSolderSizzle(!1),Ot.forEach((n,f)=>n.classList.toggle("active",f===Z)),Gt.forEach((n,f)=>n.classList.toggle("active",f===Z));let o=Y(),r=pe(o);return r.placedCount<r.totalComps?Q(1,!0):r.solderedCount<r.totalPads?Q(2,!0):Q(3,!0),fe=0,Ke(0),_==="lab"&&ke(`0${Z+1} \xB7 ${o.spec.name}`,o.spec.subtitle),de(),xe()}function $t(){let e=Me[Z],t=Y();t.compStates.forEach(o=>{o.placed=!1,o.dropOffset=0}),t.padStates.forEach(o=>{o.progress=0,o.soldered=!1,o.heat=0}),t.wireStates.forEach(o=>{o.connected=!1}),t.powered=!1,t.powerSwitchAnim=0,t.completedBonusGiven=!1,q=-1,me.clear(),g.playPowerToggle(!1),Q(1,!0),Te(`\u5DF2\u62C6\u710A\u91CD\u7F6E\uFF1A${e.name}`,"amber"),de()}function Kt(e){let t=Y(),o=t.compStates[e];if(!o||o.placed)return!1;o.placed=!0,o.dropOffset=.72,ue+=120,g.playSnap();let r=t.spec.components[e];Te(`\u5DF2\u8D34\u88C5\uFF1A${r.short} (+120)`,"emerald");let n=pe(t);return n.placedCount===n.totalComps&&n.solderedCount<n.totalPads&&(Q(2,!0),ke("\u5143\u4EF6\u5168\u90E8\u5C31\u4F4D\uFF01","\u5DF2\u5207\u6362 380\xB0C \u7535\u70D9\u94C1\uFF0C\u5212\u8FC7\u6C89\u91D1\u710A\u76D8\u5F00\u59CB\u710A\u63A5")),de(),!0}function $e(e){let t=Y(),o=t.padStates[e];if(!o||o.soldered)return!1;t.compStates[o.compIdx].placed||(t.compStates[o.compIdx].placed=!0,t.compStates[o.compIdx].dropOffset=0),o.progress=1,o.soldered=!0,o.heat=1,ut++,ue+=45,me.spawnFluxSmoke(o.x,F+.04,o.z,4),me.spawnSolderSparks(o.x,F+.04,o.z,9),g.playSolderDing(ut);let r=pe(t);return r.solderedCount===r.totalPads&&(z.heating=!1,g.setSolderSizzle(!1),r.wiredCount<r.totalWires?(Q(3,!0),ke("\u5168\u90E8\u710A\u70B9\u9971\u6EE1\u6210\u578B\uFF01","\u5DF2\u5207\u6362\u675C\u90A6\u98DE\u7EBF\u5DE5\u5177\uFF0C\u8FDE\u63A5\u6392\u9488\u5B8C\u6210\u56DE\u8DEF")):Zt()),de(),!0}function jt(e){let t=Y(),o=t.wireStates[e];if(!o||o.connected)return!1;o.connected=!0,q=-1,ue+=150,g.playWireClick();let r=t.spec.wires[e];return Te(`\u98DE\u7EBF\u5BFC\u901A\uFF1A${r.name} (+150)`,"gold"),Zt(),de(),!0}function Zt(){let e=Y();pe(e).complete&&!e.powered&&ke("\u786C\u4EF6 100% \u88C5\u914D\u5B8C\u6210\uFF01","\u6309 [Space] \u6216\u70B9\u51FB\u300C\u901A\u7535\u8FD0\u884C\u300D\u5524\u9192\u7535\u8DEF")}function Le(e=null){let t=Y(),o=e!==null?!!e:!t.powered;t.powered=o,g.playPowerToggle(t.powered);let r=pe(t);if(t.powered)if(r.complete)t.completedBonusGiven||(t.completedBonusGiven=!0,ue+=500),ke(`${t.spec.code} \u901A\u7535\u5168\u901F\u8FD0\u884C\uFF01`,t.spec.subtitle),Te("\u56DE\u8DEF 100% \u5BFC\u901A\uFF01\u7CFB\u7EDF\u5168\u529F\u7387\u8FD0\u884C (+500)","gold");else{let n=r.totalComps-r.placedCount,f=r.totalPads-r.solderedCount,s=r.totalWires-r.wiredCount;Te(`\u8BCA\u65AD\uFF1A\u7F3A ${n} \u5143\u4EF6 / ${f} \u710A\u70B9 / ${s} \u98DE\u7EBF\uFF08\u6309 [G] \u53EF\u4E00\u952E\u8865\u5168\uFF09`,"amber")}else Te("\u5DF2\u5207\u65AD\u5F00\u53D1\u677F 5.0V \u7A33\u538B\u7535\u6E90","cyan");de()}function pt(){_!=="lab"&&Fe();let e=Y();for(let t=0;t<e.compStates.length;t++)if(!e.compStates[t].placed)return Q(1,!0),Kt(t),xe();for(let t=0;t<e.compStates.length;t++){let o=[];if(e.padStates.forEach((r,n)=>{r.compIdx===t&&!r.soldered&&o.push(n)}),o.length>0){Q(2,!0);for(let r of o){let n=e.padStates[r];z.pos[0]=n.x,z.pos[1]=F+.06,z.pos[2]=n.z,$e(r)}return xe()}}for(let t=0;t<e.wireStates.length;t++)if(!e.wireStates[t].connected)return Q(3,!0),jt(t),xe();return e.powered||Le(!0),xe()}function Ze(){_!=="lab"&&Fe();let e=Y();return e.compStates.forEach((t,o)=>{t.placed||(t.placed=!0,t.dropOffset=.35+o*.14,ue+=120)}),e.padStates.forEach(t=>{t.soldered||(t.progress=1,t.soldered=!0,t.heat=1,ue+=45,me.spawnFluxSmoke(t.x,F+.04,t.z,2),me.spawnSolderSparks(t.x,F+.04,t.z,3))}),e.wireStates.forEach(t=>{t.connected||(t.connected=!0,ue+=150)}),q=-1,g.playSnap(),g.playSolderDing(6),Le(!0),xe()}function Fe(){return _="lab",Nt.classList.add("hidden"),Ft.classList.add("visible"),g.ensure(),de(),oe.focus(),xe()}function Qt(){_="menu",z.heating=!1,g.setSolderSizzle(!1),Nt.classList.remove("hidden"),Ft.classList.remove("visible")}function de(){let e=Y(),t=pe(e);if(b0.textContent=`\u8D34\u88C5 ${t.placedCount}/${t.totalComps} \xB7 \u710A\u70B9 ${t.solderedCount}/${t.totalPads} \xB7 \u98DE\u7EBF ${t.wiredCount}/${t.totalWires}`,e.powered&&t.complete)le.className="power",le.textContent="\u8FD0\u884C",Be.textContent=`${e.spec.code} \u8FD0\u884C\u4E2D \xB7 [B] \u6362\u677F`;else if(t.placedCount<t.totalComps){let n=e.compStates.findIndex(s=>!s.placed),f=e.spec.components[n];le.className="",le.textContent="\u8D34\u88C5",Be.textContent=`\u70B9\u51FB\u865A\u5F71\u5B89\u88C5 ${f.short}`}else if(t.solderedCount<t.totalPads)le.className="solder",le.textContent="\u710A\u63A5",Be.textContent=`\u5269\u4F59 ${t.totalPads-t.solderedCount} \u5904\u91D1\u710A\u76D8\u5F85\u70B9\u710A`;else if(t.wiredCount<t.totalWires){let n=e.wireStates.findIndex(f=>!f.connected);le.className="wire",le.textContent="\u98DE\u7EBF",Be.textContent=`\u63D2\u63A5 ${e.spec.wires[n].name}`}else le.className="power",le.textContent="\u5C31\u7EEA",Be.textContent="\u6309 [Space] \u62E8\u52A8\u7535\u6E90\u5F00\u5173\u901A\u7535\uFF01";let o=Math.round(t.ratio*100);w0.style.width=`${o}%`,E0.textContent=`${o}%`;let r=e.powered?Math.max(.15,t.ratio):0;A0.style.width=`${Math.round(6+r*88)}%`,S0.textContent=e.powered?`5.0V \xB7 ${Math.round(45+r*380)}mA`:"DC 5.0V \u5F85\u673A",y0.textContent=z.heating?"385\xB0C":"380\xB0C",dt.classList.toggle("powered-on",e.powered),dt.textContent=e.powered?"[Space] \u65AD\u7535\u505C\u6B62":"[Space] \u901A\u7535\u8FD0\u884C",P0.textContent=String(ue),R0.textContent=e.powered?t.complete?"\u5168\u529F\u7387\u901A\u7535\u8FD0\u884C":"\u90E8\u5206\u5BFC\u901A\u6D4B\u8BD5\u4E2D":t.complete?"\u5F85\u62E8\u52A8\u5F00\u5173\u901A\u7535":"\u9632\u9759\u7535\u53F0\u7EC4\u88C5\u4E2D",M0.textContent=`0${Z+1} \xB7 ${e.spec.code}`}function Jt(){if(T.hoverCompIdx=-1,T.hoverPadIdx=-1,T.hoverWireIdx=-1,T.hoverSwitch=!1,T.hoverLabel="",T.hoverWorldPos=null,!T.inside||_!=="lab")return;let{origin:e,dir:t}=p.screenToWorldRay(Xt,T.ndcX,T.ndcY),o=ht(e,t,F);o?(T.worldHit[0]=o[0],T.worldHit[1]=F,T.worldHit[2]=o[2],T.hasBoardHit=Math.abs(o[0])<=4.5&&Math.abs(o[2])<=3.3):T.hasBoardHit=!1;let r=Y(),[n,f]=r.spec.powerSwitchPos;if(Je(e,t,n-.32,0,f-.38,n+.32,.72,f+.38)>0&&(T.hoverSwitch=!0,T.hoverLabel=r.powered?"\u70B9\u51FB\u62E8\u6746\uFF1A\u5207\u65AD\u7535\u6E90 [Space]":"\u70B9\u51FB\u62E8\u6746\uFF1A\u901A\u7535\u8FD0\u884C [Space]",T.hoverWorldPos=[n,.65,f]),G===1){let a=1/0;if(r.spec.components.forEach((c,l)=>{if(r.compStates[l].placed)return;let[u,h]=c.pos,[v,m,b]=c.aabb,y=Je(e,t,u-v-.12,-.05,h-b-.12,u+v+.12,m+.18,h+b+.12);y>0&&y<a&&(a=y,T.hoverCompIdx=l)}),T.hoverCompIdx>=0){let c=r.spec.components[T.hoverCompIdx];T.hoverLabel=`\u70B9\u51FB\u8D34\u88C5\uFF1A${c.name}`,T.hoverWorldPos=[c.pos[0],c.aabb[1]+.28,c.pos[1]]}}else if(G===2&&o){let a=.44;if(r.padStates.forEach((c,l)=>{if(c.soldered)return;let u=Math.hypot(o[0]-c.x,o[2]-c.z);u<a&&(a=u,T.hoverPadIdx=l)}),T.hoverPadIdx>=0){let c=r.padStates[T.hoverPadIdx],l=r.spec.components[c.compIdx];T.hoverLabel=`380\xB0C \u710A\u70B9\uFF1A${l.short}`,T.hoverWorldPos=[c.x,.36,c.z]}}else if(G===3&&o){let a=.58;if(r.spec.wires.forEach((c,l)=>{if(r.wireStates[l].connected)return;let u=Math.hypot(o[0]-c.from[0],o[2]-c.from[1]),h=Math.hypot(o[0]-c.to[0],o[2]-c.to[1]);u<a&&(a=u,T.hoverWireIdx=l,T.hoverWireEnd=0),h<a&&(a=h,T.hoverWireIdx=l,T.hoverWireEnd=1)}),T.hoverWireIdx>=0){let c=r.spec.wires[T.hoverWireIdx];T.hoverLabel=q===T.hoverWireIdx?`\u70B9\u51FB\u63D2\u63A5\u5B8C\u6210\uFF1A${c.name}`:`\u70B9\u51FB\u5F15\u51FA\u98DE\u7EBF\uFF1A${c.name}`;let l=T.hoverWireEnd===0?c.from:c.to;T.hoverWorldPos=[l[0],.52,l[1]]}}}var se=new Set;function e0(e,t){let o=oe.getBoundingClientRect();o.width<=0||o.height<=0||(T.ndcX=(e-o.left)/o.width*2-1,T.ndcY=1-(t-o.top)/o.height*2,T.inside=!0)}oe.addEventListener("contextmenu",e=>e.preventDefault());oe.addEventListener("pointermove",e=>{e0(e.clientX,e.clientY);let t=e.clientX-T.lastX,o=e.clientY-T.lastY;T.lastX=e.clientX,T.lastY=e.clientY,T.rightDown&&(E.yaw-=t*.0065,E.pitch=ne(E.pitch+o*.0055,.24,1.38))});oe.addEventListener("pointerdown",e=>{if(oe.focus(),g.ensure(),e0(e.clientX,e.clientY),T.lastX=e.clientX,T.lastY=e.clientY,e.button===2||e.button===1||e.altKey){T.rightDown=!0;return}if(e.button===0&&_==="lab"){if(T.leftDown=!0,Jt(),T.hoverSwitch){Le();return}if(G===1){T.hoverCompIdx>=0&&Kt(T.hoverCompIdx);return}if(G===2){T.hoverPadIdx>=0&&$e(T.hoverPadIdx);return}if(G===3)if(q>=0){let t=Y().spec.wires[q],o=qe===0?t.to:t.from;Math.hypot(T.worldHit[0]-o[0],T.worldHit[2]-o[1])<.78||T.hoverWireIdx===q?jt(q):T.hoverWireIdx>=0?(q=T.hoverWireIdx,qe=T.hoverWireEnd,g.playSnap()):q=-1}else T.hoverWireIdx>=0&&(q=T.hoverWireIdx,qe=T.hoverWireEnd,g.playSnap())}});window.addEventListener("pointerup",e=>{e.button===0&&(T.leftDown=!1,z.heating=!1,g.setSolderSizzle(!1)),(e.button===2||e.button===1)&&(T.rightDown=!1)});oe.addEventListener("wheel",e=>{_==="lab"&&(e.preventDefault(),E.dist=ne(E.dist+e.deltaY*.0055,4.4,14.5))},{passive:!1});window.addEventListener("keydown",e=>{let t=e.code;se.add(t),t==="Digit1"?_==="lab"&&Q(1):t==="Digit2"?_==="lab"&&Q(2):t==="Digit3"?_==="lab"&&Q(3):t==="KeyF"?_==="lab"&&pt():t==="KeyG"||t==="KeyA"&&(e.shiftKey||e.metaKey||e.ctrlKey)?_==="lab"&&(e.preventDefault(),Ze()):t==="Space"?_==="lab"&&(e.preventDefault(),Le()):t==="KeyB"?je(Z+1):t==="KeyC"?(fe=(fe+1)%3,Ke(fe),Te(["\u6807\u51C6\u659C\u4FEF\u89C6\u710A\u53F0\u673A\u4F4D","\u5FAE\u8DDD\u710A\u70B9\u7279\u5199\u673A\u4F4D","\u5168\u666F\u659C\u4FA7\u5C55\u793A\u673A\u4F4D"][fe],"cyan")):t==="KeyR"?_==="lab"&&$t():(t==="KeyP"||t==="Escape")&&(_==="lab"?Qt():Fe())});window.addEventListener("keyup",e=>{se.delete(e.code)});k0?.addEventListener("click",()=>Fe());L0?.addEventListener("click",()=>Ze());C0?.addEventListener("click",()=>Ze());g0?.addEventListener("click",()=>{fe=(fe+1)%3,Ke(fe)});B0?.addEventListener("click",()=>$t());I0?.addEventListener("click",()=>Qt());V0?.addEventListener("click",()=>{document.fullscreenElement?document.exitFullscreen?.().catch(()=>{}):ze.requestFullscreen?.().catch(()=>{})});var t0=()=>{document.getElementById("robotics-app")?.classList.toggle("tall")};_0?.addEventListener("click",t0);D0?.addEventListener("click",t0);Ut?.addEventListener("click",()=>Q(1));Ht?.addEventListener("click",()=>Q(2));Wt?.addEventListener("click",()=>Q(3));z0?.addEventListener("click",()=>pt());dt?.addEventListener("click",()=>Le());Ot.forEach(e=>{e.addEventListener("click",()=>{je(Number(e.dataset.b||0))})});Gt.forEach(e=>{e.addEventListener("click",()=>{je(Number(e.dataset.b||0))})});F0?.addEventListener("click",()=>{ft.classList.toggle("open"),ft.classList.contains("open")&&g.ensure()});document.querySelectorAll(".rb-sfx-trigger").forEach(e=>{e.addEventListener("click",()=>{let t=e.dataset.s;t==="snap"?g.playSnap():t==="solder"?g.previewSolderHiss():t==="wire"?g.playWireClick():t==="power"?g.playPowerToggle(!0):t==="sonar"?(g.playSonarPing(),g.playServoWhirr(.24,1)):t==="chip"&&g.previewChiptunePhrase()})});document.querySelectorAll(".q-pill").forEach(e=>{e.addEventListener("click",()=>{document.querySelectorAll(".q-pill").forEach(o=>o.classList.remove("active")),e.classList.add("active");let t=e.dataset.q;qt=t==="low"?.68:t==="med"?.85:1})});kt?.addEventListener("input",()=>{g.setVolume(Number(kt.value)/100)});function O0(e,t){_==="lab"?((se.has("KeyA")||se.has("ArrowLeft"))&&(E.yaw-=1.35*e),(se.has("KeyD")||se.has("ArrowRight"))&&(E.yaw+=1.35*e),(se.has("KeyW")||se.has("ArrowUp"))&&(E.pitch=ne(E.pitch+.95*e,.24,1.38)),(se.has("KeyS")||se.has("ArrowDown"))&&(E.pitch=ne(E.pitch-.95*e,.24,1.38)),se.has("KeyQ")&&(E.dist=ne(E.dist-4.5*e,4.4,14.5)),se.has("KeyE")&&(E.dist=ne(E.dist+4.5*e,4.4,14.5))):E.yaw=.08+Math.sin(t*.28)*.32,E.curYaw=W(E.curYaw,E.yaw,10,e),E.curPitch=W(E.curPitch,E.pitch,10,e),E.curDist=W(E.curDist,E.dist,10,e);for(let s=0;s<3;s++)E.curTarget[s]=W(E.curTarget[s],E.target[s],8,e);let o=Math.cos(E.curPitch);E.eye[0]=E.curTarget[0]+Math.sin(E.curYaw)*o*E.curDist,E.eye[1]=E.curTarget[1]+Math.sin(E.curPitch)*E.curDist,E.eye[2]=E.curTarget[2]+Math.cos(E.curYaw)*o*E.curDist;let r=Y(),n=pe(r);r.powerSwitchAnim=W(r.powerSwitchAnim,r.powered?1:0,14,e);for(let s of r.compStates)s.dropOffset>.001&&(s.dropOffset=W(s.dropOffset,0,16,e),s.dropOffset<.002&&(s.dropOffset=0));for(let s of r.padStates)s.heat>.001&&(s.heat=Math.max(0,s.heat-e*.58));if(Jt(),_==="lab"&&G===2&&T.hasBoardHit){let s=T.worldHit[0],a=T.worldHit[2],c=F+.22,l=!1;if(T.hoverPadIdx>=0){let u=r.padStates[T.hoverPadIdx];s=u.x,a=u.z,c=T.leftDown?F+.045:F+.12,T.leftDown&&!u.soldered&&(l=!0,u.progress+=e*8.5,u.progress>=1&&$e(T.hoverPadIdx))}else T.leftDown&&(c=F+.055,r.padStates.forEach((u,h)=>{if(u.soldered)return;Math.hypot(s-u.x,a-u.z)<.38&&(l=!0,u.progress+=e*9,u.progress>=1&&$e(h))}));z.targetPos[0]=s,z.targetPos[1]=c,z.targetPos[2]=a,z.heating=l||T.leftDown,z.heating?(g.setSolderSizzle(!0,l?1.15:.55),z.smokeAccum+=e,z.smokeAccum>.065&&(z.smokeAccum=0,me.spawnFluxSmoke(s,c+.02,a,1))):g.setSolderSizzle(!1)}else z.targetPos[0]=-5.18,z.targetPos[1]=O+.46,z.targetPos[2]=-1.48,z.heating=!1;for(let s=0;s<3;s++)z.pos[s]=W(z.pos[s],z.targetPos[s],22,e);let f=r.powered?n.complete?1:.35+n.ratio*.5:0;if(A.seg7Active=!1,A.sonarFlash=Math.max(0,A.sonarFlash-e*2.6),A.espLedGlow=0,A.vuActive=!1,A.vuLevel=W(A.vuLevel,0,8,e),A.armPower=W(A.armPower,Z===3?f:0,6,e),f>.05){if(Z===0){let s=(Math.sin(t*4.2)*.5+.5)*3;for(let a=0;a<4;a++){let c=Math.abs(s-a);A.chaserLevels[a]=Math.max(.06,Math.exp(-c*c*2.6)*2.1*f)}A.seg7Active=r.compStates[4]?.placed&&f>.4,A.seg7Active&&(A.digitTimer+=e,A.digitTimer>=.65&&(A.digitTimer=0,A.currentDigit=(A.currentDigit+1)%10,_==="lab"&&g.playDigitTick(A.currentDigit)))}else if(Z===1){let s=65*Qe,a=Math.cos(t*1.55)>=0?1:-1;A.radarYaw=Math.sin(t*1.55)*s*f,A.espLedGlow=(.5+.5*Math.sin(t*9))*1.6*f,a!==A.radarDirSign&&(A.radarDirSign=a,_==="lab"&&g.playServoWhirr(.22,1.05)),A.sonarTimer+=e,A.sonarTimer>=1.15&&(A.sonarTimer=0,A.sonarFlash=1,_==="lab"&&g.playSonarPing())}else if(Z===2){if(A.vuActive=!0,A.potAngle=Math.sin(t*1.4)*.85,A.synthTimer+=e,A.synthTimer>=.145)if(A.synthTimer-=.145,_==="lab"){let s=g.playChiptuneStep(A.synthStep++);A.vuLevel=s.level*f}else A.synthStep++,A.vuLevel=(.45+.5*Math.abs(Math.sin(A.synthStep*.7)))*f}else if(Z===3){A.armPhase+=e*1.25*f;let s=A.armPhase,a=Math.sin(s*.85)*.68,c=Math.sin(s*1.7),l=.34+Math.max(0,-c)*.42,u=.62+Math.max(0,c)*.35,h=.5+.48*Math.sin(s*1.7+.8);A.armYaw=W(A.armYaw,a,6,e),A.armShoulder=W(A.armShoulder,l,6,e),A.armElbow=W(A.armElbow,u,6,e),A.armClaw=ne(h,.05,.98),A.armWhirrTimer+=e,A.armWhirrTimer>=1.45&&(A.armWhirrTimer=0,_==="lab"&&g.playServoWhirr(.28,.88))}}else{for(let s=0;s<4;s++)A.chaserLevels[s]=0;A.radarYaw=W(A.radarYaw,0,5,e),A.armYaw=W(A.armYaw,.22,4,e),A.armShoulder=W(A.armShoulder,.28,4,e),A.armElbow=W(A.armElbow,.68,4,e),A.armClaw=W(A.armClaw,.65,4,e)}}function G0(e,t){let o=ze.clientWidth||800,r=ze.clientHeight||446,n=Math.min(window.devicePixelRatio||1,2)*qt,f=Math.max(2,Math.floor(o*n)),s=Math.max(2,Math.floor(r*n));(oe.width!==f||oe.height!==s)&&(oe.width=f,oe.height=s),U0(f,s),p.perspective(Ae,42*Qe,o/Math.max(1,r),.15,140),p.lookAt(re,E.eye,E.curTarget,[0,1,0]),p.multiply(at,Ae,re),p.invert(Xt,at);let a=Y(),c=pe(a),l=a.powered?c.complete?1:.35+c.ratio*.5:0;d.bindFramebuffer(d.FRAMEBUFFER,Ce),d.viewport(0,0,Pe,Re),d.clearColor(.035,.055,.072,1),d.clear(d.COLOR_BUFFER_BIT|d.DEPTH_BUFFER_BIT),d.disable(d.DEPTH_TEST),d.depthMask(!1),d.useProgram(Ie.prog),d.uniformMatrix4fv(Ie.u.uProj,!1,Ae),d.uniformMatrix4fv(Ie.u.uView,!1,re),d.uniform3fv(Ie.u.uCamPos,E.eye),d.uniform1f(Ie.u.uTime,t),d.bindVertexArray(L.skyCube.vao),d.drawElements(d.TRIANGLES,L.skyCube.count,d.UNSIGNED_SHORT,0),d.enable(d.DEPTH_TEST),d.depthMask(!0),d.disable(d.BLEND),d.useProgram(ve.prog),d.uniformMatrix4fv(ve.u.uProj,!1,Ae),d.uniformMatrix4fv(ve.u.uView,!1,re),d.uniform3fv(ve.u.uCamPos,E.eye),d.uniform1f(ve.u.uTime,t),d.uniform4f(ve.u.uBoardRect,3.65,2.55,0,0);let u=Z===1&&a.compStates[2]?.placed&&l>.1?l:0;d.uniform4f(ve.u.uSonarOrigin,1.75,O,.78,u),d.uniform3f(ve.u.uSonarDir,Math.sin(A.radarYaw),0,Math.cos(A.radarYaw)),d.bindVertexArray(L.workbench.vao),d.drawElements(d.TRIANGLES,L.workbench.count,d.UNSIGNED_SHORT,0),d.useProgram(ie.prog),d.uniformMatrix4fv(ie.u.uProj,!1,Ae),d.uniformMatrix4fv(ie.u.uView,!1,re),d.uniformMatrix4fv(ie.u.uModel,!1,it),d.uniform3fv(ie.u.uCamPos,E.eye),d.uniform1f(ie.u.uTime,t),d.uniform1i(ie.u.uBoardTheme,a.spec.theme),d.uniform1f(ie.u.uPowerAmt,l),_==="lab"&&T.hasBoardHit?d.uniform4f(ie.u.uHoverSpot,T.worldHit[0],F,T.worldHit[2],G===2?.24:.3):d.uniform4f(ie.u.uHoverSpot,0,0,0,0);let h=Math.min(20,a.spec.traces.length);d.uniform1i(ie.u.uTraceCount,h);for(let m=0;m<h;m++){let b=a.spec.traces[m];d.uniform4f(ie.u[`uTraces[${m}]`],b[0],b[1],b[2],b[3])}if(d.bindVertexArray(L.pcbBoard.vao),d.drawElements(d.TRIANGLES,L.pcbBoard.count,d.UNSIGNED_SHORT,0),d.useProgram(C.prog),d.uniformMatrix4fv(C.u.uProj,!1,Ae),d.uniformMatrix4fv(C.u.uView,!1,re),d.uniform3fv(C.u.uCamPos,E.eye),d.uniform1f(C.u.uTime,t),It(d,C,L,a.spec,{powered:a.powered,powerSwitchAnim:a.powerSwitchAnim,powerEffective:l,activeTool:G,wiredFlags:a.wireStates.map(m=>m.connected),highlightWireIdx:q>=0?q:T.hoverWireIdx}),a.padStates.forEach((m,b)=>{let y=T.hoverPadIdx===b,w=!m.soldered&&(G===2||y)?1:0;if(p.fromTRS(be,m.x,F+.002,m.z,0,0,0,.145,1,.145),d.uniformMatrix4fv(C.u.uModel,!1,be),d.uniform1i(C.u.uMatType,2),d.uniform3fv(C.u.uBaseColor,x.enigGold),d.uniform1f(C.u.uParam1,w),d.uniform1f(C.u.uParam2,0),d.bindVertexArray(L.padRing.vao),d.drawElements(d.TRIANGLES,L.padRing.count,d.UNSIGNED_SHORT,0),a.compStates[m.compIdx].placed&&(p.fromTRS(be,m.x,F,m.z,0,0,0,.028,.13,.028),d.uniformMatrix4fv(C.u.uModel,!1,be),d.uniform1i(C.u.uMatType,1),d.uniform3fv(C.u.uBaseColor,x.silverMetal),d.uniform1f(C.u.uParam1,0),d.bindVertexArray(L.cylinder.vao),d.drawElements(d.TRIANGLES,L.cylinder.count,d.UNSIGNED_SHORT,0)),m.soldered||m.progress>.02){let P=m.soldered?1:ne(m.progress,.15,1),R=m.soldered?m.heat:1;p.fromTRS(be,m.x,F+.012,m.z,0,0,0,.138*P,.125*P,.138*P),d.uniformMatrix4fv(C.u.uModel,!1,be),d.uniform1i(C.u.uMatType,3),d.uniform3fv(C.u.uBaseColor,x.silverMetal),d.uniform1f(C.u.uParam1,R),d.uniform1f(C.u.uParam2,P),d.bindVertexArray(L.solderCone.vao),d.drawElements(d.TRIANGLES,L.solderCone.count,d.UNSIGNED_SHORT,0)}}),a.spec.components.forEach((m,b)=>{let y=a.compStates[b];y.placed&&(m.dropOffset=y.dropOffset,et(d,C,L,m,!1,!1,A))}),a.wireStates.forEach((m,b)=>{if(!m.connected)return;let y=a.spec.wires[b];d.uniformMatrix4fv(C.u.uModel,!1,it),d.uniform1i(C.u.uMatType,7),d.uniform3fv(C.u.uBaseColor,y.color),d.uniform1f(C.u.uParam1,l),d.bindVertexArray(m.mesh.vao),d.drawElements(d.TRIANGLES,m.mesh.count,d.UNSIGNED_SHORT,0);for(let[w,P]of[y.from,y.to])p.fromTRS(be,w,.25,P,0,0,0,.17,.26,.17),d.uniformMatrix4fv(C.u.uModel,!1,be),d.uniform1i(C.u.uMatType,9),d.uniform3fv(C.u.uBaseColor,x.charcoalIC),d.uniform1f(C.u.uParam1,0),d.bindVertexArray(L.box.vao),d.drawElements(d.TRIANGLES,L.box.count,d.UNSIGNED_SHORT,0)}),_==="lab"&&G===3&&q>=0&&T.hasBoardHit){let m=a.spec.wires[q],b=qe===0?m.from:m.to;L.dynWire.update([b[0],.34,b[1]],[T.worldHit[0],.34,T.worldHit[2]],.038),d.uniformMatrix4fv(C.u.uModel,!1,it),d.uniform1i(C.u.uMatType,7),d.uniform3fv(C.u.uBaseColor,m.color),d.uniform1f(C.u.uParam1,.85),d.bindVertexArray(L.dynWire.vao),d.drawElements(d.TRIANGLES,L.dynWire.count,d.UNSIGNED_SHORT,0)}a.spec.hasRoboticArm&&_t(d,C,L,A),Dt(d,C,L,z),d.enable(d.BLEND),d.blendFunc(d.SRC_ALPHA,d.ONE_MINUS_SRC_ALPHA),d.depthMask(!1),d.useProgram(C.prog),a.spec.components.forEach((m,b)=>{if(a.compStates[b].placed)return;let y=T.hoverCompIdx===b;et(d,C,L,m,!0,y,A)});let v=me.updateAndUpload(e);if(v>0){let m=[re[0],re[4],re[8]],b=[re[1],re[5],re[9]];d.useProgram(_e.prog),d.uniformMatrix4fv(_e.u.uProj,!1,Ae),d.uniformMatrix4fv(_e.u.uView,!1,re),d.uniform3fv(_e.u.uCamRight,m),d.uniform3fv(_e.u.uCamUp,b),d.bindVertexArray(me.vao),d.drawArraysInstanced(d.TRIANGLES,0,6,v)}if(d.depthMask(!0),d.disable(d.BLEND),d.bindFramebuffer(d.FRAMEBUFFER,null),d.viewport(0,0,oe.width,oe.height),d.disable(d.DEPTH_TEST),d.useProgram(nt.prog),d.activeTexture(d.TEXTURE0),d.bindTexture(d.TEXTURE_2D,Ee),d.uniform1i(nt.u.uSceneTex,0),d.uniform2f(nt.u.uTexelSize,1/Pe,1/Re),d.bindVertexArray(N0),d.drawArrays(d.TRIANGLES,0,3),d.bindVertexArray(null),_==="lab"&&T.hoverLabel&&T.hoverWorldPos){let m=p.projectToScreen(at,T.hoverWorldPos[0],T.hoverWorldPos[1],T.hoverWorldPos[2],o,r);if(m){let b=ne(m.x,195,o-195),y=ne(m.y,138,r-96);tt.innerHTML=`<div class="rb-hover-chip" style="left:${b.toFixed(1)}px;top:${y.toFixed(1)}px">${T.hoverLabel}</div>`}else tt.innerHTML=""}else tt.innerHTML=""}var Ge=new Uint8Array(256);function Y0(){if(!j||!ft.classList.contains("open"))return;let e=Xe.width,t=Xe.height;if(j.fillStyle="#060b0f",j.fillRect(0,0,e,t),j.strokeStyle="rgba(16, 185, 129, 0.22)",j.lineWidth=1,j.beginPath(),j.moveTo(0,t*.5),j.lineTo(e,t*.5),j.stroke(),!!g.analyser){g.analyser.getByteTimeDomainData(Ge),j.strokeStyle="#22d3ee",j.lineWidth=2,j.beginPath();for(let o=0;o<Ge.length;o++){let r=o/(Ge.length-1)*e,n=Ge[o]/255*t;o===0?j.moveTo(r,n):j.lineTo(r,n)}j.stroke()}}var o0=!0;typeof IntersectionObserver<"u"&&ze&&new IntersectionObserver(t=>{for(let o of t)o0=o.isIntersecting},{threshold:.01}).observe(ze);Ke(0);de();var ct=performance.now(),lt=0,Ye=0,mt=60;function r0(e){if(requestAnimationFrame(r0),!o0){ct=e;return}let t=Math.min(.05,Math.max(.001,(e-ct)*.001));ct=e;let o=e*.001;if(lt++,Ye+=t,Ye>=.45){mt=Math.round(lt/Ye),lt=0,Ye=0;let r=Y(),n=r.powered?"5.0V \u901A\u7535\u8FD0\u884C":z.heating?"385\xB0C \u7194\u9521\u4E2D":"380\xB0C \u6052\u6E29\u5F85\u547D";v0.textContent=`${mt} FPS \xB7 ${r.spec.code} \xB7 ${n}`,de()}O0(t,o),G0(t,o),Y0()}requestAnimationFrame(r0);function xe(){let e=d.getError();e!==0&&(Lt=e);let t=Y(),o=pe(t);return{mode:_,fps:mt,glErr:Lt,boardIndex:Z,boardName:t.spec.name,placedCount:o.placedCount,solderedCount:o.solderedCount,wiredCount:o.wiredCount,powered:t.powered,score:ue}}window.__ROBOTICSLAB__={getState:xe,startLab:Fe,selectBoard:je,autoAssembleAndPower:Ze,stepAction:pt};</script>
+</body>
+</html>
